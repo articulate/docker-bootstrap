@@ -12,7 +12,7 @@ In order to use vault to pull in secrets as ENV variables you will need to inclu
 setting {
   namespace = "aws:elasticbeanstalk:application:environment"
   name = "APP_NAME"
-  value = "<your app name>"
+  value = "${var.app_name}"
   }
 setting {
   namespace = "aws:elasticbeanstalk:application:environment"
