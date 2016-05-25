@@ -1,6 +1,10 @@
 #!/bin/bash
 {{$env := env "APP_ENV" }}
 {{$appname := env "APP_NAME" }}
+#global envs
+{{range ls "apps/global/envs"}}
+export {{.Key | toUpper}}="{{.Value}}"{{end}}
+#app envs
 {{range ls (printf "apps/%s/%s" $appname $env )}}
 export {{.Key | toUpper}}="{{.Value}}"{{end}}
 {{range secrets (printf "secret/apps/%s/%s" $appname $env) }}export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/%s" $appname $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
