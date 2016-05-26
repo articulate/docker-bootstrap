@@ -1,7 +1,19 @@
 #!/bin/bash
-{{$env := env "APP_ENV" }}
-{{$appname := env "APP_NAME" }}
-{{range ls (printf "apps/%s/%s" $appname $env )}}
-export {{.Key | toUpper}}="{{.Value}}"{{end}}
-{{range secrets (printf "secret/apps/%s/%s" $appname $env) }}export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/%s" $appname $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
-{{end}}
+{{$env := env "APP_ENV" -}}
+{{$appname := env "APP_NAME" -}}
+#global envs
+{{range ls (printf "global/%s" $env ) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+#app envs
+{{range ls (printf "apps/%s/%s" $appname $env ) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+#global secrets
+{{range secrets (printf "secret/global/%s" $env) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/global/%s/%s" $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
+{{end -}}
+#app secrets
+{{range secrets (printf "secret/apps/%s/%s" $appname $env) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/%s" $appname $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
+{{end -}}
