@@ -2,7 +2,7 @@
 {{$env := env "APP_ENV" -}}
 {{$appname := env "APP_NAME" -}}
 #global envs
-{{range ls (printf "apps/global/%s" $env ) -}}
+{{range ls (printf "global/%s" $env ) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 #app envs
