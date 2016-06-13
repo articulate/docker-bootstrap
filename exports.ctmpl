@@ -10,10 +10,10 @@ export {{.Key | toUpper}}="{{.Value}}"
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 #global secrets
-{{range secrets (printf "secret/global/%s" $env) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/global/%s/%s" $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
+{{range secrets (printf "secret/global/%s/env_vars" $env) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
 {{end -}}
 #app secrets
-{{range secrets (printf "secret/apps/%s/%s" $appname $env) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/%s" $appname $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
+{{range secrets (printf "secret/apps/%s/%s/env_vars" $appname $env) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" $appname $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
 {{end -}}
