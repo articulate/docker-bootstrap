@@ -2,15 +2,15 @@
 {{$env := env "APP_ENV" -}}
 {{$appname := env "APP_NAME" -}}
 #global envs
-{{range ls (printf "global/%s" $env ) -}}
+{{range ls (printf "global/%s/env_vars" $env ) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 #app envs
-{{range ls (printf "apps/%s/%s" $appname $env ) -}}
+{{range ls (printf "apps/%s/%s/env_vars" $appname $env ) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 #global secrets
-{{range secrets (printf "secret/global/env_vars") -}}
+{{range secrets (printf "secret/global/%s/env_vars" $env ) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
 {{end -}}
 #app secrets
