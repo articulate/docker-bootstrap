@@ -17,3 +17,4 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" $env
 {{range secrets (printf "secret/apps/%s/%s/env_vars" $appname $env) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" $appname $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
 {{end -}}
+echo "exports.sh has been loaded into the environment."
