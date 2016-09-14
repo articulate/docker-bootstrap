@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apt-get update
-apt-get install -y unzip git
+apt-get install -y unzip git wget
 rm -rf /var/lib/apt/lists/*
 git clone https://github.com/articulate/docker-consul-template-bootstrap.git
 wget https://releases.hashicorp.com/consul-template/0.14.0/consul-template_0.14.0_linux_amd64.zip
