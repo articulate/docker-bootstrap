@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ ${VAULT_TOKEN} ]
 then
-  if consul-template -consul=$CONSUL_ADDR -template=/exports.ctmpl:/tmp/exports.sh -once
+  if consul-template -consul=$CONSUL_ADDR -template=/exports.ctmpl:/tmp/exports.sh -once -max-stale=0
   then
     source /tmp/exports.sh
   else
