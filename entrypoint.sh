@@ -2,7 +2,7 @@
 
 if [ -f ".app.json" ]
 then
-  export VAULT_TOKEN=$(jq -r '.vault_token' .app.json | base64 --decode | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext | base64 --decode)
+  export VAULT_TOKEN=$(jq -r '.vault_token' .app.json | base64 --decode | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext --region $AWS_REGION | base64 --decode)
 fi
 
 if [ ${VAULT_TOKEN} ]
