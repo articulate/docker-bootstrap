@@ -16,6 +16,5 @@ then
   fi
 else
   echo "VAULT_TOKEN is not set skipping exports"
-  exit 1
 fi
 exec "$@"
