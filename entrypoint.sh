@@ -15,7 +15,7 @@ then
     exit 1
   fi
 else
-  echo "Vault token was not set. It may be missing from the .app.json or KMS may have been unable to decrypt."
+  echo "VAULT_TOKEN is not set skipping exports"
   exit 1
 fi
 exec "$@"
