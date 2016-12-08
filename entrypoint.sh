@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -f ".app.json" ] && [ "${APP_ENV}" == "stage" ]
+if [ -f ".app.json" ] && [ ! "${VAULT_TOKEN}" ]
 then
   export VAULT_TOKEN=$(jq -r '.vault_token' .app.json | base64 --decode | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext --region $AWS_REGION | base64 --decode)
 fi
