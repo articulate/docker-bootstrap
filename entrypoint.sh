@@ -11,7 +11,7 @@ then
   then
     source /tmp/exports.sh
   else
-    echo "======== CONSUL OR VAULT ARE HAVING ISSUES, WEB OPS HAVE BEEN ALERTED ========"
+    echo "======== Consul or Vault are misbehaving. If you are seeing this in prod, Engineering Ops have been alerted. ========"
     exit 1
   fi
 else
