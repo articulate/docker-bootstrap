@@ -5,7 +5,7 @@ then
   export VAULT_TOKEN=$(jq -r '.vault_token' .app.json | base64 --decode | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext --region $AWS_REGION | base64 --decode)
 fi
 
-if [ ${VAULT_TOKEN} ]
+if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ]
 then
   if consul-template -consul=$CONSUL_ADDR -template=/exports.ctmpl:/tmp/exports.sh -once -max-stale=0
   then
@@ -15,6 +15,6 @@ then
     exit 1
   fi
 else
-  echo "VAULT_TOKEN is not set skipping exports"
+  echo "VAULT_TOKEN, VAULT_ADDR, or CONSUL_ADDR are not set skipping exports"
 fi
 exec "$@"
