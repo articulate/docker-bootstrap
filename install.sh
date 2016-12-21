@@ -8,7 +8,7 @@ git clone https://github.com/articulate/docker-consul-template-bootstrap.git
 wget https://releases.hashicorp.com/consul-template/0.14.0/consul-template_0.14.0_linux_amd64.zip
 unzip -d /usr/local/bin consul-template_0.14.0_linux_amd64.zip
 
-curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+wget "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
 unzip awscli-bundle.zip
 sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 
