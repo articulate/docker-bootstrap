@@ -1,6 +1,10 @@
 #!/bin/bash
-{{$env := env "APP_ENV" -}}
+{{scratch.Set "env" (env "APP_ENV") -}}
 {{$appname := env "APP_NAME" -}}
+{{if scratch.Get "env" | contains "peer"}}{{scratch.Set "env" "stage"}}{{end -}}
+
+{{$env := scratch.Get "env"}}
+
 #global envs
 {{range ls (printf "global/%s/env_vars" $env ) -}}
 export {{.Key | toUpper}}="{{.Value}}"
