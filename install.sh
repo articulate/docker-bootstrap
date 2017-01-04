@@ -5,8 +5,8 @@ apt-get install -y unzip git sudo python-dev jq
 rm -rf /var/lib/apt/lists/*
 
 git clone https://github.com/articulate/docker-consul-template-bootstrap.git
-wget https://releases.hashicorp.com/consul-template/0.14.0/consul-template_0.14.0_linux_amd64.zip
-unzip -d /usr/local/bin consul-template_0.14.0_linux_amd64.zip
+wget https://releases.hashicorp.com/consul-template/0.18.0-rc1/consul-template_0.18.0-rc1_linux_amd64.zip
+unzip -d /usr/local/bin consul-template_0.18.0-rc1_linux_amd64.zip
 
 wget "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
 unzip awscli-bundle.zip
