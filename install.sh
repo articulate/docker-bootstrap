@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apt-get update
-apt-get install -y unzip git sudo python-dev jq
+apt-get install -y unzip git sudo python-dev jq wget
 rm -rf /var/lib/apt/lists/*
 
 git clone https://github.com/articulate/docker-consul-template-bootstrap.git
