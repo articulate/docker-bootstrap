@@ -19,8 +19,6 @@ then
 else
   echo "CONSUL_ADDR are not set skipping Consul exports"
 fi
-exec "$@"
-
 
 if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ] 
 then
@@ -34,4 +32,5 @@ then
 else
   echo "VAULT_TOKEN or VAULT_ADDR are not set, skipping Vault exports"
 fi
+
 exec "$@"
