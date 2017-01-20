@@ -9,9 +9,9 @@ fi
 
 if [ ${CONSUL_ADDR} ]
 then
-  if consul-template -consul=$CONSUL_ADDR -template=/consul-exports.ctmpl:/tmp/consul-exports.sh -once -max-stale=0
+  if consul-template -consul=$CONSUL_ADDR -template=/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
   then
-    source /tmp/consul-exports.sh
+    source /tmp/export-consul.sh
   else
     echo "======== Consul may be misbehaving. If you are seeing this in prod, Engineering Ops have been alerted. ========"
     exit 1
@@ -22,9 +22,9 @@ fi
 
 if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ] 
 then
-  if consul-template -consul=$CONSUL_ADDR -template=/vault-exports.ctmpl:/tmp/vault-exports.sh -once -max-stale=0
+  if consul-template -consul=$CONSUL_ADDR -template=/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
   then
-    source /tmp/vault-exports.sh
+    source /tmp/export-vault.sh
   else
     echo "======== Vault may be misbehaving. If you are seeing this in prod, Engineering Ops have been alerted. ========"
     exit 1
