@@ -9,14 +9,29 @@ fi
 
 if [ ${CONSUL_ADDR} ]
 then
-  if consul-template -consul=$CONSUL_ADDR -template=/exports.ctmpl:/tmp/exports.sh -once -max-stale=0
+  if consul-template -consul=$CONSUL_ADDR -template=/consul-exports.ctmpl:/tmp/consul-exports.sh -once -max-stale=0
   then
-    source /tmp/exports.sh
+    source /tmp/consul-exports.sh
   else
     echo "======== Consul may be misbehaving. If you are seeing this in prod, Engineering Ops have been alerted. ========"
     exit 1
   fi
 else
-  echo "CONSUL_ADDR are not set skipping exports"
+  echo "CONSUL_ADDR are not set skipping Consul exports"
+fi
+exec "$@"
+
+
+if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ] 
+then
+  if consul-template -consul=$CONSUL_ADDR -template=/vault-exports.ctmpl:/tmp/vault-exports.sh -once -max-stale=0
+  then
+    source /tmp/vault-exports.sh
+  else
+    echo "======== Vault may be misbehaving. If you are seeing this in prod, Engineering Ops have been alerted. ========"
+    exit 1
+  fi
+else
+  echo "VAULT_TOKEN or VAULT_ADDR are not set, skipping Vault exports"
 fi
 exec "$@"
