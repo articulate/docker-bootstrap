@@ -1,0 +1,15 @@
+#!/bin/bash
+{{scratch.Set "env" (env "APP_ENV") -}}
+{{$appname := env "APP_NAME" -}}
+{{if scratch.Get "env" | contains "peer"}}{{scratch.Set "env" "stage"}}{{end -}}
+
+{{$env := scratch.Get "env"}}
+
+#global secrets
+{{range secrets (printf "secret/global/%s/env_vars" $env ) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
+{{end -}}
+#app secrets
+{{range secrets (printf "secret/apps/%s/%s/env_vars" $appname $env) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" $appname $env .) }}{{range $k, $v := .Data}}="{{$v}}"{{end}}{{end}}
+{{end -}}
