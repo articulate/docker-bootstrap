@@ -13,5 +13,5 @@ unzip awscli-bundle.zip
 sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 
 mv ./docker-consul-template-bootstrap/entrypoint.sh /entrypoint.sh
-mv ./docker-consul-template-bootstrap/exports.ctmpl /exports.ctmpl
-
+mv ./docker-consul-template-bootstrap/export-consul.ctmpl /export-consul.ctmpl
+mv ./docker-consul-template-bootstrap/export-vault.ctmpl /export-vault.ctmpl
