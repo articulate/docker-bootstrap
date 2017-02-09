@@ -8,5 +8,5 @@ wget https://releases.hashicorp.com/consul-template/0.18.0-rc1/consul-template_0
 unzip -d /usr/local/bin consul-template_0.18.0-rc1_linux_amd64.zip
 
 mv ./docker-consul-template-bootstrap/entrypoint.sh /entrypoint.sh
-mv ./docker-consul-template-bootstrap/exports.ctmpl /exports.ctmpl
-
+mv ./docker-consul-template-bootstrap/export-consul.ctmpl /export-consul.ctmpl
+mv ./docker-consul-template-bootstrap/export-vault.ctmpl /export-vault.ctmpl
