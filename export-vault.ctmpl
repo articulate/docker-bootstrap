@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 {{scratch.Set "env" (env "APP_ENV") -}}
 {{$appname := env "APP_NAME" -}}
 {{if scratch.Get "env" | contains "peer"}}{{scratch.Set "env" "stage"}}{{end -}}
