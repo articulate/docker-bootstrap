@@ -9,7 +9,7 @@ fi
 
 if [ ${CONSUL_ADDR} ]
 then
-  if consul-template -consul=$CONSUL_ADDR -template=/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
+  if consul-template -consul-addr=$CONSUL_ADDR -template=/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
   then
     source /tmp/export-consul.sh
   else
@@ -20,9 +20,9 @@ else
   echo "CONSUL_ADDR are not set skipping Consul exports"
 fi
 
-if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ] 
+if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ]
 then
-  if consul-template -consul=$CONSUL_ADDR -template=/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
+  if consul-template -consul-addr=$CONSUL_ADDR -vault-addr=$VAULT_ADDR -template=/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
   then
     source /tmp/export-vault.sh
   else
