@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 yum install -y unzip git \
   && yum clean all
