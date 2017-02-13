@@ -6,7 +6,7 @@ if [ -f /etc/lsb-release ]; then
   rm -rf /var/lib/apt/lists/*
 else
   yum update
-  yum install -y unzip git sudo python-devel jq wget
+  yum -y install unzip git python-devel jq wget
   yum clean all
 fi
 
