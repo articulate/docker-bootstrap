@@ -1,8 +1,14 @@
 #!/bin/bash -e
 
-apt-get update
-apt-get install -y unzip git sudo python-dev jq wget
-rm -rf /var/lib/apt/lists/*
+if [ -f /etc/lsb-release ]; then
+  apt-get update
+  apt-get install -y unzip git sudo python-dev jq wget
+  rm -rf /var/lib/apt/lists/*
+else
+  yum update
+  yum install -y unzip git sudo python-devel jq wget
+  yum clean all
+fi
 
 export CONSUL_TEMPLATE_VERSION=0.18.1
 wget -O consul-template.zip https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
