@@ -5,7 +5,7 @@ if [ `command -v apt-get` ]; then
   apt-get install -y unzip git sudo python-dev jq wget
   rm -rf /var/lib/apt/lists/*
 elif [ `command -v yum` ]; then
-  yum update
+  yum -y update
   yum -y install unzip git python-devel jq wget
   yum clean all
 else
