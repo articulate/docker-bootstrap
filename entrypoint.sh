@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
-MISBEHAVING_NOTICE="may be misbehaving. If our monitoring detected this problem, Engineering Ops have been alerted, but please let us know in case."
+MISBEHAVING_NOTICE="may be misbehaving. In a perfect world, our monitoring detected this problem and Engineering Ops were alerted... but just in case, please let us know."
 
 if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
 then
