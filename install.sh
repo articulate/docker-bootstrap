@@ -6,7 +6,7 @@ if [ `command -v apt-get` ]; then
   rm -rf /var/lib/apt/lists/*
 elif [ `command -v yum` ]; then
   yum -y update
-  yum -y install unzip git python-devel jq wget
+  yum -y install unzip git sudo python-devel jq wget
   yum clean all
 else
   echo "Existing package manager is not supported"
