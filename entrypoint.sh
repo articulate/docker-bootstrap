@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
+MISBEHAVING_NOTICE="may be misbehaving. If our monitoring detected this problem, Engineering Ops have been alerted, but please let us know in case."
 
 if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
 then
@@ -13,7 +14,7 @@ then
   then
     source /tmp/export-consul.sh
   else
-    echo "======== Consul may be misbehaving. If you are seeing this in prod, Engineering Ops have been alerted. ========"
+    echo "Consul $MISBEHAVING_NOTICE"
     exit 1
   fi
 else
@@ -26,7 +27,7 @@ then
   then
     source /tmp/export-vault.sh
   else
-    echo "======== Vault may be misbehaving. If you are seeing this in prod, Engineering Ops have been alerted. ========"
+    echo "Vault $MISBEHAVING_NOTICE"
     exit 1
   fi
 else
