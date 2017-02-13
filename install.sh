@@ -1,13 +1,16 @@
 #!/bin/bash -e
 
-if [ -f /etc/lsb-release ]; then
+if [ `command -v apt-get` ]; then
   apt-get update
   apt-get install -y unzip git sudo python-dev jq wget
   rm -rf /var/lib/apt/lists/*
-else
+elif [ `command -v yum` ]; then
   yum update
   yum -y install unzip git python-devel jq wget
   yum clean all
+else
+  echo "Existing package manager is not supported"
+  exit 1
 fi
 
 export CONSUL_TEMPLATE_VERSION=0.18.1
