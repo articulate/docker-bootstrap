@@ -34,4 +34,7 @@ else
   echo "VAULT_TOKEN or VAULT_ADDR are not set, skipping Vault exports"
 fi
 
+rm -f /tmp/export-vault.sh
+rm -f /tmp/export-consul.sh
+
 exec "$@"
