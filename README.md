@@ -2,32 +2,6 @@
 
 This gets pulled in and sets up consul-template binaries and installs the entrypoint script and the exports.ctmpl file.
 
-## Using Vault
-
-In order to use vault to pull in secrets as ENV variables you will need to include the following Atlas variables in your EB settings.
-
-- The ENV variables `VAULT_ADDR` and `VAULT_TOKEN` will need to be defined in atlas variables and in the terraform module as Elasticbeanstalk environment settings. Here is an example of the settings for the terraform module. These will be used by consul-template to connect to vault.
-
- ```
-setting {
-  namespace = "aws:elasticbeanstalk:application:environment"
-  name = "APP_NAME"
-  value = "${var.app_name}"
-  }
-setting {
-  namespace = "aws:elasticbeanstalk:application:environment"
-  name = "VAULT_TOKEN"
-  value = "${lookup(var.my_app_vault_token, var.env)}"
-  }
-setting {
-  namespace = "aws:elasticbeanstalk:application:environment"
-  name = "VAULT_ADDR"
-  value = "${lookup(var.vault_addr, var.env)}"
-  }
-```
-
-The app name, repo name and name in the vault path should all be the same.
-
 ## Development Usage
 
 In order to test this locally you will need to edit the `docker-compose.override.yml` and add the following:
