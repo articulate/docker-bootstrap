@@ -4,16 +4,20 @@
 
 #global envs
 {{range ls (printf "global/%s/env_vars" (scratch.Get "env")) -}}
-{{if and (scratch.Get "peer") (not (env .Key))}}export {{.Key | toUpper}}="{{.Value}}"
+{{if and (scratch.Get "peer") (not (env .Key)) -}}
+export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
-{{if not (scratch.Get "peer")}}export {{.Key | toUpper}}="{{.Value}}"
+{{if not (scratch.Get "peer") -}}
+export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
 
 #app envs
 {{range ls (printf "apps/%s/%s/env_vars" (env "APP_NAME") (scratch.Get "env")) -}}
-{{if and (scratch.Get "peer") (not (env .Key))}}export {{.Key | toUpper}}="{{.Value}}"
+{{if and (scratch.Get "peer") (not (env .Key)) -}}
+export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
-{{if not (scratch.Get "peer")}}export {{.Key | toUpper}}="{{.Value}}"
+{{if not (scratch.Get "peer") -}}
+export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
