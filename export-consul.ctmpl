@@ -1,15 +1,19 @@
 #!/bin/bash -e
 {{scratch.Set "env" (env "APP_ENV") -}}
-{{$appname := env "APP_NAME" -}}
-{{if scratch.Get "env" | contains "peer"}}{{scratch.Set "env" "stage"}}{{end -}}
-
-{{$env := scratch.Get "env"}}
+{{if scratch.Get "env" | contains "peer"}}{{and (scratch.Set "env" "stage") (scratch.Set "peer" true)}}{{end -}}
 
 #global envs
-{{range ls (printf "global/%s/env_vars" $env ) -}}
-export {{.Key | toUpper}}="{{.Value}}"
+{{range ls (printf "global/%s/env_vars" (scratch.Get "env")) -}}
+{{if and (scratch.Get "peer") (not (env .Key))}}export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
+{{if not (scratch.Get "peer")}}export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+
 #app envs
-{{range ls (printf "apps/%s/%s/env_vars" $appname $env ) -}}
-export {{.Key | toUpper}}="{{.Value}}"
+{{range ls (printf "apps/%s/%s/env_vars" (env "APP_NAME") (scratch.Get "env")) -}}
+{{if and (scratch.Get "peer") (not (env .Key))}}export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{if not (scratch.Get "peer")}}export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
 {{end -}}
