@@ -4,6 +4,7 @@
 
 #global secrets
 {{range secrets (printf "secret/global/%s/env_vars" (scratch.Get "env")) -}}
+{{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
 {{if and (scratch.Get "peer") (not (env .)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (scratch.Get "env") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
@@ -14,6 +15,7 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (scr
 
 #app secrets
 {{range secrets (printf "secret/apps/%s/%s/env_vars" (env "APP_NAME") (scratch.Get "env")) -}}
+{{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
 {{if and (scratch.Get "peer") (not (env .)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (env "APP_NAME") (scratch.Get "env") .) }}="{{.Data.value}}"{{end}}
 {{end -}}

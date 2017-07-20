@@ -4,6 +4,7 @@
 
 #global envs
 {{range ls (printf "global/%s/env_vars" (scratch.Get "env")) -}}
+{{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
 {{if and (scratch.Get "peer") (not (env .Key)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
@@ -14,6 +15,7 @@ export {{.Key | toUpper}}="{{.Value}}"
 
 #app envs
 {{range ls (printf "apps/%s/%s/env_vars" (env "APP_NAME") (scratch.Get "env")) -}}
+{{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
 {{if and (scratch.Get "peer") (not (env .Key)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
