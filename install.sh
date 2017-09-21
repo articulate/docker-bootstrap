@@ -8,6 +8,9 @@ elif [ `command -v yum` ]; then
   yum -y update
   yum -y install unzip git sudo python-devel jq wget
   yum clean all
+elif [ `command -v apk` ]; then
+  apk --update add unzip git sudo python-dev jq wget
+  rm -rf /var/cache/apk/*
 else
   echo "Existing package manager is not supported"
   exit 1
