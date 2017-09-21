@@ -3,11 +3,6 @@
 AWS_REGION="${AWS_REGION:-us-east-1}"
 MISBEHAVING_NOTICE="may be misbehaving. In a perfect world, our monitoring detected this problem and Engineering Ops were alerted... but just in case, please let us know."
 
-if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
-then
-  export VAULT_TOKEN=$(echo $ENCRYPTED_VAULT_TOKEN | base64 --decode | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext --region $AWS_REGION | base64 --decode)
-fi
-
 if [ ${CONSUL_ADDR} ]
 then
   if consul-template -consul-addr=$CONSUL_ADDR -template=/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
@@ -19,6 +14,11 @@ then
   fi
 else
   echo "CONSUL_ADDR are not set skipping Consul exports"
+fi
+
+if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
+then
+  export VAULT_TOKEN=$(echo $ENCRYPTED_VAULT_TOKEN | base64 --decode | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext --region $AWS_REGION | base64 --decode)
 fi
 
 if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ]
