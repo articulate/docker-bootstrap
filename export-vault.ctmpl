@@ -3,13 +3,11 @@
 {{if scratch.Get "env" | contains "peer"}}{{and (scratch.Set "env" "stage") (scratch.Set "override" true)}}{{end -}}
 {{if scratch.Get "env" | contains "dev"}}{{(scratch.Set "override" true)}}{{end -}}
 
+## OLD DEPRECATED STYLE
 #global secrets
 {{range secrets (printf "secret/global/%s/env_vars" (scratch.Get "env")) -}}
 {{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
-{{if and (scratch.Get "override") (not (env .)) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (scratch.Get "env") .) }}="{{.Data.value}}"{{end}}
-{{end -}}
-{{if not (scratch.Get "override") -}}
+{{if not (and (scratch.Get "override") (env .)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (scratch.Get "env") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
@@ -17,10 +15,34 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (scr
 #app secrets
 {{range secrets (printf "secret/apps/%s/%s/env_vars" (env "APP_NAME") (scratch.Get "env")) -}}
 {{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
-{{if and (scratch.Get "override") (not (env .)) -}}
+{{if not (and (scratch.Get "override") (env .)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (env "APP_NAME") (scratch.Get "env") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
-{{if not (scratch.Get "override") -}}
-export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (env "APP_NAME") (scratch.Get "env") .) }}="{{.Data.value}}"{{end}}
+{{end -}}
+
+## NEW STYLE
+#global secrets
+{{range secrets (printf "secret/global/env_vars" (scratch.Get "env")) -}}
+{{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
+{{if not (and (scratch.Get "override") (env .)) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="{{.Data.value}}"{{end}}
+{{end -}}
+{{end -}}
+
+{{if (not (env "APP_PRODUCT")) -}}
+#products secrets
+{{range secrets (printf "secret/products/%s/env_vars" (env "APP_PRODUCT")) -}}
+{{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
+{{if not (and (scratch.Get "override") (env .)) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (env "APP_PRODUCT") .) }}="{{.Data.value}}"{{end}}
+{{end -}}
+{{end -}}
+{{end -}}
+
+#app secrets
+{{range secrets (printf "secret/apps/%s/env_vars" (env "APP_NAME")) -}}
+{{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
+{{if not (and (scratch.Get "override") (env .)) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
