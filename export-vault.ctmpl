@@ -29,7 +29,7 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="
 {{end -}}
 {{end -}}
 
-{{if (not (env "APP_PRODUCT")) -}}
+{{if (env "APP_PRODUCT") -}}
 #products secrets
 {{range secrets (printf "secret/products/%s/env_vars" (env "APP_PRODUCT")) -}}
 {{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
