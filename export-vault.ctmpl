@@ -40,9 +40,9 @@ export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (e
 {{end -}}
 
 #app secrets
-{{range secrets (printf "secret/apps/%s/env_vars" (env "APP_NAME")) -}}
+{{range secrets (printf "secret/services/%s/env_vars" (env "APP_NAME")) -}}
 {{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
 {{if not (and (scratch.Get "override") (env .)) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
+export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
