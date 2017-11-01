@@ -8,10 +8,11 @@ In order to test this locally you will need to edit the `docker-compose.override
 
 ```
 environment:
-    APP_NAME: "<your app name>"
-    APP_ENV: "<dev||prod||stage>"
+    APP_NAME: "your-service"
+    APP_ENV: "dev|stage|prod"
+    CONSUL_ADDR: "http://consul.articulate.zone"
     VAULT_ADDR: "https://myarticulatetest.localtunnel.me"
-    VAULT_TOKEN: "<the root vault token from your test vault server instance>"
+    VAULT_TOKEN: "your-token"
 ```
 
 You can run vault locally with `vault server -dev`. This command will output the VAULT_TOKEN you need and listen on port 8200. I use [localtunnel](https://localtunnel.me) to grab a url to use as the VAULT_ADDR.

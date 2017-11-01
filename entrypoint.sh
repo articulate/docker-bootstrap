@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
-MISBEHAVING_NOTICE="may be misbehaving. In a perfect world, our monitoring detected this problem and Engineering Ops were alerted... but just in case, please let us know."
+MISBEHAVING_NOTICE="may be misbehaving. In a perfect world, our monitoring detected this problem and Platform Engineering was alerted... but just in case, please let us know."
 
 if [ ${CONSUL_ADDR} ]
 then
