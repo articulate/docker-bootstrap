@@ -21,7 +21,7 @@ export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (en
 {{end -}}
 
 ## NEW STYLE
-{{if not (scratch.Get "env" | contains "dev")} -}
+{{if not (scratch.Get "env" | contains "dev") -}}
 
 #global secrets
 {{range secrets "secret/global/env_vars" -}}
