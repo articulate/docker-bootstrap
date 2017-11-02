@@ -21,6 +21,8 @@ export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (en
 {{end -}}
 
 ## NEW STYLE
+{{if not (scratch.Get "env" | contains "dev")} -}
+
 #global secrets
 {{range secrets "secret/global/env_vars" -}}
 {{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
@@ -45,4 +47,6 @@ export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (e
 {{if not (and (scratch.Get "override") (env .)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
+{{end -}}
+
 {{end -}}
