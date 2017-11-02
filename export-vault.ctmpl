@@ -22,10 +22,12 @@ export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (en
 
 ## NEW STYLE
 #global secrets
+{{if scratch.Get "env" | contains "dev"}}
 {{range secrets "secret/global/env_vars" -}}
 {{/* check to see if app is peer related and skip ENV VARS that are already set */ -}}
 {{if not (and (scratch.Get "override") (env .)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="{{.Data.value}}"{{end}}
+{{end -}}
 {{end -}}
 {{end -}}
 
