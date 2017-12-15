@@ -29,5 +29,6 @@ rm awscli-bundle.zip
 git clone https://github.com/articulate/docker-consul-template-bootstrap.git
 
 mv ./docker-consul-template-bootstrap/entrypoint.sh /entrypoint.sh
-mv ./docker-consul-template-bootstrap/export-consul.ctmpl /export-consul.ctmpl
-mv ./docker-consul-template-bootstrap/export-vault.ctmpl /export-vault.ctmpl
+mv ./docker-consul-template-bootstrap/dev-entrypoint.sh /dev-entrypoint.sh
+mkdir -p /consul-template/
+mv ./docker-consul-template-bootstrap/* /consul-template/

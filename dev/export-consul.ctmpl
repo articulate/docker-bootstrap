@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+{{range ls "dev/global/env_vars" -}}
+{{if not (env .Key) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+
+{{if (env "APP_PRODUCT") -}}
+{{range ls (printf "dev/products/%s/env_vars" (env "APP_PRODUCT")) -}}
+{{if not (env .Key) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+{{end -}}
+
+{{range ls (printf "dev/services/%s/env_vars" (env "APP_NAME")) -}}
+{{if not (env .Key) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}

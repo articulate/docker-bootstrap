@@ -1,0 +1,37 @@
+#!/bin/bash -e
+## OLD STYLE global envs
+{{range ls "global/stage/env_vars" -}}
+{{if not (env .Key) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+
+## NEW STYLE global envs
+{{range ls "global/env_vars" -}}
+{{if not (env .Key) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+
+#products envs
+{{if (env "APP_PRODUCT") -}}
+{{range ls (printf "products/%s/env_vars" (env "APP_PRODUCT")) -}}
+{{if not (env .Key) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+{{end -}}
+
+#OLD STYLE app envs
+{{range ls (printf "apps/%s/stage/env_vars" (env "APP_NAME")) -}}
+{{if not (env .Key) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+
+#NEW STYLE app envs
+{{range ls (printf "services/%s/env_vars" (env "APP_NAME")) -}}
+{{if not (env .Key) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
