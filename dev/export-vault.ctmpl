@@ -1,23 +1,21 @@
 #!/bin/bash -e
 
 {{range secrets "secret/dev/global/env_vars" -}}
-{{if not (env .) -}}
+{{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/dev/global/env_vars/%s" .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
 
-#products secrets
 {{if (env "APP_PRODUCT") -}}
 {{range secrets (printf "secret/dev/products/%s/env_vars" (env "APP_PRODUCT")) -}}
-{{if not (env .) -}}
+{{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/dev/products/%s/env_vars/%s" (env "APP_PRODUCT") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
 {{end -}}
 
-#NEW STYLE app secrets
 {{range secrets (printf "secret/dev/services/%s/env_vars" (env "APP_NAME")) -}}
-{{if not (env .) -}}
+{{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/dev/services/%s/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}

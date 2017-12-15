@@ -4,6 +4,8 @@ AWS_REGION="${AWS_REGION:-us-east-1}"
 
 if [ "${APP_ENV}" == "dev" ]
 then
+  # we use `source` here because we want dev-entrypoint.sh to be executed in the context
+  # of this script, and not as a new process
   source /dev-entrypoint.sh
 else
   MISBEHAVING_NOTICE="may be misbehaving. In a perfect world, our monitoring detected this problem and Platform Engineering was alerted... but just in case, please let us know."

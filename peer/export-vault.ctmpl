@@ -1,14 +1,15 @@
 #!/bin/bash -e
+
 ## OLD DEPRECATED STYLE global secrets
 {{range secrets "secret/global/stage/env_vars" -}}
-{{if not (env .) -}}
+{{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/stage/env_vars/%s" .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
 
 #NEW STYLE global secrets
 {{range secrets "secret/global/env_vars" -}}
-{{if not (env .) -}}
+{{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
@@ -16,7 +17,7 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="
 #products secrets
 {{if (env "APP_PRODUCT") -}}
 {{range secrets (printf "secret/products/%s/env_vars" (env "APP_PRODUCT")) -}}
-{{if not (env .) -}}
+{{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (env "APP_PRODUCT") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
@@ -24,14 +25,14 @@ export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (e
 
 #OLD DEPRECATED STYLE app secrets
 {{range secrets (printf "secret/apps/%s/stage/env_vars" (env "APP_NAME") (scratch.Get "env")) -}}
-{{if not (env .) -}}
+{{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/stage/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
 
 #NEW STYLE app secrets
 {{range secrets (printf "secret/services/%s/env_vars" (env "APP_NAME")) -}}
-{{if not (env .) -}}
+{{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
