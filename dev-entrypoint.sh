@@ -1,18 +1,18 @@
 MISBEHAVING_NOTICE="may be misbehaving. Please ensure you have skipper and private-resources running properly."
 
-if consul-template -consul-addr=http://consul-priv.dev.articulate.zone -template=/consul-template/${APP_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
-then
-  source /tmp/export-consul.sh
-else
-  echo "Consul stage $MISBEHAVING_NOTICE"
-  exit 1
-fi
-
 if consul-template -consul-addr=http://consul-tugboat.dev.articulate.zone -template=/consul-template/${APP_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
 then
   source /tmp/export-consul.sh
 else
   echo "Consul tugboat $MISBEHAVING_NOTICE"
+  exit 1
+fi
+
+if consul-template -consul-addr=http://consul-priv.dev.articulate.zone -template=/consul-template/${APP_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
+then
+  source /tmp/export-consul.sh
+else
+  echo "Consul stage $MISBEHAVING_NOTICE"
   exit 1
 fi
 
