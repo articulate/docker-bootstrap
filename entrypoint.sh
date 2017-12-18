@@ -1,8 +1,11 @@
 #!/bin/bash -e
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
+export SERVICE_ENV="${APP_ENV}"
+export SERVICE_NAME="${APP_NAME}"
+export SERVICE_PRODUCT="${APP_PRODUCT}"
 
-if [ "${APP_ENV}" == "dev" ]
+if [ "${SERVICE_ENV}" == "dev" ]
 then
   # we use `source` here because we want dev-entrypoint.sh to be executed in the context
   # of this script, and not as a new process
@@ -12,7 +15,7 @@ else
 
   if [ ${CONSUL_ADDR} ]
   then
-    if consul-template -consul-addr=$CONSUL_ADDR -template=/consul-template/${APP_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
+    if consul-template -consul-addr=$CONSUL_ADDR -template=/consul-template/${SERVICE_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
     then
       source /tmp/export-consul.sh
     else
@@ -30,7 +33,7 @@ else
 
   if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ]
   then
-    if consul-template -consul-addr=$CONSUL_ADDR -vault-addr=$VAULT_ADDR -template=/consul-template/${APP_ENV}/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
+    if consul-template -consul-addr=$CONSUL_ADDR -vault-addr=$VAULT_ADDR -template=/consul-template/${SERVICE_ENV}/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
     then
       source /tmp/export-vault.sh
     else

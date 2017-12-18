@@ -15,24 +15,24 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="
 {{end -}}
 
 #products secrets
-{{if (env "APP_PRODUCT") -}}
-{{range secrets (printf "secret/products/%s/env_vars" (env "APP_PRODUCT")) -}}
+{{if (env "SERVICE_PRODUCT") -}}
+{{range secrets (printf "secret/products/%s/env_vars" (env "SERVICE_PRODUCT")) -}}
 {{if not (env (. | toUpper)) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (env "APP_PRODUCT") .) }}="{{.Data.value}}"{{end}}
+export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (env "SERVICE_PRODUCT") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
 {{end -}}
 
 #OLD DEPRECATED STYLE app secrets
-{{range secrets (printf "secret/apps/%s/stage/env_vars" (env "APP_NAME") (scratch.Get "env")) -}}
+{{range secrets (printf "secret/apps/%s/stage/env_vars" (env "SERVICE_NAME") (scratch.Get "env")) -}}
 {{if not (env (. | toUpper)) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/stage/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
+export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/stage/env_vars/%s" (env "SERVICE_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
 
 #NEW STYLE app secrets
-{{range secrets (printf "secret/services/%s/env_vars" (env "APP_NAME")) -}}
+{{range secrets (printf "secret/services/%s/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (. | toUpper)) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
+export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (env "SERVICE_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}

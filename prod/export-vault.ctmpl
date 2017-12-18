@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 ## OLD DEPRECATED STYLE global secrets
-{{range secrets (printf "secret/global/%s/env_vars" (env "APP_ENV")) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (env "APP_ENV") .) }}="{{.Data.value}}"{{end}}
+{{range secrets (printf "secret/global/%s/env_vars" (env "SERVICE_ENV")) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (env "SERVICE_ENV") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 
 #NEW STYLE global secrets
@@ -11,18 +11,18 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="
 {{end -}}
 
 #products secrets
-{{if (env "APP_PRODUCT") -}}
-{{range secrets (printf "secret/products/%s/env_vars" (env "APP_PRODUCT")) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (env "APP_PRODUCT") .) }}="{{.Data.value}}"{{end}}
+{{if (env "SERVICE_PRODUCT") -}}
+{{range secrets (printf "secret/products/%s/env_vars" (env "SERVICE_PRODUCT")) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (env "SERVICE_PRODUCT") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
 
 #OLD DEPRECATED STYLE app secrets
-{{range secrets (printf "secret/apps/%s/%s/env_vars" (env "APP_NAME") (env "APP_ENV")) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (env "APP_NAME") (env "APP_ENV") .) }}="{{.Data.value}}"{{end}}
+{{range secrets (printf "secret/apps/%s/%s/env_vars" (env "SERVICE_NAME") (env "SERVICE_ENV")) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (env "SERVICE_NAME") (env "SERVICE_ENV") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 
 #NEW STYLE app secrets
-{{range secrets (printf "secret/services/%s/env_vars" (env "APP_NAME")) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
+{{range secrets (printf "secret/services/%s/env_vars" (env "SERVICE_NAME")) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (env "SERVICE_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}

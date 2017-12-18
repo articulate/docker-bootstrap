@@ -6,16 +6,16 @@ export {{ . | toUpper}}{{with secret (printf "secret/dev/global/env_vars/%s" .) 
 {{end -}}
 {{end -}}
 
-{{if (env "APP_PRODUCT") -}}
-{{range secrets (printf "secret/dev/products/%s/env_vars" (env "APP_PRODUCT")) -}}
+{{if (env "SERVICE_PRODUCT") -}}
+{{range secrets (printf "secret/dev/products/%s/env_vars" (env "SERVICE_PRODUCT")) -}}
 {{if not (env (. | toUpper)) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/dev/products/%s/env_vars/%s" (env "APP_PRODUCT") .) }}="{{.Data.value}}"{{end}}
+export {{ . | toUpper}}{{with secret (printf "secret/dev/products/%s/env_vars/%s" (env "SERVICE_PRODUCT") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}
 {{end -}}
 
-{{range secrets (printf "secret/dev/services/%s/env_vars" (env "APP_NAME")) -}}
+{{range secrets (printf "secret/dev/services/%s/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (. | toUpper)) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/dev/services/%s/env_vars/%s" (env "APP_NAME") .) }}="{{.Data.value}}"{{end}}
+export {{ . | toUpper}}{{with secret (printf "secret/dev/services/%s/env_vars/%s" (env "SERVICE_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
 {{end -}}

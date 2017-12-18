@@ -12,29 +12,29 @@ export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
 
-{{if (env "APP_PRODUCT") -}}
-{{range ls (printf "products/%s/env_vars" (env "APP_PRODUCT")) -}}
+{{if (env "SERVICE_PRODUCT") -}}
+{{range ls (printf "products/%s/env_vars" (env "SERVICE_PRODUCT")) -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
 {{end -}}
 
-{{if (env "APP_PRODUCT") -}}
-{{range ls (printf "dev/products/%s/env_vars" (env "APP_PRODUCT")) -}}
+{{if (env "SERVICE_PRODUCT") -}}
+{{range ls (printf "dev/products/%s/env_vars" (env "SERVICE_PRODUCT")) -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
 {{end -}}
 
-{{range ls (printf "services/%s/env_vars" (env "APP_NAME")) -}}
+{{range ls (printf "services/%s/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
 
-{{range ls (printf "dev/services/%s/env_vars" (env "APP_NAME")) -}}
+{{range ls (printf "dev/services/%s/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
