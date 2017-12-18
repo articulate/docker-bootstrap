@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 if [ `command -v apt-get` ]; then
   apt-get update
@@ -27,7 +27,7 @@ sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 rm awscli-bundle.zip
 
 git clone https://github.com/articulate/docker-consul-template-bootstrap.git
-cd refactor-dev-workflow
+cd docker-consul-template-bootstrap
 git checkout refactor-dev-workflow
 
 mv ./entrypoint.sh /entrypoint.sh
