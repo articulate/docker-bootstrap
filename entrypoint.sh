@@ -1,9 +1,15 @@
 #!/bin/bash -e
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
-export SERVICE_ENV="${APP_ENV}"
-export SERVICE_NAME="${APP_NAME}"
-export SERVICE_PRODUCT="${APP_PRODUCT}"
+if [ "${APP_ENV}" != "" ]; then
+  export SERVICE_ENV="${APP_ENV}"
+fi
+if [ "${APP_NAME}" != "" ]; then
+  export SERVICE_NAME="${APP_NAME}"
+fi
+if [ "${APP_PRODUCT}" != "" ]; then
+  export SERVICE_PRODUCT="${APP_PRODUCT}"
+fi
 
 if [ "${SERVICE_ENV}" == "dev" ]
 then
