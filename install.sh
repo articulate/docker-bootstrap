@@ -16,7 +16,7 @@ else
   exit 1
 fi
 
-export CONSUL_TEMPLATE_VERSION=0.19.0
+export CONSUL_TEMPLATE_VERSION=0.19.4
 wget -O consul-template.zip https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
 unzip -d /usr/local/bin consul-template.zip
 rm consul-template.zip
