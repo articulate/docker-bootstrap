@@ -1,6 +1,6 @@
 MISBEHAVING_NOTICE="may be misbehaving. Please ensure you have skipper and private-resources running properly."
 
-if consul-template -consul-addr=http://consul-tugboat.dev.articulate.zone -template=/consul-template/${SERVICE_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
+if consul-template -consul-addr=consul-tugboat.dev.articulate.zone -template=/consul-template/${SERVICE_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
 then
   source /tmp/export-consul.sh
 else
@@ -8,7 +8,7 @@ else
   exit 1
 fi
 
-if consul-template -consul-addr=http://consul-priv.dev.articulate.zone -template=/consul-template/${SERVICE_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
+if consul-template -consul-addr=consul-priv.dev.articulate.zone -template=/consul-template/${SERVICE_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
 then
   source /tmp/export-consul.sh
 else
@@ -23,7 +23,7 @@ fi
 
 if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ]
 then
-  if consul-template -consul-addr=http://consul-priv.dev.articulate.zone -vault-addr=http://vault-priv.dev.articulate.zone -template=/consul-template/${SERVICE_ENV}/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
+  if consul-template -consul-addr=consul-priv.dev.articulate.zone -vault-addr=http://vault-priv.dev.articulate.zone -template=/consul-template/${SERVICE_ENV}/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
   then
     source /tmp/export-vault.sh
   else
