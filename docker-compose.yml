@@ -1,0 +1,13 @@
+version: '2.1'
+services:
+  app:
+    build: .
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./spec:/service/spec"
+    depends_on:
+      - consul
+
+  consul:
+    image: consul
+    command: "agent -dev -log-level info -client 0.0.0.0"
