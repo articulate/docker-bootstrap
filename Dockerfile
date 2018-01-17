@@ -6,5 +6,6 @@ WORKDIR /service
 RUN bundle install
 
 ADD spec /service/spec
+ADD Makefile /service/Makefile
 
 CMD rspec
