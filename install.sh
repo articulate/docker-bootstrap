@@ -27,10 +27,7 @@ sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 rm awscli-bundle.zip
 
 git clone https://github.com/articulate/docker-consul-template-bootstrap.git
-cd docker-consul-template-bootstrap
 
-mv ./entrypoint.sh /entrypoint.sh
+mv docker-consul-template-bootstrap/entrypoint.sh /entrypoint.sh
 mkdir -p /consul-template/
-mv * /consul-template/
-
-cd ..
+mv docker-consul-template-bootstrap/* /consul-template/
