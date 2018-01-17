@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 if [ `command -v apt-get` ]; then
   apt-get update
@@ -28,10 +28,8 @@ rm awscli-bundle.zip
 
 git clone https://github.com/articulate/docker-consul-template-bootstrap.git
 cd docker-consul-template-bootstrap
-git checkout refactor-dev-workflow
 
 mv ./entrypoint.sh /entrypoint.sh
-mv ./dev-entrypoint.sh /dev-entrypoint.sh
 mkdir -p /consul-template/
 mv * /consul-template/
 
