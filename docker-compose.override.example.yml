@@ -2,4 +2,4 @@ version: '2.1'
 services:
   app:
     volumes:
-      - "./spec:/service/spec"
+      - "./:/service"
