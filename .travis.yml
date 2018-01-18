@@ -15,4 +15,4 @@ before_install:
 install:
   - docker-compose build
 script:
-  - docker-compose run app
+  - docker-compose run -e TRAVIS_COMMIT app

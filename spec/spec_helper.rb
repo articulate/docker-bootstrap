@@ -6,7 +6,7 @@ def get_config(key)
 end
 
 def docker_build_template(opts = {})
-  git_commit = `git rev-parse HEAD`.strip
+  git_commit = ENV["TRAVIS_COMMIT"] || `git rev-parse HEAD`.strip
   opts.merge!(context: { git_commit: git_commit})
   docker_build(opts)
 end
