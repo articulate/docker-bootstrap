@@ -103,6 +103,7 @@ GEM
     specinfra-backend-docker_lxc (0.2.0)
       specinfra (~> 2.13)
     thor (0.20.0)
+    vault (0.10.1)
     websocket-driver (0.7.0)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
@@ -116,6 +117,7 @@ DEPENDENCIES
   diplomat
   dockerspec
   serverspec
+  vault
 
 BUNDLED WITH
    1.16.1

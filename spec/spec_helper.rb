@@ -1,5 +1,6 @@
 require "dockerspec/serverspec"
 require 'diplomat'
+require 'vault'
 
 def get_config(key)
   Specinfra.configuration.send(key)
@@ -19,46 +20,59 @@ def entrypoint_command(cmd)
   command("/entrypoint.sh #{cmd}")
 end
 
-def set_consul(scope, key, value, new=true)
-  service_name = get_config(:service_name)
-  service_product = get_config(:service_product)
-  service_env = get_config(:service_env)
+[:consul, :vault].each do |store_type|
+  define_method("set_#{store_type}") do |scope, key, value, new=true|
+    service_name = get_config(:service_name)
+    service_product = get_config(:service_product)
+    service_env = get_config(:service_env)
 
-  consul_key = case scope
-               when :service
-                 if new
-                   "services/#{service_name}/env_vars/#{key}"
-                 else
-                   "apps/#{service_name}/#{service_env}/env_vars/#{key}"
+    full_key = case scope
+                 when :service
+                   if new
+                     "services/#{service_name}/env_vars/#{key}"
+                   else
+                     "apps/#{service_name}/#{service_env}/env_vars/#{key}"
+                   end
+                 when :global
+                   if new
+                     "global/env_vars/#{key}"
+                   else
+                     "global/#{service_env}/env_vars/#{key}"
+                   end
+                 when :product
+                   "products/#{service_product}/env_vars/#{key}"
                  end
-               when :global
-                 if new
-                   "global/env_vars/#{key}"
-                 else
-                   "global/#{service_env}/env_vars/#{key}"
-                 end
-               when :product
-                 "products/#{service_product}/env_vars/#{key}"
-               end
+    if store_type == :vault
+      full_key = "secret/#{full_key}"
+    end
 
-  puts "Setting '#{consul_key}' to value '#{value}'"
+    puts "Setting '#{full_key}' to value '#{value}' in #{store_type}"
 
-  before(:each) do
-    Diplomat::Kv.put(consul_key, value)
-  end
+    before(:each) do
+      if store_type == :vault
+        Vault.logical.write(full_key, value: value)
+      else
+        Diplomat::Kv.put(full_key, value)
+      end
+    end
 
-  after(:each) do
-    Diplomat::Kv.delete(consul_key)
+    after(:each) do
+      if store_type == :vault
+        Vault.logical.delete(full_key)
+      else
+        Diplomat::Kv.delete(full_key)
+      end
+    end
   end
 end
 
 Diplomat.configure do |diplomat_config|
-  diplomat_config.url = "http://consul:8500"
+  diplomat_config.url = "http://#{ENV.fetch("CONSUL_ADDR")}"
 end
 
 RSpec::Matchers.define :include_env do |env_var, env_val|
   match do |stdout|
-    stdout.include?("#{env_var}=#{env_val}2\n")
+    stdout.include?("#{env_var}=#{env_val}\n")
   end
   failure_message_when_negated do |actual|
     "expected that #{env_var}=#{env_val} is in #{stdout}"
@@ -73,13 +87,17 @@ RSpec.configure do |config|
   set :service_product, "product-name"
 
   set :env, [
-    ["CONSUL_ADDR", "consul:8500"],
+    ["CONSUL_ADDR", ENV.fetch("CONSUL_ADDR")],
+    ["VAULT_ADDR", ENV.fetch("VAULT_ADDR")],
+    ["VAULT_TOKEN", ENV.fetch("VAULT_TOKEN")],
+    ["VAULT_RENEW_TOKEN", "false"],
     ["APP_ENV", get_config(:service_env)],
     ["APP_NAME", get_config(:service_name)],
     ["APP_PRODUCT", get_config(:service_product)]
   ]
 
   config.before(:suite) do
+    Vault.logical.delete("secret")
     Diplomat::Kv.delete("", recurse: true)
   end
 end
