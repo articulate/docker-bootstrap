@@ -56,6 +56,15 @@ Diplomat.configure do |diplomat_config|
   diplomat_config.url = "http://consul:8500"
 end
 
+RSpec::Matchers.define :include_env do |env_var, env_val|
+  match do |stdout|
+    stdout.include?("#{env_var}=#{env_val}2\n")
+  end
+  failure_message_when_negated do |actual|
+    "expected that #{env_var}=#{env_val} is in #{stdout}"
+  end
+end
+
 RSpec.configure do |config|
   set :docker_container_create_options, HostConfig: { NetworkMode: "container:#{`hostname`.strip}" }
 

@@ -19,11 +19,11 @@ then
   then
     source /tmp/export-consul.sh
   else
-    echo "Consul $MISBEHAVING_NOTICE"
+    (>&2 echo "Consul $MISBEHAVING_NOTICE")
     exit 1
   fi
 else
-  echo "CONSUL_ADDR are not set skipping Consul exports"
+  (>&2 echo "CONSUL_ADDR are not set skipping Consul exports")
 fi
 
 if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
@@ -37,11 +37,11 @@ then
   then
     source /tmp/export-vault.sh
   else
-    echo "Vault $MISBEHAVING_NOTICE"
+    (>&2 echo "Vault $MISBEHAVING_NOTICE")
     exit 1
   fi
 else
-  echo "VAULT_TOKEN or VAULT_ADDR are not set, skipping Vault exports"
+  (>&2 echo "VAULT_TOKEN or VAULT_ADDR are not set, skipping Vault exports")
 fi
 
 rm -f /tmp/export-vault.sh

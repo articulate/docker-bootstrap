@@ -14,7 +14,8 @@ elif [ `command -v yum` ]; then
   yum -y install unzip sudo python-devel jq wget
   yum clean all
 elif [ `command -v apk` ]; then
-  apk --update add unzip sudo python-dev jq wget
+  apk --update add unzip sudo python-dev jq wget ca-certificates
+  update-ca-certificates
   rm -rf /var/cache/apk/*
 else
   echo "Existing package manager is not supported"

@@ -1,14 +1,18 @@
 require "spec_helper"
 
-describe "Dockerfile" do
-  describe docker_build_template(template: "spec/dockerfiles/Dockerfile.debian.erb", tag: "consul_template_bootstrap_debian") do
-    describe "Service path env vars" do
-      set_consul(:service, "SOME_SERVICE_VAR", "service-var")
+distros = ["debian", "centos", "alpine"]
 
-      describe docker_run("consul_template_bootstrap_debian") do
-        describe entrypoint_command("env") do
-          its(:stdout) { should include("SOME_SERVICE_VAR") }
-          its(:stderr) { should be_empty }
+distros.each do |distro|
+  describe "Dockerfile" do
+    describe docker_build_template(template: "spec/dockerfiles/Dockerfile.#{distro}.erb", tag: "consul_template_bootstrap_#{distro}") do
+      describe "Service path env vars" do
+        set_consul(:service, "SOME_SERVICE_VAR", "service-var")
+
+        describe docker_run("consul_template_bootstrap_#{distro}") do
+          describe entrypoint_command("env") do
+            its(:stdout) { should include_env "SOME_SERVICE_VAR", "service-var" }
+            its(:stderr) { should be_empty }
+          end
         end
       end
     end
