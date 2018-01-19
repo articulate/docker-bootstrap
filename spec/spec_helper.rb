@@ -20,48 +20,46 @@ def entrypoint_command(cmd)
   command("/entrypoint.sh #{cmd}")
 end
 
-[:consul, :vault].each do |store_type|
-  define_method("set_#{store_type}") do |scope, key, value, new=true|
-    service_name = get_config(:service_name)
-    service_product = get_config(:service_product)
-    service_env = get_config(:service_env)
+def set_var(store_type, scope, key, value, new=true)
+  service_name = get_config(:service_name)
+  service_product = get_config(:service_product)
+  service_env = get_config(:service_env)
 
-    full_key = case scope
-                 when :service
-                   if new
-                     "services/#{service_name}/env_vars/#{key}"
-                   else
-                     "apps/#{service_name}/#{service_env}/env_vars/#{key}"
-                   end
-                 when :global
-                   if new
-                     "global/env_vars/#{key}"
-                   else
-                     "global/#{service_env}/env_vars/#{key}"
-                   end
-                 when :product
-                   "products/#{service_product}/env_vars/#{key}"
-                 end
+  full_key = case scope
+             when :service
+               if new
+                 "services/#{service_name}/env_vars/#{key}"
+               else
+                 "apps/#{service_name}/#{service_env}/env_vars/#{key}"
+               end
+             when :global
+               if new
+                 "global/env_vars/#{key}"
+               else
+                 "global/#{service_env}/env_vars/#{key}"
+               end
+             when :product
+               "products/#{service_product}/env_vars/#{key}"
+             end
+  if store_type == :vault
+    full_key = "secret/#{full_key}"
+  end
+
+  puts "Setting '#{full_key}' to value '#{value}' in #{store_type}"
+
+  before(:each) do
     if store_type == :vault
-      full_key = "secret/#{full_key}"
+      Vault.logical.write(full_key, value: value)
+    else
+      Diplomat::Kv.put(full_key, value)
     end
+  end
 
-    puts "Setting '#{full_key}' to value '#{value}' in #{store_type}"
-
-    before(:each) do
-      if store_type == :vault
-        Vault.logical.write(full_key, value: value)
-      else
-        Diplomat::Kv.put(full_key, value)
-      end
-    end
-
-    after(:each) do
-      if store_type == :vault
-        Vault.logical.delete(full_key)
-      else
-        Diplomat::Kv.delete(full_key)
-      end
+  after(:each) do
+    if store_type == :vault
+      Vault.logical.delete(full_key)
+    else
+      Diplomat::Kv.delete(full_key)
     end
   end
 end
@@ -91,9 +89,9 @@ RSpec.configure do |config|
     ["VAULT_ADDR", ENV.fetch("VAULT_ADDR")],
     ["VAULT_TOKEN", ENV.fetch("VAULT_TOKEN")],
     ["VAULT_RENEW_TOKEN", "false"],
-    ["APP_ENV", get_config(:service_env)],
-    ["APP_NAME", get_config(:service_name)],
-    ["APP_PRODUCT", get_config(:service_product)]
+    ["SERVICE_ENV", get_config(:service_env)],
+    ["SERVICE_NAME", get_config(:service_name)],
+    ["SERVICE_PRODUCT", get_config(:service_product)]
   ]
 
   config.before(:suite) do
