@@ -1,5 +1,7 @@
 # Docker Consul Template Bootstrap
 
+[![Build Status](https://travis-ci.org/articulate/docker-consul-template-bootstrap.svg?branch=master)](https://travis-ci.org/articulate/docker-consul-template-bootstrap)
+
 This gets pulled in and sets up consul-template binaries and installs the entrypoint script and the exports.ctmpl file.
 
 ## Development Usage
