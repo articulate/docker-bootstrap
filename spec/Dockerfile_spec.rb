@@ -153,10 +153,10 @@ distros.each do |distro|
               set_var(backend_type, :service, "SERVICE_VAR", "service-var")
 
               describe entrypoint_command("env") do
-                its(:stdout) { should include_env "SERVICE_ENV", "peer" }
                 its(:stdout) { should include_env "GLOBAL_VAR", "global-var" }
                 its(:stdout) { should include_env "PRODUCT_VAR", "product-var" }
                 its(:stdout) { should include_env "SERVICE_VAR", "service-var" }
+                its(:stdout) { should include_env "SERVICE_ENV", "peer-rise-runtime-1768" }
                 its(:stderr) { should be_empty }
               end
             end
