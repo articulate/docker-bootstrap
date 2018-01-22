@@ -144,7 +144,7 @@ distros.each do |distro|
         end
       end
 
-      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "peer", ALREADY_SET: "true") do
+      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "peer-rise-runtime-1768", ALREADY_SET: "true") do
         [:consul, :vault].each do |backend_type|
           describe backend_type do
             describe "General sets work" do

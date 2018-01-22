@@ -14,11 +14,14 @@ if [ "${APP_PRODUCT}" != "" ]; then
   export SERVICE_PRODUCT="${APP_PRODUCT}"
 fi
 
+
+CT_SERVICE_ENV="${SERVICE_ENV%%-*}"
+
 MISBEHAVING_NOTICE="may be misbehaving. In a perfect world, our monitoring detected this problem and Platform Engineering was alerted... but just in case, please let us know."
 
 if [ ${CONSUL_ADDR} ]
 then
-  if consul-template -consul-addr=$CONSUL_ADDR -template=/consul-template/${SERVICE_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
+  if consul-template -consul-addr=$CONSUL_ADDR -template=/consul-template/${CT_SERVICE_ENV}/export-consul.ctmpl:/tmp/export-consul.sh -once -max-stale=0
   then
     source /tmp/export-consul.sh
   else
@@ -36,7 +39,7 @@ fi
 
 if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ]
 then
-  if consul-template -consul-addr=$CONSUL_ADDR -vault-addr=$VAULT_ADDR -template=/consul-template/${SERVICE_ENV}/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
+  if consul-template -consul-addr=$CONSUL_ADDR -vault-addr=$VAULT_ADDR -template=/consul-template/${CT_SERVICE_ENV}/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
   then
     source /tmp/export-vault.sh
   else
