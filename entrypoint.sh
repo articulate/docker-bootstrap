@@ -14,7 +14,8 @@ if [ "${APP_PRODUCT}" != "" ]; then
   export SERVICE_PRODUCT="${APP_PRODUCT}"
 fi
 
-
+# This will return everything before a - chararacter.
+# "peer-something-thing" => "peer"
 CT_SERVICE_ENV="${SERVICE_ENV%%-*}"
 
 MISBEHAVING_NOTICE="may be misbehaving. In a perfect world, our monitoring detected this problem and Platform Engineering was alerted... but just in case, please let us know."
