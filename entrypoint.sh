@@ -2,12 +2,15 @@
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
 if [ "${APP_ENV}" != "" ]; then
+  (>&2 echo "Using deprecated APP_ENV, please swap to SERVICE_ENV")
   export SERVICE_ENV="${APP_ENV}"
 fi
 if [ "${APP_NAME}" != "" ]; then
+  (>&2 echo "Using deprecated APP_NAME, please swap to SERVICE_NAME")
   export SERVICE_NAME="${APP_NAME}"
 fi
 if [ "${APP_PRODUCT}" != "" ]; then
+  (>&2 echo "Using deprecated APP_PRODUCT, please swap to SERVICE_PRODUCT")
   export SERVICE_PRODUCT="${APP_PRODUCT}"
 fi
 
