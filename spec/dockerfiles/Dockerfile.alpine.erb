@@ -1,0 +1,17 @@
+FROM alpine:3.6
+
+ENV SERVICE_ROOT /service
+ENV SERVICE_USER service
+
+RUN apk --update add bash
+RUN rm -rf /var/cache/apk/*
+
+ADD https://raw.githubusercontent.com/articulate/docker-consul-template-bootstrap/<%= @git_commit %>/install.sh /tmp/consul_template_install.sh
+RUN bash -ex /tmp/consul_template_install.sh <%= @git_commit %> && rm /tmp/consul_template_install.sh
+
+RUN addgroup $SERVICE_USER && adduser -h $SERVICE_ROOT -G $SERVICE_USER -s /bin/bash -D $SERVICE_USER
+WORKDIR $SERVICE_ROOT
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD "/bin/sh"

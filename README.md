@@ -1,5 +1,7 @@
 # Docker Consul Template Bootstrap
 
+[![Build Status](https://travis-ci.org/articulate/docker-consul-template-bootstrap.svg?branch=master)](https://travis-ci.org/articulate/docker-consul-template-bootstrap)
+
 This gets pulled in and sets up consul-template binaries and installs the entrypoint script and the exports.ctmpl file.
 
 ## Development Usage
@@ -8,8 +10,8 @@ In order to test this locally you will need to edit the `docker-compose.override
 
 ```
 environment:
-    APP_NAME: "your-service"
-    APP_ENV: "dev|stage|prod"
+    SERVICE_NAME: "your-service"
+    SERVICE_ENV: "dev|stage|prod|peer"
     CONSUL_ADDR: "http://consul.articulate.zone"
     VAULT_ADDR: "https://myarticulatetest.localtunnel.me"
     VAULT_TOKEN: "your-token"
