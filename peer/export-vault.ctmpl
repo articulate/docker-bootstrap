@@ -24,7 +24,7 @@ export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (e
 {{end -}}
 
 #OLD DEPRECATED STYLE app secrets
-{{range secrets (printf "secret/apps/%s/stage/env_vars" (env "SERVICE_NAME") (scratch.Get "env")) -}}
+{{range secrets (printf "secret/apps/%s/stage/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/stage/env_vars/%s" (env "SERVICE_NAME") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
