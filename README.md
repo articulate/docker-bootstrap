@@ -19,3 +19,13 @@ environment:
 
 You can run vault locally with `vault server -dev`. This command will output the VAULT_TOKEN you need and listen on port 8200. I use [localtunnel](https://localtunnel.me) to grab a url to use as the VAULT_ADDR.
 `lt --port 8200 -s myarticulatetest`
+
+## Test Suite
+
+To run the test suite, first make sure your changes are commited and
+pushed to github.  Then run:
+
+`docker-compose run app`
+
+If your changes are not commited and pushed it will not be picked up
+when the test images build.
