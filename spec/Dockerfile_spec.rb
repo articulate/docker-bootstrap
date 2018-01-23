@@ -113,17 +113,10 @@ distros.each do |distro|
         [:consul, :vault].each do |backend_type|
           describe backend_type do
             describe "General sets work" do
-              set_var(backend_type, :global, "GLOBAL_VAR", "global-var", service_env: "dev")
               set_var(backend_type, :global, "OLD_GLOBAL_VAR", "old-global-var", service_env: "dev", old_keys: true)
-              set_var(backend_type, :product, "PRODUCT_VAR", "product-var", service_env: "dev")
-              set_var(backend_type, :service, "SERVICE_VAR", "service-var", service_env: "dev")
               set_var(backend_type, :service, "OLD_SERVICE_VAR", "old-service-var", service_env: "dev", old_keys: true)
 
               describe entrypoint_command("env") do
-                its(:stdout) { should include_env "SERVICE_ENV", "dev" }
-                its(:stdout) { should include_env "GLOBAL_VAR", "global-var" }
-                its(:stdout) { should include_env "PRODUCT_VAR", "product-var" }
-                its(:stdout) { should include_env "SERVICE_VAR", "service-var" }
                 its(:stdout) { should include_env "OLD_GLOBAL_VAR", "old-global-var" }
                 its(:stdout) { should include_env "OLD_SERVICE_VAR", "old-service-var" }
                 its(:stderr) { should be_empty }
@@ -131,7 +124,7 @@ distros.each do |distro|
             end
 
             describe "Already set envs are not overriden" do
-              set_var(backend_type, :global, "ALREADY_SET", "false", service_env: "dev")
+              set_var(backend_type, :global, "ALREADY_SET", "false", service_env: "dev", old_keys: true)
 
               describe entrypoint_command("env") do
                 its(:stdout) { should include_env "SERVICE_ENV", "dev" }
