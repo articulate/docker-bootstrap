@@ -141,13 +141,17 @@ distros.each do |distro|
         [:consul, :vault].each do |backend_type|
           describe backend_type do
             describe "General sets work" do
+              set_var(backend_type, :global, "OLD_GLOBAL_VAR", "old-global-var", old_keys: true)
               set_var(backend_type, :global, "GLOBAL_VAR", "global-var")
               set_var(backend_type, :product, "PRODUCT_VAR", "product-var")
+              set_var(backend_type, :service, "OLD_SERVICE_VAR", "old-service-var", old_keys: true)
               set_var(backend_type, :service, "SERVICE_VAR", "service-var")
 
               describe entrypoint_command("env") do
+                its(:stdout) { should include_env "OLD_GLOBAL_VAR", "old-global-var" }
                 its(:stdout) { should include_env "GLOBAL_VAR", "global-var" }
                 its(:stdout) { should include_env "PRODUCT_VAR", "product-var" }
+                its(:stdout) { should include_env "OLD_SERVICE_VAR", "old-service-var" }
                 its(:stdout) { should include_env "SERVICE_VAR", "service-var" }
                 its(:stdout) { should include_env "SERVICE_ENV", "peer-rise-runtime-1768" }
                 its(:stderr) { should be_empty }
