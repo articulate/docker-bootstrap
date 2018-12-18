@@ -64,7 +64,7 @@ GEM
       cliver (~> 0.3.1)
       websocket-driver (>= 0.2.0)
     public_suffix (3.0.1)
-    rack (2.0.3)
+    rack (2.0.6)
     rack-test (0.8.2)
       rack (>= 1.0, < 3)
     rspec (3.7.0)
@@ -120,4 +120,4 @@ DEPENDENCIES
   vault
 
 BUNDLED WITH
-   1.16.1
+   1.17.1
