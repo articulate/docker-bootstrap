@@ -48,7 +48,7 @@ GEM
       thor
     json (2.1.0)
     mini_mime (1.0.0)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.4.0)
     multi_json (1.13.1)
     multipart-post (2.0.0)
     net-scp (1.2.1)
@@ -57,8 +57,8 @@ GEM
     net-ssh-gateway (2.0.0)
       net-ssh (>= 4.0.0)
     net-telnet (0.1.1)
-    nokogiri (1.8.1)
-      mini_portile2 (~> 2.3.0)
+    nokogiri (1.9.1)
+      mini_portile2 (~> 2.4.0)
     poltergeist (1.17.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -120,4 +120,4 @@ DEPENDENCIES
   vault
 
 BUNDLED WITH
-   1.16.1
+   1.17.1
