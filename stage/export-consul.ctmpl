@@ -6,7 +6,6 @@
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
-{{end -}}
 
 ## NEW STYLE global envs
 {{range ls "global/env_vars" -}}
