@@ -7,14 +7,14 @@ fi
 
 if [ `command -v apt-get` ]; then
   apt-get update
-  apt-get install -y unzip sudo python-dev jq wget
+  apt-get install -y unzip sudo python-dev jq wget curl
   rm -rf /var/lib/apt/lists/*
 elif [ `command -v yum` ]; then
   yum -y update
-  yum -y install unzip sudo python-devel jq wget
+  yum -y install unzip sudo python-devel jq wget curl
   yum clean all
 elif [ `command -v apk` ]; then
-  apk --update add unzip sudo python-dev jq wget ca-certificates
+  apk --update add unzip sudo python-dev jq wget ca-certificates curl
   update-ca-certificates
   rm -rf /var/cache/apk/*
 else
