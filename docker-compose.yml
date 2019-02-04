@@ -13,10 +13,13 @@ services:
       - vault
 
   consul:
-    image: consul
+    image: consul:latest
     command: "agent -dev -log-level info -client 0.0.0.0"
 
   vault:
-    image: vault
+    image: vault:latest
+    command: server -dev-kv-v1 -dev
     environment:
       VAULT_DEV_ROOT_TOKEN_ID: "vault-token"
+    cap_add:
+      - IPC_LOCK

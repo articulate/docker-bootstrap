@@ -33,6 +33,13 @@ else
   (>&2 echo "CONSUL_ADDR are not set skipping Consul exports")
 fi
 
+if [ ! "${VAULT_TOKEN}" ] && [ -f /var/run/secrets/kubernetes.io/serviceaccount/token ]; then
+  KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+  VAULT_TOKEN=$(curl --request POST \
+    --data '{"jwt": "'"$KUBE_TOKEN"'", "role": "'"$SERVICE_NAME"'"}' \
+    $VAULT_ADDR/v1/auth/kubernetes/login | jq '.auth.client_token')
+fi
+
 if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
 then
   export VAULT_TOKEN=$(echo $ENCRYPTED_VAULT_TOKEN | base64 -d | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext --region $AWS_REGION | base64 -d)
