@@ -36,12 +36,9 @@ fi
 if [ -f /var/run/secrets/kubernetes.io/serviceaccount/token ]
 then
   KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-  echo "Kube Token: ${KUBE_TOKEN}"
-  echo "Service Name: ${SERVICE_NAME}"
   export VAULT_TOKEN=$(curl --request POST \
     --data '{"jwt": "'"$KUBE_TOKEN"'", "role": "'"$SERVICE_NAME"'"}' \
     $VAULT_ADDR/v1/auth/kubernetes/login | jq -r '.auth.client_token')
-  echo "Vault Token: ${VAULT_TOKEN}"
 fi
 
 if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
