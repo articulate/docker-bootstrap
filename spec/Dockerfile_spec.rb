@@ -146,6 +146,7 @@ distros.each do |distro|
               set_var(backend_type, :product, "PRODUCT_VAR", "product-var")
               set_var(backend_type, :service, "OLD_SERVICE_VAR", "old-service-var", old_keys: true)
               set_var(backend_type, :service, "SERVICE_VAR", "service-var")
+              set_var(backend_type, :peer, "CLIENT_ID", "peer-var", service_env: "peer-rise-runtime-1768")
 
               describe entrypoint_command("env") do
                 its(:stdout) { should include_env "OLD_GLOBAL_VAR", "old-global-var" }
@@ -154,6 +155,7 @@ distros.each do |distro|
                 its(:stdout) { should include_env "OLD_SERVICE_VAR", "old-service-var" }
                 its(:stdout) { should include_env "SERVICE_VAR", "service-var" }
                 its(:stdout) { should include_env "SERVICE_ENV", "peer-rise-runtime-1768" }
+                its(:stdout) { should include_env "CLIENT_ID", "peer-var" }
                 its(:stderr) { should be_empty }
               end
             end

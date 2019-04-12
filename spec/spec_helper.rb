@@ -53,6 +53,8 @@ def set_var(store_type, scope, key, value, opts={})
                  end
                when :product
                  "products/#{service_product}/env_vars/#{key}"
+               when :peer
+                "services/#{service_name}/peer/#{service_env}/env_vars/#{key}"
                end
 
     if store_type == :vault

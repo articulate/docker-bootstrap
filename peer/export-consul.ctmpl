@@ -36,3 +36,8 @@ export {{.Key | toUpper}}="{{.Value}}"
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
+
+# Peer namespace, overwrites values to allow peer to inject values
+{{range ls (printf "services/%s/peer/%s/env_vars" (env "SERVICE_NAME") (env "SERVICE_ENV")) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
