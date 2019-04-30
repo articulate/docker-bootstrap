@@ -41,6 +41,16 @@ then
     $VAULT_ADDR/v1/auth/kubernetes/login | jq -r '.auth.client_token')
 fi
 
+if [ ! "${VAULT_TOKEN}" ] && [ "${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI}" ]
+then
+  ROLE_NAME=$(curl -v 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI | jq -r '.RoleArn' | awk -F '/' '{ print $2 }')
+  curl -X POST "http://$VAULT_ADDR/v1/auth/aws/login" -d '{"role":"${ROLE_NAME}","pkcs7":"'$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/pkcs7 | tr -d '\n')'","nonce":"5defbf9e-a8f9-3063-bdfc-54b7a42a1f95"}'
+
+
+
+  export VAULT_TOKEN=$()
+fi
+
 if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
 then
   export VAULT_TOKEN=$(echo $ENCRYPTED_VAULT_TOKEN | base64 -d | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext --region $AWS_REGION | base64 -d)
