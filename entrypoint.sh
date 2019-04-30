@@ -41,15 +41,14 @@ then
     $VAULT_ADDR/v1/auth/kubernetes/login | jq -r '.auth.client_token')
 fi
 
-if [ ! "${VAULT_TOKEN}" ] && [ "${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI}" ]
-then
-  ROLE_NAME=$(curl -v 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI | jq -r '.RoleArn' | awk -F '/' '{ print $2 }')
-  export VAULT_TOKEN=$(vault login -method=aws role=${ROLE_NAME} -token-only)
-fi
-
 if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
 then
   export VAULT_TOKEN=$(echo $ENCRYPTED_VAULT_TOKEN | base64 -d | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext --region $AWS_REGION | base64 -d)
+fi
+
+if [ ! "${VAULT_TOKEN}" ] && [ "${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI}" ]
+then
+  export VAULT_TOKEN=$(vault login -method=aws -token-only)
 fi
 
 if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ]

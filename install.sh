@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 CONSUL_TEMPLATE_BOOTSTRAP_REF=$1
 if [ "${CONSUL_TEMPLATE_BOOTSTRAP_REF}" == "" ]; then
