@@ -44,11 +44,7 @@ fi
 if [ ! "${VAULT_TOKEN}" ] && [ "${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI}" ]
 then
   ROLE_NAME=$(curl -v 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI | jq -r '.RoleArn' | awk -F '/' '{ print $2 }')
-  curl -X POST "http://$VAULT_ADDR/v1/auth/aws/login" -d '{"role":"${ROLE_NAME}","pkcs7":"'$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/pkcs7 | tr -d '\n')'","nonce":"5defbf9e-a8f9-3063-bdfc-54b7a42a1f95"}'
-
-
-
-  export VAULT_TOKEN=$()
+  export VAULT_TOKEN=$(vault login -method=aws role=${ROLE_NAME} -token-only)
 fi
 
 if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
