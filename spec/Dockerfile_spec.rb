@@ -6,11 +6,6 @@ distros.each do |distro|
   describe "Dockerfile" do
     describe docker_build_template(template: "spec/dockerfiles/Dockerfile.#{distro}.erb", tag: "consul_template_bootstrap_#{distro}") do
       describe docker_run_with_envs("consul_template_bootstrap_#{distro}") do
-        describe "Installs vault" do
-          describe entrypoint_command("ls -l /usr/bin/vault") do
-            its(:stderr) { should_not include "/usr/bin/vault" }
-          end
-        end
         [:consul, :vault].each do |backend_type|
           describe backend_type do
             describe "General sets work" do
