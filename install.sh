@@ -36,7 +36,6 @@ fi
 
 # Install Vault CLI
 wget -q -O /tmp/vault.zip "https://releases.hashicorp.com/vault/1.1.1/vault_1.1.1_linux_amd64.zip"
-ls -lh /tmp
 unzip -d /tmp /tmp/vault.zip
 sudo mv /tmp/vault /usr/bin/vault
 sudo chmod +x /usr/bin/vault
