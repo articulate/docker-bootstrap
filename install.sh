@@ -34,6 +34,13 @@ unzip -d /tmp /tmp/awscli-bundle.zip
 sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 rm -rf /tmp/awscli-bundle*
 
+# Install Vault CLI
+wget -q -O /tmp/vault.zip "https://releases.hashicorp.com/vault/1.1.1/vault_1.1.1_linux_amd64.zip"
+unzip -d /tmp /tmp/vault.zip
+sudo mv /tmp/vault /usr/bin/vault
+sudo chmod +x /usr/bin/vault
+rm -rf /tmp/vault*
+
 # Install consul-bootstrap
 wget -q -O /tmp/docker-consul-template-bootstrap.zip https://github.com/articulate/docker-consul-template-bootstrap/archive/${CONSUL_TEMPLATE_BOOTSTRAP_REF}.zip
 unzip -d /tmp /tmp/docker-consul-template-bootstrap.zip

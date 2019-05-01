@@ -46,6 +46,11 @@ then
   export VAULT_TOKEN=$(echo $ENCRYPTED_VAULT_TOKEN | base64 -d | aws kms decrypt --ciphertext-blob fileb:///dev/stdin --output text --query Plaintext --region $AWS_REGION | base64 -d)
 fi
 
+if [ ! "${VAULT_TOKEN}" ] && [ "${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI}" ]
+then
+  export VAULT_TOKEN=$(vault login -method=aws -token-only)
+fi
+
 if [ ${VAULT_TOKEN} ] && [ ${CONSUL_ADDR} ] && [ ${VAULT_ADDR} ]
 then
   if consul-template -consul-addr=$CONSUL_ADDR -vault-addr=$VAULT_ADDR -template=/consul-template/${CT_SERVICE_ENV}/export-vault.ctmpl:/tmp/export-vault.sh -once -max-stale=0
