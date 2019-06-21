@@ -22,9 +22,11 @@ You can run vault locally with `vault server -dev`. This command will output the
 
 ## Test Suite
 
-The test suite is written in rspec and creates a series of containers (both vault & consul) and runs a series of tests against those.
-The tests included run through the normal cascade pattern of Global -> Product -> Service and then provides output. It is not uncommon 
-for these comprehensive tests to take ~15 mins.
+The test suite is written in rspec and creates a series of containers (both vault & consul) and runs a series of tests against 
+those.
+
+The tests included run through the normal cascade pattern of Global -> Product -> Service and at the end provides output. 
+It is not uncommon for these comprehensive tests to take ~15 mins.
 
 To kick off the tests:
 
