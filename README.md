@@ -31,7 +31,7 @@ It is not uncommon for these comprehensive tests to take ~15 mins.
 To kick off the tests:
 
 1. Create a branch and push that branch to GitHub.
-2. Run something similar to `cp docker-compose.override.example.yml docker-compose.override.yml` (and make any necessary edits)   
+2. Run something similar to `cp docker-compose.override.example.yml docker-compose.override.yml`    
 
 Then run:
 
