@@ -43,7 +43,7 @@ when the test images build (rspec pulls in details from the git branch to create
 There may be a chance that the containers created by the test suite contain cached content.
 If needed you can run:
 
-```docker-compose down
+``` docker-compose down
 docker rmi docker-consul-template-bootstrap_app
 docker rmi consul_template_bootstrap_alpine
 docker rmi consul_template_bootstrap_centos
