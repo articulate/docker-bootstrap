@@ -7,7 +7,7 @@ fi
 
 if [ `command -v apt-get` ]; then
   apt-get update
-  apt-get -y install --no-install-recommends unzip sudo python3.5-minimal python3-pip jq wget curl
+  apt-get -y install --no-install-recommends unzip sudo python3.5-minimal python3-pip python3-setuptools jq wget curl
   pip3 install awscli boto3
   apt-get clean && apt-get autoclean && apt-get -y autoremove --purge 
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
