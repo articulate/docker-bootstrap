@@ -13,7 +13,8 @@ if [ `command -v apt-get` ]; then
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
 elif [ `command -v yum` ]; then
   yum -y update
-  yum -y install unzip sudo python-devel jq wget curl
+  yum -y install unzip sudo jq wget curl centos-release-scl
+  yum -y install rh-python36 rh-python36-python-pip python-boto3 awscli
   yum clean all
 elif [ `command -v apk` ]; then
   apk --update add unzip sudo python-dev jq wget ca-certificates curl
