@@ -21,7 +21,7 @@ elif [ `command -v yum` ]; then
   yum clean all
 elif [ `command -v apk` ]; then
   apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl
-  pip3 install awscli boto3
+  pip3 --no-cache-dir install awscli boto3
   update-ca-certificates
   rm -rf /var/cache/apk/*
 else
