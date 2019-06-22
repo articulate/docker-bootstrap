@@ -13,8 +13,11 @@ if [ `command -v apt-get` ]; then
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
 elif [ `command -v yum` ]; then
   yum -y update
-  yum -y install unzip sudo jq wget curl centos-release-scl
-  yum -y install rh-python36 rh-python36-python-pip python-boto3 awscli
+  yum -y install unzip sudo jq wget curl
+  wget -q -O /tmp/awscli-bundle.zip "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
+  unzip -d /tmp /tmp/awscli-bundle.zip
+  sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+  rm -rf /tmp/awscli-bundle*
   yum clean all
 elif [ `command -v apk` ]; then
   apk --update add unzip sudo python-dev jq wget ca-certificates curl
