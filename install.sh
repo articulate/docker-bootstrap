@@ -20,11 +20,11 @@ elif [ `command -v yum` ]; then
   rm -rf /tmp/awscli-bundle*
   yum clean all
 elif [ `command -v apk` ]; then
-  apk add --no-cache --update unzip sudo python jq wget ca-certificates curl
-  wget -q -O /tmp/awscli-bundle.zip "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
-  unzip -d /tmp /tmp/awscli-bundle.zip
-  sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-  rm -rf /tmp/awscli-bundle* 
+  apk add --no-cache --update unzip sudo python aws-cli jq wget ca-certificates curl
+  #wget -q -O /tmp/awscli-bundle.zip "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
+  #unzip -d /tmp /tmp/awscli-bundle.zip
+  #sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+  #rm -rf /tmp/awscli-bundle* 
   update-ca-certificates
   rm -rf /var/cache/apk/*
 else
