@@ -20,7 +20,7 @@ elif [ `command -v yum` ]; then
   rm -rf /tmp/awscli-bundle*
   yum clean all
 elif [ `command -v apk` ]; then
-  apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl
+  apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl which
   pip3 --no-cache-dir install awscli
   update-ca-certificates
   rm -rf /var/cache/apk/*
