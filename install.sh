@@ -50,6 +50,7 @@ mv /tmp/docker-consul-template-bootstrap-${CONSUL_TEMPLATE_BOOTSTRAP_REF}/ /cons
 mv /consul-template/entrypoint.sh /entrypoint.sh
 rm /tmp/docker-consul-template-bootstrap.zip
 
+##process for using awscli-bundle in case it is needed in the future
   #wget -q -O /tmp/awscli-bundle.zip "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
   #unzip -d /tmp /tmp/awscli-bundle.zip
   #sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
