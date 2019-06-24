@@ -8,7 +8,7 @@ fi
 if [ `command -v apt-get` ]; then
   apt-get update
   apt-get -y install --no-install-recommends unzip sudo python3.5-minimal python3-pip jq wget curl
-  pip3 --no-cache-dir install awscli
+  pip3 --no-cache-dir install setuptools awscli
   apt-get clean && apt-get autoclean && apt-get -y autoremove --purge 
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
 elif [ `command -v yum` ]; then
