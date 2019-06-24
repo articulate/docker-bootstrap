@@ -7,8 +7,8 @@ fi
 
 if [ `command -v apt-get` ]; then
   apt-get update
-  apt-get -y install --no-install-recommends unzip sudo python3.5-minimal python3-pip python3-setuptools jq wget curl
-  pip3 --no-cache-dir install awscli boto3
+  apt-get -y install --no-install-recommends unzip sudo python3.5-minimal python3-pip jq wget curl
+  pip3 --no-cache-dir install awscli
   apt-get clean && apt-get autoclean && apt-get -y autoremove --purge 
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
 elif [ `command -v yum` ]; then
@@ -21,7 +21,7 @@ elif [ `command -v yum` ]; then
   yum clean all
 elif [ `command -v apk` ]; then
   apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl
-  pip3 --no-cache-dir install awscli boto3
+  pip3 --no-cache-dir install awscli
   update-ca-certificates
   rm -rf /var/cache/apk/*
 else
