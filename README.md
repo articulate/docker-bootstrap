@@ -45,8 +45,8 @@ If needed you can run:
 
 ```
 docker-compose down
-docker rmi docker-consul-template-bootstrap_app
-docker rmi consul_template_bootstrap_alpine
-docker rmi consul_template_bootstrap_centos
-docker rmi consul_template_bootstrap_debian
+docker rmi --force docker-consul-template-bootstrap_app
+docker rmi --force consul_template_bootstrap_alpine
+docker rmi --force consul_template_bootstrap_centos
+docker rmi --force consul_template_bootstrap_debian
 ```
