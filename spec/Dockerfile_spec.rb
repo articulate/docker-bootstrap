@@ -6,6 +6,13 @@ distros.each do |distro|
   describe "Dockerfile" do
     describe docker_build_template(template: "spec/dockerfiles/Dockerfile.#{distro}.erb", tag: "consul_template_bootstrap_#{distro}") do
       describe docker_run_with_envs("consul_template_bootstrap_#{distro}") do
+        describe "Has awscli" do 
+          describe entrypoint_command("which aws") do
+            its(:stdout) { should include "bin/aws" }
+            its(:stderr) { should be_empty }            
+          end
+        end
+
         [:consul, :vault].each do |backend_type|
           describe backend_type do
             describe "General sets work" do
