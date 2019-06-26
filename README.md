@@ -23,7 +23,7 @@ You can run vault locally with `vault server -dev`. This command will output the
 ## Test Suite
 
 The test suite is written in rspec and creates a series of containers (both vault & consul) and runs a series of tests against 
-those.
+those. The module used within rspec is `https://github.com/zuazo/dockerspec` and uses serverspec behind the scenes.
 
 The tests included run through the normal cascade pattern of Global -> Product -> Service and at the end provides output. 
 It is not uncommon for these comprehensive tests to take ~10 mins.
