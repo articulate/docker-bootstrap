@@ -22,10 +22,31 @@ You can run vault locally with `vault server -dev`. This command will output the
 
 ## Test Suite
 
-To run the test suite, first make sure your changes are commited and
-pushed to github.  Then run:
+The test suite is written in rspec and creates a series of containers (both vault & consul) and runs a series of tests against 
+those. The module used within rspec is `https://github.com/zuazo/dockerspec` and uses serverspec behind the scenes.
+
+The tests included run through the normal cascade pattern of Global -> Product -> Service and at the end provides output. 
+It is not uncommon for these comprehensive tests to take ~10 mins.
+
+To kick off the tests:
+
+1. Create a branch and push that branch to GitHub.
+2. Run something similar to `cp docker-compose.override.example.yml docker-compose.override.yml`    
+
+Then run:
 
 `docker-compose run app`
 
 If your changes are not commited and pushed it will not be picked up
-when the test images build.
+when the test images build (rspec pulls in details from the git branch to create the tests).
+
+There may be a chance that the containers created by the test suite contain cached content.
+If needed you can run:
+
+```
+docker-compose down
+docker rmi --force docker-consul-template-bootstrap_app
+docker rmi --force consul_template_bootstrap_alpine
+docker rmi --force consul_template_bootstrap_centos
+docker rmi --force consul_template_bootstrap_debian
+```
