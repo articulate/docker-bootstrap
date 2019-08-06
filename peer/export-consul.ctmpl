@@ -38,9 +38,9 @@ export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 
 # Peer namespace, overwrites values to allow peer to inject values
-{{if (env "PEER_ID") ne ""}}
+{{if (env "PEER_ID") -}}
 {{range ls (printf "services/%s/peer/%s/env_vars" (env "SERVICE_NAME") (env "PEER_ID")) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
-{{end}}
+{{end -}}
 
