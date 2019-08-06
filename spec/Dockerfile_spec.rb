@@ -154,6 +154,7 @@ distros.each do |distro|
                 its(:stdout) { should include_env "PRODUCT_VAR", "product-var" }
                 its(:stdout) { should include_env "OLD_SERVICE_VAR", "old-service-var" }
                 its(:stdout) { should include_env "SERVICE_VAR", "service-var" }
+                its(:stdout) { should include_env "SERVICE_ENV", "peer-rise-runtime-1768" }
                 its(:stdout) { should include_env "PEER_ID", "rise-runtime-1768" }
                 its(:stderr) { should be_empty }
               end
