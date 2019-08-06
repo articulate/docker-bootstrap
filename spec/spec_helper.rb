@@ -37,6 +37,7 @@ def set_var(store_type, scope, key, value, opts={})
     service_name = $service_name
     service_product = $service_product
     service_env = opts[:service_env] || $service_env
+    peer_id = opts[:peer_id]
 
     full_key = case scope
                when :service
@@ -54,7 +55,7 @@ def set_var(store_type, scope, key, value, opts={})
                when :product
                  "products/#{service_product}/env_vars/#{key}"
                when :peer
-                "services/#{service_name}/peer/#{service_env}/env_vars/#{key}"
+                "services/#{service_name}/peer/#{peer_id}/env_vars/#{key}"
                end
 
     if store_type == :vault

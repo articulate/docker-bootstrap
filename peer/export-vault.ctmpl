@@ -38,8 +38,6 @@ export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (e
 {{end -}}
 
 # Peer namespace, overwrites values to allow peer to inject values
-{{if (env "SERVICE_ENV") -}}
-{{range secrets (printf "secret/services/%s/peer/%s/env_vars" (env "SERVICE_NAME") (env "SERVICE_ENV")) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/services/%s/peer/%s/env_vars/%s" (env "SERVICE_NAME") (env "SERVICE_ENV") .) }}="{{.Data.value}}"{{end}}
-{{end -}}
+{{range secrets (printf "secret/services/%s/peer/%s/env_vars" (env "SERVICE_NAME") (env "PEER_ID")) -}}
+export {{ . | toUpper}}{{with secret (printf "secret/services/%s/peer/%s/env_vars/%s" (env "SERVICE_NAME") (env "PEER_ID") .) }}="{{.Data.value}}"{{end}}
 {{end -}}
