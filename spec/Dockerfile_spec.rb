@@ -165,7 +165,7 @@ distros.each do |distro|
               set_var(backend_type, :global, "ALREADY_SET", "false")
 
               describe entrypoint_command("env") do
-                its(:stdout) { should include_env "PEER_ID", "rise-runtime-1768" }
+                its(:stdout) { should include_env "SERVICE_ENV", "peer-rise-runtime-1768" }
                 its(:stdout) { should_not include_env "ALREADY_SET", "false" }
                 its(:stdout) { should include_env "ALREADY_SET", "true" }
                 its(:stderr) { should be_empty }
