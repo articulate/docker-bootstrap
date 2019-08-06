@@ -137,7 +137,7 @@ distros.each do |distro|
         end
       end
 
-      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", PEER_ID: "peer-rise-runtime-1768", ALREADY_SET: "true") do
+      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "peer-rise-runtime-1768", PEER_ID: "rise-runtime-1768", ALREADY_SET: "true") do
         [:consul, :vault].each do |backend_type|
           describe backend_type do
             describe "General sets work" do
@@ -154,7 +154,7 @@ distros.each do |distro|
                 its(:stdout) { should include_env "PRODUCT_VAR", "product-var" }
                 its(:stdout) { should include_env "OLD_SERVICE_VAR", "old-service-var" }
                 its(:stdout) { should include_env "SERVICE_VAR", "service-var" }
-                its(:stdout) { should include_env "PEER_ID", "peer-rise-runtime-1768" }
+                its(:stdout) { should include_env "PEER_ID", "rise-runtime-1768" }
                 its(:stderr) { should be_empty }
               end
             end
@@ -163,7 +163,7 @@ distros.each do |distro|
               set_var(backend_type, :global, "ALREADY_SET", "false")
 
               describe entrypoint_command("env") do
-                its(:stdout) { should include_env "PEER_ID", "peer-rise-runtime-1768" }
+                its(:stdout) { should include_env "PEER_ID", "rise-runtime-1768" }
                 its(:stdout) { should_not include_env "ALREADY_SET", "false" }
                 its(:stdout) { should include_env "ALREADY_SET", "true" }
                 its(:stderr) { should be_empty }
