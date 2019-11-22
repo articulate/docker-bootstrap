@@ -36,9 +36,25 @@ fi
 if [ -f /var/run/secrets/kubernetes.io/serviceaccount/token ]
 then
   KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-  export VAULT_TOKEN=$(curl --request POST \
-    --data '{"jwt": "'"$KUBE_TOKEN"'", "role": "'"$SERVICE_NAME"'"}' \
-    $VAULT_ADDR/v1/auth/kubernetes/login | jq -r '.auth.client_token')
+  vault_token="null"
+  attempts=1
+  while [ "${attempts}" -le 10 ]; do
+    echo "Attempt number ${attempts} to get vault token..."
+    vault_token=$(curl --request POST \
+      --data '{"jwt": "'"$KUBE_TOKEN"'", "role": "'"$SERVICE_NAME"'"}' \
+      $VAULT_ADDR/v1/auth/kubernetes/login | jq -r '.auth.client_token');
+    if [[ "${vault_token}" != "null" ]]; then
+       break
+    fi
+    ((attempts+=1))
+    sleep 3
+  done
+
+  if [[ "${vault_token}" == "null" ]]; then
+    echo "Failed to get vault token via kubernetes"
+    exit 1
+  fi
+  export VAULT_TOKEN=${vault_token}
 fi
 
 if [ "${ENCRYPTED_VAULT_TOKEN}" ] && [ ! "${VAULT_TOKEN}" ]
