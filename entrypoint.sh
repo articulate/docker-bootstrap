@@ -78,7 +78,7 @@ if [ ${VAULT_ADDR} ]
       exit 1
     fi
   else
-    (>&2 echo "VAULT_TOKEN or VAULT_ADDR are not set, skipping Vault exports")
+    (>&2 echo "VAULT_TOKEN and/or CONSUL_ADDR not set, skipping Vault exports")
   fi
 else
     (>&2 echo "VAULT_ADDR is not set, skipping Vault exports")
