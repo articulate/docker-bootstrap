@@ -33,7 +33,7 @@ GEM
       specinfra-backend-docker_compose (~> 0.1.0)
       specinfra-backend-docker_lxc (~> 0.2.0)
     erubis (2.7.0)
-    excon (0.60.0)
+    excon (0.71.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.12.2)
