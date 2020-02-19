@@ -40,7 +40,7 @@ then
   attempts=1
   while [ "${attempts}" -le 10 ]; do
     echo "Attempt number ${attempts} to get vault token..."
-    vault_token=$(curl --request POST \
+    vault_token=$(curl -s --show-error --request POST \
       --data '{"jwt": "'"$KUBE_TOKEN"'", "role": "'"$SERVICE_NAME"'"}' \
       $VAULT_ADDR/v1/auth/kubernetes/login | jq -r '.auth.client_token');
     if [[ "${vault_token}" != "null" ]]; then
