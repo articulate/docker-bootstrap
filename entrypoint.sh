@@ -34,7 +34,7 @@ else
 fi
 
 if [ ${VAULT_ADDR} ]
-  if [ -f /var/run/secrets/kubernetes.io/serviceaccount/token ]
+  if [ ! "${VAULT_TOKEN}" ] && [ -f /var/run/secrets/kubernetes.io/serviceaccount/token ]
   then
     KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
     vault_token="null"
