@@ -145,7 +145,7 @@ distros.each do |distro|
       end
 
       describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "apiary", ALREADY_SET: "true") do
-        [:consul, :vault].each do |backend_type|
+        [:vault].each do |backend_type|
           describe backend_type do
             describe "Dev envs override stage envs" do
               set_var(backend_type, :global, "GLOBAL_VAR", "global-var-stage", service_env: "stage", old_keys: true)
