@@ -36,6 +36,3 @@ export {{.Key | toUpper}}="{{.Value}}"
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
-
-
-
