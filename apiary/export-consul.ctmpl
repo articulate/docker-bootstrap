@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+## Global Env Vars - STAGE (old, deprecated style)
+{{range ls "global/stage/env_vars" -}}
+{{if not (env (.Key | toUpper)) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+
+## Global Env Vars - STAGE (new style)
+{{range ls "global/env_vars" -}}
+{{if not (env (.Key | toUpper)) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+
+## Product Env Vars - STAGE
+{{if (env "SERVICE_PRODUCT") -}}
+{{range ls (printf "products/%s/env_vars" (env "SERVICE_PRODUCT")) -}}
+{{if not (env (.Key | toUpper)) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+{{end -}}
+
+## App Env Vars - STAGE (old, deprecated style)
+{{range ls (printf "apps/%s/stage/env_vars" (env "SERVICE_NAME")) -}}
+{{if not (env (.Key | toUpper)) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}
+
+## App Env Vars - STAGE (new style)
+{{range ls (printf "services/%s/env_vars" (env "SERVICE_NAME")) -}}
+{{if not (env (.Key | toUpper)) -}}
+export {{.Key | toUpper}}="{{.Value}}"
+{{end -}}
+{{end -}}

@@ -52,7 +52,11 @@ def set_var(store_type, scope, key, value, opts={})
                    "global/env_vars/#{key}"
                  end
                when :product
-                 "products/#{service_product}/env_vars/#{key}"
+                if opts[:old_keys]
+                  "products/#{service_product}/#{service_env}/env_vars/#{key}"
+                 else
+                  "products/#{service_product}/env_vars/#{key}"
+                end
                end
 
     if store_type == :vault
