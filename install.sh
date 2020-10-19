@@ -17,8 +17,9 @@ if [ `command -v apt-get` ]; then
   apt-get clean && apt-get autoclean && apt-get -y autoremove --purge 
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
 elif [ `command -v yum` ]; then
+  yum -y install epel-release
   yum -y update
-  yum -y install unzip sudo wget curl which
+  yum -y install unzip jq sudo wget curl which
   wget -q -O /tmp/awscli-bundle.zip "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
   unzip -d /tmp /tmp/awscli-bundle.zip
   sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
@@ -62,7 +63,7 @@ rm /tmp/docker-consul-template-bootstrap.zip
   #sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
   #rm -rf /tmp/awscli-bundle* 
 
-for package in wget curl which aws consul-template vault; do
+for package in wget jq curl which aws consul-template vault; do
   if [ ! `command -v $package` ]; then
     echo "$package is not installed"
     exit 1
