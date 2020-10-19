@@ -1,8 +1,9 @@
-#!/bin/bash -e
+#!/bin/bash
+set -eo pipefail
 
 # Due to docker's layer caching, you may need to update this file in a way to force docker
 # to skip the layer cache and re-run this install the next time it builds the image.
-# Simply edit the date here: 2020-04-09
+# Simply edit the date here: 2020-10-15
 
 CONSUL_TEMPLATE_BOOTSTRAP_REF=$1
 if [ "${CONSUL_TEMPLATE_BOOTSTRAP_REF}" == "" ]; then
@@ -16,15 +17,16 @@ if [ `command -v apt-get` ]; then
   apt-get clean && apt-get autoclean && apt-get -y autoremove --purge 
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
 elif [ `command -v yum` ]; then
+  yum -y install epel-release
   yum -y update
-  yum -y install unzip sudo jq wget curl which
+  yum -y install unzip jq sudo wget curl which
   wget -q -O /tmp/awscli-bundle.zip "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
   unzip -d /tmp /tmp/awscli-bundle.zip
   sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
   rm -rf /tmp/awscli-bundle*
   yum clean all
 elif [ `command -v apk` ]; then
-  apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl which
+  apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl which py3-pip
   pip3 --no-cache-dir install awscli
   update-ca-certificates
   rm -rf /var/cache/apk/*
@@ -34,14 +36,15 @@ else
 fi
 
 # Install Consul template
-CONSUL_TEMPLATE_VERSION=0.19.4
+CONSUL_TEMPLATE_VERSION=0.25.1
 wget -q -O /tmp/consul-template.zip https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
 unzip -d /usr/local/bin /tmp/consul-template.zip
 rm /tmp/consul-template.zip
 
 
 # Install Vault CLI
-wget -q -O /tmp/vault.zip "https://releases.hashicorp.com/vault/1.1.1/vault_1.1.1_linux_amd64.zip"
+VAULT_VERSION=1.5.4
+wget -q -O /tmp/vault.zip "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip"
 unzip -d /tmp /tmp/vault.zip
 sudo mv /tmp/vault /usr/bin/vault
 sudo chmod +x /usr/bin/vault
@@ -60,3 +63,9 @@ rm /tmp/docker-consul-template-bootstrap.zip
   #sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
   #rm -rf /tmp/awscli-bundle* 
 
+for package in wget jq curl which aws consul-template vault; do
+  if [ ! `command -v $package` ]; then
+    echo "$package is not installed"
+    exit 1
+  fi
+done
