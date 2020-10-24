@@ -3,7 +3,7 @@ set -eo pipefail
 
 # Due to docker's layer caching, you may need to update this file in a way to force docker
 # to skip the layer cache and re-run this install the next time it builds the image.
-# Simply edit the date here: 2020-10-15
+# Simply edit the date here: 2020-10-24
 
 CONSUL_TEMPLATE_BOOTSTRAP_REF=$1
 if [ "${CONSUL_TEMPLATE_BOOTSTRAP_REF}" == "" ]; then
@@ -13,8 +13,8 @@ fi
 if [ `command -v apt-get` ]; then
   apt-get update
   apt-get -y install --no-install-recommends unzip sudo python3-setuptools python3-pip jq wget curl
-  pip3 --no-cache-dir install awscli
-  apt-get clean && apt-get autoclean && apt-get -y autoremove --purge 
+  pip3 install awscli
+  apt-get clean && apt-get autoclean && apt-get -y autoremove --purge
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
 elif [ `command -v yum` ]; then
   yum -y install epel-release
