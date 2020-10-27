@@ -1,6 +1,6 @@
 require "spec_helper"
 
-distros = ["debian", "centos", "alpine"]
+distros = ["debian", "centos", "amazon-linux", "alpine"]
 
 distros.each do |distro|
   describe "Dockerfile" do
