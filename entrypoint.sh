@@ -41,13 +41,15 @@ if [ ${VAULT_ADDR} ]
     vault_token="null"
     attempts=1
     while [ "${attempts}" -le 10 ]; do
-      vault_token=$(curl -s --show-error --request POST \
+      response=$(curl -s --show-error --request POST \
         --data '{"jwt": "'"$KUBE_TOKEN"'", "role": "'"$SERVICE_NAME"'"}' \
-        $VAULT_ADDR/v1/auth/kubernetes/login | jq -r '.auth.client_token');
+        $VAULT_ADDR/v1/auth/kubernetes/login)
+      vault_token=$(echo $response | jq -r '.auth.client_token');
       if [[ "${vault_token}" != "null" ]]; then
         break
       fi
       echo "Attempt number ${attempts} to get vault token failed, retrying..."
+      echo "Vault response: $(echo $response | jq '.errors[]')"
       ((attempts+=1))
       sleep 3
     done
