@@ -3,7 +3,7 @@ set -eo pipefail
 
 # Due to docker's layer caching, you may need to update this file in a way to force docker
 # to skip the layer cache and re-run this install the next time it builds the image.
-# Simply edit the date here: 2020-10-26
+# Simply edit the date here: 2020-11-12
 
 CONSUL_TEMPLATE_BOOTSTRAP_REF=$1
 if [ "${CONSUL_TEMPLATE_BOOTSTRAP_REF}" == "" ]; then
