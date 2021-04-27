@@ -3,7 +3,7 @@ set -eo pipefail
 
 # Due to docker's layer caching, you may need to update this file in a way to force docker
 # to skip the layer cache and re-run this install the next time it builds the image.
-# Simply edit the date here: 2021-04-12.1
+# Simply edit the date here: 2021-04-27
 
 CONSUL_TEMPLATE_BOOTSTRAP_REF=$1
 if [ "${CONSUL_TEMPLATE_BOOTSTRAP_REF}" == "" ]; then
@@ -13,27 +13,27 @@ fi
 if [ `command -v apt-get` ]; then
   apt-get update
   apt-get -y install --no-install-recommends unzip sudo python3-setuptools python3-pip jq wget curl
-  pip3 install awscli
   apt-get clean && apt-get autoclean && apt-get -y autoremove --purge
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
 elif [ `command -v yum` ]; then
   grep "Amazon Linux" /etc/os-release &>/dev/null || yum -y install epel-release
   yum -y update
   yum -y install unzip jq sudo wget curl which
-  wget -q -O /tmp/awscli-bundle.zip "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
-  unzip -d /tmp /tmp/awscli-bundle.zip
-  /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-  rm -rf /tmp/awscli-bundle*
   yum clean all
 elif [ `command -v apk` ]; then
   apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl which py3-pip
-  pip3 --no-cache-dir install awscli
   update-ca-certificates
   rm -rf /var/cache/apk/*
 else
   echo "Existing package manager is not supported"
   exit 1
 fi
+
+# Install awscli
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip -q awscliv2.zip
+sudo ./aws/install
+rm -r awscliv2.zip aws
 
 # Install Consul template
 CONSUL_TEMPLATE_VERSION=0.25.1
@@ -56,12 +56,6 @@ unzip -d /tmp /tmp/docker-consul-template-bootstrap.zip
 mv /tmp/docker-consul-template-bootstrap-${CONSUL_TEMPLATE_BOOTSTRAP_REF}/ /consul-template/
 mv /consul-template/entrypoint.sh /entrypoint.sh
 rm /tmp/docker-consul-template-bootstrap.zip
-
-##process for using awscli-bundle in case it is needed in the future
-  #wget -q -O /tmp/awscli-bundle.zip "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
-  #unzip -d /tmp /tmp/awscli-bundle.zip
-  #sudo /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-  #rm -rf /tmp/awscli-bundle* 
 
 for package in wget jq curl which aws consul-template vault; do
   if [ ! `command -v $package` ]; then
