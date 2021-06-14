@@ -1,0 +1,17 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  dockerspec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker-compose build
+      - run: docker-compose run --rm -e COMMIT_SHA app
+        env:
+          COMMIT_SHA: ${{ github.sha }}
