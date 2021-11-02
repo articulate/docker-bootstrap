@@ -17,7 +17,7 @@ if command -v apt-get; then
   curl -s "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" -o /tmp/awscliv2.zip
   unzip -d /tmp /tmp/awscliv2.zip
   /tmp/aws/install
-  rm -rf /tmp/aws /tmp/awscliv2
+  rm -rf /tmp/aws /tmp/awscliv2 /tmp/awscliv2.zip
 elif command -v yum; then
   grep "Amazon Linux" /etc/os-release &>/dev/null || yum -y install epel-release
   yum -y update
@@ -28,7 +28,7 @@ elif command -v yum; then
   curl -s "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" -o /tmp/awscliv2.zip
   unzip -d /tmp /tmp/awscliv2.zip
   /tmp/aws/install
-  rm -rf /tmp/aws /tmp/awscliv2
+  rm -rf /tmp/aws /tmp/awscliv2 /tmp/awscliv2.zip
 elif command -v apk; then
   apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl which py3-pip
   update-ca-certificates
