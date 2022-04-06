@@ -8,24 +8,12 @@ if command -v apt-get; then
   apt-get -y install --no-install-recommends unzip sudo jq wget curl ca-certificates
   apt-get clean && apt-get autoclean && apt-get -y autoremove --purge
   rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
-
-  # AWS CLI
-  curl -s "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" -o /tmp/awscliv2.zip
-  unzip -d /tmp /tmp/awscliv2.zip
-  /tmp/aws/install
-  rm -rf /tmp/aws /tmp/awscliv2 /tmp/awscliv2.zip
 elif command -v yum; then
   grep "Amazon Linux" /etc/os-release &>/dev/null || yum -y install epel-release
   yum -y update
   yum -y install unzip jq sudo wget curl which
   yum clean all
   rm -rf /var/cache/yum
-
-  # AWS CLI
-  curl -s "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" -o /tmp/awscliv2.zip
-  unzip -d /tmp /tmp/awscliv2.zip
-  /tmp/aws/install
-  rm -rf /tmp/aws /tmp/awscliv2 /tmp/awscliv2.zip
 elif command -v apk; then
   apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl which py3-pip
   update-ca-certificates
@@ -33,9 +21,17 @@ elif command -v apk; then
 
   # Use the Python version of AWS CLI since they don't provide a musl compatible build
   pip3 --no-cache-dir install awscli
+  SKIP_AWS_INSTALL=1
 else
   echo "Existing package manager is not supported"
   exit 1
+fi
+
+if [ -z "$SKIP_AWS_INSTALL" ]; then
+  curl -s "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" -o /tmp/awscliv2.zip
+  unzip -d /tmp /tmp/awscliv2.zip
+  /tmp/aws/install
+  rm -rf /tmp/aws /tmp/awscliv2 /tmp/awscliv2.zip
 fi
 
 arch="linux_amd64"
