@@ -9,7 +9,7 @@ In order to test this locally you will need to edit the `docker-compose.override
 ```yaml
 environment:
     SERVICE_NAME: "your-service"
-    SERVICE_ENV: "dev|stage|prod|peer|apiary"
+    SERVICE_ENV: "dev|stage|prod|peer"
     VAULT_ADDR: "https://myarticulatetest.localtunnel.me"
     VAULT_TOKEN: "your-token"
 ```

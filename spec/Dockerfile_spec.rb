@@ -144,44 +144,6 @@ distros.each do |distro|
         end
       end
 
-      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "apiary", ALREADY_SET: "true") do
-        [:vault].each do |backend_type|
-          describe backend_type do
-            describe "General sets work" do
-              set_var(backend_type, :global, "OLD_GLOBAL_VAR", "old-global-var", old_keys: true)
-              set_var(backend_type, :global, "GLOBAL_VAR", "global-var")
-              set_var(backend_type, :product, "PRODUCT_VAR", "product-var")
-              set_var(backend_type, :service, "OLD_SERVICE_VAR", "old-service-var", old_keys: true)
-              set_var(backend_type, :service, "SERVICE_VAR", "service-var")
-
-              describe entrypoint_command("env") do
-                its(:stdout) { should include_env "OLD_GLOBAL_VAR", "old-global-var" }
-                its(:stdout) { should include_env "GLOBAL_VAR", "global-var" }
-                its(:stdout) { should include_env "PRODUCT_VAR", "product-var" }
-                its(:stdout) { should include_env "OLD_SERVICE_VAR", "old-service-var" }
-                its(:stdout) { should include_env "SERVICE_VAR", "service-var" }
-                its(:stderr) { should be_empty }
-              end
-            end
-
-            describe "Already set envs are not overridden" do
-              set_var(backend_type, :global, "ALREADY_SET", "false", service_env: "stage", old_keys: true)
-              set_var(backend_type, :global, "ALREADY_SET", "false")
-              set_var(backend_type, :product, "ALREADY_SET", "false")
-              set_var(backend_type, :service, "ALREADY_SET", "false", service_env: "stage", old_keys: true)
-              set_var(backend_type, :service, "ALREADY_SET", "false")
-
-              describe entrypoint_command("env") do
-                its(:stdout) { should include_env "SERVICE_ENV", "apiary" }
-                its(:stdout) { should_not include_env "ALREADY_SET", "false" }
-                its(:stdout) { should include_env "ALREADY_SET", "true" }
-                its(:stderr) { should be_empty }
-              end
-            end
-          end
-        end
-      end
-
       describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "peer-rise-runtime-1768", ALREADY_SET: "true") do
         [:consul, :vault].each do |backend_type|
           describe backend_type do

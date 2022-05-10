@@ -53,7 +53,7 @@ rm /tmp/vault.zip
 curl -Ls "https://github.com/articulate/docker-consul-template-bootstrap/archive/${CONSUL_TEMPLATE_BOOTSTRAP_REF}.zip" -o /tmp/docker-consul-template-bootstrap.zip
 unzip /tmp/docker-consul-template-bootstrap.zip -d /tmp
 mkdir -p /consul-template/
-mv "/tmp/docker-consul-template-bootstrap-${CONSUL_TEMPLATE_BOOTSTRAP_REF}"/{apiary,dev,peer,prod,stage} /consul-template/
+mv "/tmp/docker-consul-template-bootstrap-${CONSUL_TEMPLATE_BOOTSTRAP_REF}"/{dev,peer,prod,stage} /consul-template/
 mv "/tmp/docker-consul-template-bootstrap-${CONSUL_TEMPLATE_BOOTSTRAP_REF}/entrypoint.sh" /entrypoint.sh
 rm -rf /tmp/docker-consul-template-bootstrap*
 
