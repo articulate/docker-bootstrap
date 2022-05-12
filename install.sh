@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eo pipefail
 
 CONSUL_TEMPLATE_BOOTSTRAP_REF="${1:-master}"
@@ -15,7 +15,7 @@ elif command -v yum; then
   yum clean all
   rm -rf /var/cache/yum
 elif command -v apk; then
-  apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl which py3-pip
+  apk add --no-cache --update unzip sudo python3 jq wget ca-certificates curl which py3-pip bash
   update-ca-certificates
   rm -rf /var/cache/apk/*
 
@@ -23,7 +23,7 @@ elif command -v apk; then
   pip3 --no-cache-dir install awscli
   SKIP_AWS_INSTALL=1
 else
-  echo "Existing package manager is not supported"
+  echo "Could not find a supported package manager (apt-get, yum, apk)."
   exit 1
 fi
 
