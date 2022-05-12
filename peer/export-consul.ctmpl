@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -e
 
 ## OLD STYLE global envs
 {{range ls "global/stage/env_vars" -}}
