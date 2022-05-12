@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -e
 
 ## OLD DEPRECATED STYLE global secrets
 {{range secrets "secret/global/stage/env_vars" -}}

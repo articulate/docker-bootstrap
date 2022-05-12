@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -e
 
 ## OLD STYLE global envs
 {{range ls (printf "global/%s/env_vars" (env "SERVICE_ENV")) -}}
