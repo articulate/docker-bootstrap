@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 set -e
 
-## OLD STYLE global envs
+# DEPRECATED: global envs
 {{range ls "global/stage/env_vars" -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
 
-## NEW STYLE global envs
+# global envs
 {{range ls "global/env_vars" -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
 
-#products envs
+# DEPRECATED: products envs
 {{if (env "SERVICE_PRODUCT") -}}
 {{range ls (printf "products/%s/env_vars" (env "SERVICE_PRODUCT")) -}}
 {{if not (env (.Key | toUpper)) -}}
@@ -24,14 +24,14 @@ export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
 
-#OLD STYLE app envs
+# DEPRECATED: app envs
 {{range ls (printf "apps/%s/stage/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
 {{end -}}
 {{end -}}
 
-#NEW STYLE app envs
+# service envs
 {{range ls (printf "services/%s/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
