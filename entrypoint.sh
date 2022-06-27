@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
 
