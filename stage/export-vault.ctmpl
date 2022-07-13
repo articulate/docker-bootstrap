@@ -13,7 +13,7 @@ function log_deprecated(){
 {{range secrets (printf "secret/global/%s/env_vars" (env "SERVICE_ENV")) -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (env "SERVICE_ENV") .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/global/${SERVICE_ENV}/env_vars/{{.Key}}"
+log_deprecated "secret/global/${SERVICE_ENV}/env_vars/{{.}}"
 {{end -}}
 {{end -}}
 
@@ -21,7 +21,7 @@ log_deprecated "secret/global/${SERVICE_ENV}/env_vars/{{.Key}}"
 {{range secrets "secret/global/env_vars" -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/global/env_vars/{{.Key}}"
+log_deprecated "secret/global/env_vars/{{.}}"
 {{end -}}
 {{end -}}
 
@@ -30,7 +30,7 @@ log_deprecated "secret/global/env_vars/{{.Key}}"
 {{range secrets (printf "secret/products/%s/env_vars" (env "SERVICE_PRODUCT")) -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/products/%s/env_vars/%s" (env "SERVICE_PRODUCT") .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/products/${SERVICE_PRODUCT}/env_vars/{{.Key}}"
+log_deprecated "secret/products/${SERVICE_PRODUCT}/env_vars/{{.}}"
 {{end -}}
 {{end -}}
 {{end -}}

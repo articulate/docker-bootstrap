@@ -20,7 +20,7 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (env
 {{if (env "SERVICE_PRODUCT") -}}
 {{range secrets (printf "secret/products/%s/dev/env_vars" (env "SERVICE_PRODUCT")) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/products/%s/dev/env_vars/%s" (env "SERVICE_PRODUCT") .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/products/${SERVICE_PRODUCT}/env_vars/{{.Key}}"
+log_deprecated "secret/products/${SERVICE_PRODUCT}/env_vars/{{.}}"
 {{end -}}
 {{end -}}
 
@@ -28,6 +28,6 @@ log_deprecated "secret/products/${SERVICE_PRODUCT}/env_vars/{{.Key}}"
 {{range secrets (printf "secret/apps/%s/%s/env_vars" (env "SERVICE_NAME") (env "SERVICE_ENV")) -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (env "SERVICE_NAME") (env "SERVICE_ENV") .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/apps/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/{{.Key}}"
+log_deprecated "secret/apps/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/{{.}}"
 {{end -}}
 {{end -}}
