@@ -38,7 +38,7 @@ log_deprecated "products/${SERVICE_PRODUCT}/env_vars/{{.Key}}"
 {{range ls (printf "apps/%s/%s/env_vars" (env "SERVICE_NAME") (env "SERVICE_ENV")) -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
-log_deprecated "apps/${SERVICE_NAME}/{$SERVICE_ENV}/env_vars/{{.Key}}"
+log_deprecated "apps/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/{{.Key}}"
 {{end -}}
 {{end -}}
 
