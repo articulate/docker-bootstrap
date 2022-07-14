@@ -24,7 +24,7 @@ distros.each do |distro|
                 its(:stdout) { should include_env "GLOBAL_VAR", "global-var" }
                 its(:stdout) { should include_env "PRODUCT_VAR", "product-var" }
                 its(:stdout) { should include_env "SERVICE_VAR", "service-var" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(PRODUCT_VAR).*(loaded deprecated value))/ }
               end
             end
 
@@ -34,7 +34,7 @@ distros.each do |distro|
 
               describe entrypoint_command("env") do
                 its(:stdout) { should include_env "TEST_VAR", "product-var" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(products).*(TEST_VAR).*(loaded deprecated value))/ }
               end
             end
 
@@ -44,17 +44,7 @@ distros.each do |distro|
 
               describe entrypoint_command("env") do
                 its(:stdout) { should include_env "TEST_VAR", "service-var" }
-                its(:stderr) { should be_empty }
-              end
-            end
-
-            describe "Services override products" do
-              set_var(backend_type, :global, "TEST_VAR", "global-var")
-              set_var(backend_type, :service, "TEST_VAR", "service-var")
-
-              describe entrypoint_command("env") do
-                its(:stdout) { should include_env "TEST_VAR", "service-var" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(TEST_VAR).*(loaded deprecated value))/ }
               end
             end
 
@@ -64,7 +54,7 @@ distros.each do |distro|
 
               describe entrypoint_command("env") do
                 its(:stdout) { should include_env "TEST_VAR", "service-var" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(TEST_VAR).*(loaded deprecated value))/ }
               end
             end
 
@@ -75,7 +65,7 @@ distros.each do |distro|
 
               describe entrypoint_command("env") do
                 its(:stdout) { should include_env "TEST_VAR", "service-var" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(TEST_VAR).*(loaded deprecated value))/ }
               end
             end
 
@@ -86,7 +76,7 @@ distros.each do |distro|
 
               describe entrypoint_command("env") do
                 its(:stdout) { should include_env "TEST_VAR", "service-var" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(apps).*(TEST_VAR).*(loaded deprecated value))/ }
               end
             end
 
@@ -96,7 +86,7 @@ distros.each do |distro|
 
               describe entrypoint_command("env") do
                 its(:stdout) { should include_env "TEST_VAR", "global-var" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(TEST_VAR).*(loaded deprecated value))/ }
               end
             end
 
@@ -109,7 +99,7 @@ distros.each do |distro|
                 its(:stdout) { should include_env "TEST_VAR", "app-var" }
                 its(:stdout) { should_not include_env "TEST_VAR", "old-global-var" }
                 its(:stdout) { should_not include_env "TEST_VAR", "global-var" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(service).*(TEST_VAR).*(loaded deprecated value))/ }
               end
             end
           end
@@ -126,7 +116,7 @@ distros.each do |distro|
               describe entrypoint_command("env") do
                 its(:stdout) { should include_env "OLD_GLOBAL_VAR", "old-global-var" }
                 its(:stdout) { should include_env "OLD_SERVICE_VAR", "old-service-var" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(OLD_GLOBAL_VAR|OLD_SERVICE_VAR).*(loaded deprecated value))/ }
               end
             end
 
@@ -161,7 +151,7 @@ distros.each do |distro|
                 its(:stdout) { should include_env "OLD_SERVICE_VAR", "old-service-var" }
                 its(:stdout) { should include_env "SERVICE_VAR", "service-var" }
                 its(:stdout) { should include_env "SERVICE_ENV", "peer-rise-runtime-1768" }
-                its(:stderr) { should be_empty }
+                its(:stderr) { should match /(^$|(GLOBAL_VAR|PRODUCT_VAR|OLD_GLOBAL_VAR|OLD_SERVICE_VAR).*(loaded deprecated value))/ }
               end
             end
 

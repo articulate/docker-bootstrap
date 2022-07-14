@@ -21,7 +21,6 @@ log_deprecated "secret/global/${SERVICE_ENV}/env_vars/{{.}}"
 {{range secrets "secret/global/env_vars" -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/global/env_vars/{{.}}"
 {{end -}}
 {{end -}}
 
@@ -47,6 +46,5 @@ log_deprecated "secret/apps/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/{{.}}"
 {{range secrets (printf "secret/services/%s/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (env "SERVICE_NAME") .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/services/${SERVICE_NAME}}/env_vars/{{.}}"
 {{end -}}
 {{end -}}
