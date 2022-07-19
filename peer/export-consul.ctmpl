@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 set -e
 
+function log_deprecated(){
+    path="${1}"
+    env="${SERVICE_ENV}"
+    product="${SERVICE_PRODUCT}"
+    service="${SERVICE_NAME}"
+    (>&2 echo "{\"level\":\"warn\",\"path\":\"${path}\",\"env\":\"${env}\",\"product\":\"${product}\",\"msg\":\"loaded deprecated value\"}")
+}
+
 # DEPRECATED: global envs
 {{range ls "global/stage/env_vars" -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
+log_deprecated "global/stage/env_vars/{{.Key}}"
 {{end -}}
 {{end -}}
 
@@ -20,6 +29,7 @@ export {{.Key | toUpper}}="{{.Value}}"
 {{range ls (printf "products/%s/env_vars" (env "SERVICE_PRODUCT")) -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
+log_deprecated "products/${SERVICE_PRODUCT}/env_vars/{{.Key}}"
 {{end -}}
 {{end -}}
 {{end -}}
@@ -28,6 +38,7 @@ export {{.Key | toUpper}}="{{.Value}}"
 {{range ls (printf "apps/%s/stage/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (.Key | toUpper)) -}}
 export {{.Key | toUpper}}="{{.Value}}"
+log_deprecated "apps/${SERVICE_NAME}/stage/env_vars/{{.Key}}"
 {{end -}}
 {{end -}}
 
