@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+# NOTE: Update if changes are made to this repo that need to be included in the images
+# CACHE VERSION: 202207220134
+
 set -eo pipefail
 
 CONSUL_TEMPLATE_BOOTSTRAP_REF="${1:-master}"
