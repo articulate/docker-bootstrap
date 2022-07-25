@@ -2,6 +2,9 @@
 
 This gets pulled in and sets up consul-template binaries and installs the entrypoint script and the exports.ctmpl file.
 
+## Circumventing Docker Caching
+Because of this dynamic nature, we will need to update the install.sh slightly if this repository is modified. See the `CACHE VERSION` at the top of install.sh. 
+
 ## Development Usage
 
 In order to test this locally you will need to edit the `docker-compose.override.yml` and add the following:
