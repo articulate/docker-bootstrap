@@ -37,7 +37,7 @@ Then run:
 
 `docker-compose run app`
 
-If your changes are not commited and pushed it will not be picked up
+If your changes are not committed and pushed it will not be picked up
 when the test images build (rspec pulls in details from the git branch to create the tests).
 
 There may be a chance that the containers created by the test suite contain cached content.

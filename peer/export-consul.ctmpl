@@ -6,7 +6,7 @@ function log_deprecated(){
     env="${SERVICE_ENV}"
     product="${SERVICE_PRODUCT}"
     service="${SERVICE_NAME}"
-    (>&2 echo "{\"level\":\"warn\",\"path\":\"${path}\",\"env\":\"${env}\",\"product\":\"${product}\",\"msg\":\"loaded deprecated value\"}")
+    (>&2 echo "{\"level\":\"warn\",\"path\":\"${path}\",\"env\":\"${env}\",\"product\":\"${product}\",\"service\":\"${service}\",\"msg\":\"loaded deprecated value\"}")
 }
 
 # DEPRECATED: global envs
