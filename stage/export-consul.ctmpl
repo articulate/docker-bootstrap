@@ -3,7 +3,7 @@ set -e
 
 function log_deprecated(){
     if [ "${LOG_CONSUL_DEPRECATION}" != "true" ]; then
-        return 1
+        return
     fi
     path="${1}"
     env="${SERVICE_ENV}"
