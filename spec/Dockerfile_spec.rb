@@ -5,7 +5,7 @@ distros = ["debian", "centos", "amazon-linux", "alpine"]
 distros.each do |distro|
   describe "Dockerfile" do
     describe docker_build_template(template: "spec/dockerfiles/Dockerfile.#{distro}.erb", tag: "consul_template_bootstrap_#{distro}") do
-      describe docker_run_with_envs("consul_template_bootstrap_#{distro}") do
+      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", LOG_CONSUL_DEPRECATION: "true") do
         describe "Has awscli" do 
           describe entrypoint_command("which aws") do
             its(:stdout) { should include "bin/aws" }
@@ -106,7 +106,7 @@ distros.each do |distro|
         end
       end
 
-      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "dev", ALREADY_SET: "true") do
+      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "dev", ALREADY_SET: "true", LOG_CONSUL_DEPRECATION: "true") do
         [:consul, :vault].each do |backend_type|
           describe backend_type do
             describe "General sets work" do
@@ -134,7 +134,7 @@ distros.each do |distro|
         end
       end
 
-      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "peer-rise-runtime-1768", ALREADY_SET: "true") do
+      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "peer-rise-runtime-1768", ALREADY_SET: "true", LOG_CONSUL_DEPRECATION: "true") do
         [:consul, :vault].each do |backend_type|
           describe backend_type do
             describe "General sets work" do
@@ -162,6 +162,23 @@ distros.each do |distro|
                 its(:stdout) { should include_env "SERVICE_ENV", "peer-rise-runtime-1768" }
                 its(:stdout) { should_not include_env "ALREADY_SET", "false" }
                 its(:stdout) { should include_env "ALREADY_SET", "true" }
+                its(:stderr) { should be_empty }
+              end
+            end
+          end
+        end
+      end
+
+      describe docker_run_with_envs("consul_template_bootstrap_#{distro}", SERVICE_ENV: "dev", ALREADY_SET: "true") do
+        [:consul, :vault].each do |backend_type|
+          describe backend_type do
+            describe "Deprecation warnings are not thrown by default" do
+              set_var(backend_type, :global, "OLD_GLOBAL_VAR", "old-global-var", service_env: "dev", old_keys: true)
+              set_var(backend_type, :service, "OLD_SERVICE_VAR", "old-service-var", service_env: "dev", old_keys: true)
+
+              describe entrypoint_command("env") do
+                its(:stdout) { should include_env "OLD_GLOBAL_VAR", "old-global-var" }
+                its(:stdout) { should include_env "OLD_SERVICE_VAR", "old-service-var" }
                 its(:stderr) { should be_empty }
               end
             end
