@@ -50,8 +50,10 @@ if [ -n "$VAULT_ADDR" ]; then
     export VAULT_TOKEN
   fi
 
-  if [ -z "$VAULT_TOKEN" ] && [ -n "$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" ]; then
-    VAULT_TOKEN=$(vault login -method=aws -token-only)
+  # shellcheck disable=SC2166
+  if [ -z "$VAULT_TOKEN" ] && [ -n "$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" -o -n "$AWS_LAMBDA_FUNCTION_NAME" ]; then
+    [ -n "$VAULT_ROLE" ] && role="role=${VAULT_ROLE}"
+    VAULT_TOKEN=$(vault login -method=aws -token-only "$role")
     export VAULT_TOKEN
   fi
 
