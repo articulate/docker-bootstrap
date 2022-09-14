@@ -38,7 +38,7 @@ if [ -n "$VAULT_ADDR" ]; then
     done
 
     if [[ "$VAULT_TOKEN" == "null" ]]; then
-      echo "Failed to get vault token via kubernetes"
+      (>&2 echo "ERROR: Unable to get vault token via kubernetes")
       exit 1
     fi
 
