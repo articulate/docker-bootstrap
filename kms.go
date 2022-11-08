@@ -1,4 +1,4 @@
-package vault
+package main
 
 import (
 	"context"
@@ -7,11 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 )
 
+// KMSDecryptAPI represents the KMS client
 type KMSDecryptAPI interface {
 	Decrypt(context.Context, *kms.DecryptInput, ...func(*kms.Options)) (*kms.DecryptOutput, error)
 }
 
-func DecodeToken(ctx context.Context, api KMSDecryptAPI, token string) (string, error) {
+// decodeToken decodes a vault token using KMS
+func decodeToken(ctx context.Context, api KMSDecryptAPI, token string) (string, error) {
 	blob, err := base64.StdEncoding.DecodeString(token)
 	if err != nil {
 		return "", err
