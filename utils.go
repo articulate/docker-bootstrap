@@ -18,7 +18,7 @@ func loadValues(c Client, l zerolog.Logger, paths []string) Dict {
 
 		kv, err := c.Load(path)
 		if err != nil {
-			l.Fatal().Err(err).Str("path", path).Msg("could not load values")
+			l.Fatal().Err(err).Str("path", path).Msg("Could not load values")
 		}
 
 		for k, v := range kv {
