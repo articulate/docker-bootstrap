@@ -1,22 +1,29 @@
 name: Test
 
 on:
+  pull_request:
   push:
     branches:
-      - master
-  pull_request:
+      - main
 
 jobs:
-  shellcheck:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: shellcheck install.sh entrypoint.sh
-  dockerspec:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+          check-latest: true
+      - uses: golangci/golangci-lint-action@v3
+
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: docker-compose build
-      - run: docker-compose run --rm -e COMMIT_SHA app
-        env:
-          COMMIT_SHA: ${{ github.sha }}
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+          check-latest: true
+          cache: true
+      - run: make test

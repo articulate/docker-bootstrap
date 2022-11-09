@@ -1,0 +1,23 @@
+linters:
+  enable:
+    - gofmt
+    - revive
+    - gocyclo
+    - misspell
+    - whitespace
+    - goimports
+    - gofmt
+    - gosec
+    - lll
+
+linters-settings:
+  gocyclo:
+    min-complexity: 8
+  goimports:
+    local-prefixes: github.com/articulate/docker-consul-template-bootstrap
+  gosimple:
+    go: "1.19"
+  staticcheck:
+    go: "1.19"
+  unused:
+    go: "1.19"

@@ -1,1 +1,2 @@
-docker-compose.override.yml
+/coverage.out
+dist/
