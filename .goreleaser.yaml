@@ -20,6 +20,7 @@ builds:
         - upx --brute {{ .Path }}
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
+    format: binary
     replacements:
       arm64: aarch64
       amd64: x86_64
@@ -28,8 +29,7 @@ checksum:
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 changelog:
-  skip: true
-  # use: github-native
+  use: github-native
 
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
