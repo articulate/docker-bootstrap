@@ -12,7 +12,7 @@ help:
 
 build: ## Build binary
 	@echo "+ $@"
-	@GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/$(RELEASE)
+	@goreleaser build --snapshot --rm-dist --skip-post-hooks
 .PHONY: build
 
 generate: ## Autogenerate code and resources
