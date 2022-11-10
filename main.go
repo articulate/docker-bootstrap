@@ -35,6 +35,10 @@ func main() {
 		cfg.Environment = "stage"
 	}
 
+	if len(os.Args) < 2 {
+		logger.Fatal().Msg("Missing command")
+	}
+
 	env := NewEnvMap()
 
 	if addr := os.Getenv("CONSUL_ADDR"); addr != "" {
