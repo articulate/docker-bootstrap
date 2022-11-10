@@ -61,7 +61,12 @@ func loadConsul(addr string, c Config, l zerolog.Logger) Dict {
 		l.Fatal().Err(err).Str("addr", addr).Msg("Could not connect to Consul")
 	}
 
-	return loadValues(client, l, c.ConsulPaths())
+	paths := c.ConsulPaths()
+	if p := os.Getenv("CONSUL_PATHS"); p != "" {
+		paths = append(paths, strings.Split(p, ",")...)
+	}
+
+	return loadValues(client, l, paths)
 }
 
 func loadVault(ctx context.Context, addr string, c Config, l zerolog.Logger) Dict {
@@ -87,7 +92,12 @@ func loadVault(ctx context.Context, addr string, c Config, l zerolog.Logger) Dic
 		l.Fatal().Err(err).Msg("Could not authenticate Vault")
 	}
 
-	values := loadValues(client, l, c.VaultPaths())
+	paths := c.VaultPaths()
+	if p := os.Getenv("VAULT_PATHS"); p != "" {
+		paths = append(paths, strings.Split(p, ",")...)
+	}
+
+	values := loadValues(client, l, paths)
 	values["VAULT_TOKEN"] = auth
 	return values
 }
