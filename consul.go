@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/url"
 	"strings"
 
 	"github.com/hashicorp/consul/api"
@@ -14,15 +13,10 @@ type Consul struct {
 
 // NewConsul returns a new instance of the Consul client using the given address
 func NewConsul(addr string) (*Consul, error) {
-	a, err := url.Parse(addr)
-	if err != nil {
-		return nil, err
-	}
+	cfg := api.DefaultConfig()
+	cfg.Address = addr
 
-	c, err := api.NewClient(&api.Config{
-		Address: a.Host,
-		Scheme:  a.Scheme,
-	})
+	c, err := api.NewClient(cfg)
 	if err != nil {
 		return nil, err
 	}
