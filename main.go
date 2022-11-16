@@ -96,6 +96,11 @@ func loadVault(ctx context.Context, addr string, c Config, l zerolog.Logger) Dic
 		l.Fatal().Err(err).Msg("Could not authenticate Vault")
 	}
 
+	if auth == "" {
+		l.Warn().Msg("Not loading values from Vault. Unable to authenticate Vault")
+		return make(Dict)
+	}
+
 	paths := c.VaultPaths()
 	if p := os.Getenv("VAULT_PATHS"); p != "" {
 		paths = append(paths, strings.Split(p, ",")...)

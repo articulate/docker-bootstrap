@@ -40,7 +40,7 @@ func (v *Vault) Authenticate(ctx context.Context, token, role string) (string, e
 	}
 
 	auth, err := v.getAuthMethod(role)
-	if err != nil {
+	if auth == nil || err != nil {
 		return "", err
 	}
 
@@ -56,6 +56,13 @@ func (v *Vault) Authenticate(ctx context.Context, token, role string) (string, e
 func (v *Vault) getAuthMethod(role string) (api.AuthMethod, error) {
 	if _, err := os.Stat(k8sTokenFile); !os.IsNotExist(err) {
 		return kubernetes.NewKubernetesAuth(role)
+	}
+
+	ecs := os.Getenv("AWS_CONTAINER_CREDENTIALS_RELATIVE_URI")
+	lambda := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
+
+	if ecs == "" && lambda == "" {
+		return nil, nil
 	}
 
 	region := os.Getenv("AWS_REGION")
