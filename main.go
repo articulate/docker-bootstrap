@@ -40,6 +40,11 @@ func main() {
 	}
 
 	env := NewEnvMap()
+	pwd, err := os.Getwd()
+	if err != nil {
+		logger.Warn().Err(err).Msg("Cannot determine PWD")
+	}
+	env.Add("PWD", pwd)
 
 	if addr := os.Getenv("CONSUL_ADDR"); addr != "" {
 		env.Merge(loadConsul(addr, cfg, logger))
