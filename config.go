@@ -32,8 +32,8 @@ func (c *Config) VaultPaths() []string {
 	}
 
 	return []string{
-		fmt.Sprintf("secret/global/%s/%s/env_vars", c.Environment, c.Environment), // DEPRECATED
-		fmt.Sprintf("secret/products/%s/%s/env_vars", c.Product, c.Environment),   // DEPRECATED
-		fmt.Sprintf("secret/apps/%s/%s/env_vars", c.Service, c.Environment),       // DEPRECATED
+		fmt.Sprintf("secret/global/%s/env_vars", c.Environment),                 // DEPRECATED
+		fmt.Sprintf("secret/products/%s/%s/env_vars", c.Product, c.Environment), // DEPRECATED
+		fmt.Sprintf("secret/apps/%s/%s/env_vars", c.Service, c.Environment),     // DEPRECATED
 	}
 }
