@@ -49,7 +49,7 @@ func TestConfig_VaultPaths(t *testing.T) {
 	c.Environment = "dev"
 	assert.Equal(t, []string{
 		"secret/global/dev/env_vars",
-		"secret/products/bar/env_vars",
+		"secret/products/bar/dev/env_vars",
 		"secret/apps/foo/dev/env_vars",
 	}, c.VaultPaths())
 }
