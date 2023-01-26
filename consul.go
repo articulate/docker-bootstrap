@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/hashicorp/consul/api"
@@ -18,7 +19,7 @@ func NewConsul(addr string) (*Consul, error) {
 
 	c, err := api.NewClient(cfg)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not connect to %s: %w", addr, err)
 	}
 
 	return &Consul{c.KV()}, nil
@@ -29,7 +30,7 @@ func (c *Consul) Load(path string) (Dict, error) {
 	kv := make(Dict)
 	pairs, _, err := c.kv.List(path, &api.QueryOptions{})
 	if err != nil {
-		return kv, err
+		return kv, fmt.Errorf("could not load %s: %w", path, err)
 	}
 
 	for _, p := range pairs {

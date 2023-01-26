@@ -26,7 +26,7 @@ func NewVault(addr string) (*Vault, error) {
 
 	client, err := api.NewClient(cfg)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not connect to %s: %w", addr, err)
 	}
 
 	return &Vault{client}, nil
@@ -46,16 +46,24 @@ func (v *Vault) Authenticate(ctx context.Context, token, role string) (string, e
 
 	secret, err := v.client.Auth().Login(ctx, auth)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("could not authenticate: %w", err)
 	}
 
-	return secret.TokenID()
+	id, err := secret.TokenID()
+	if err != nil {
+		return "", fmt.Errorf("could not get token: %w", err)
+	}
+	return id, nil
 }
 
 // getAuthMethod tries to determine the auth method to be used with Vault
 func (v *Vault) getAuthMethod(role string) (api.AuthMethod, error) {
 	if _, err := os.Stat(k8sTokenFile); !os.IsNotExist(err) {
-		return kubernetes.NewKubernetesAuth(role)
+		auth, err := kubernetes.NewKubernetesAuth(role)
+		if err != nil {
+			return nil, fmt.Errorf("could not authenticate with kubernetes: %w", err)
+		}
+		return auth, nil
 	}
 
 	ecs := os.Getenv("AWS_CONTAINER_CREDENTIALS_RELATIVE_URI")
@@ -70,7 +78,12 @@ func (v *Vault) getAuthMethod(role string) (api.AuthMethod, error) {
 		region = "us-east-1"
 	}
 
-	return aws.NewAWSAuth(aws.WithRegion(region), aws.WithRole(role))
+	auth, err := aws.NewAWSAuth(aws.WithRegion(region), aws.WithRole(role))
+	if err != nil {
+		return nil, fmt.Errorf("could not authenticate with IAM: %w", err)
+	}
+
+	return auth, nil
 }
 
 // Load fetches values from the given paths
@@ -79,13 +92,14 @@ func (v *Vault) Load(path string) (Dict, error) {
 	client := v.client.Logical()
 	secret, err := client.List(path)
 	if err != nil {
-		return vars, err
+		return vars, fmt.Errorf("could not list %s: %w", path, err)
 	}
 
 	for _, key := range secretKeys(secret) {
-		s, err := client.Read(fmt.Sprintf("%s/%s", path, key))
+		k := fmt.Sprintf("%s/%s", path, key)
+		s, err := client.Read(k)
 		if err != nil {
-			return vars, err
+			return vars, fmt.Errorf("could not read %s: %w", k, err)
 		}
 		if s == nil {
 			continue
@@ -126,7 +140,7 @@ func vaultToken(ctx context.Context) (string, error) {
 	if enc := os.Getenv("ENCRYPTED_VAULT_TOKEN"); enc != "" {
 		cfg, err := config.LoadDefaultConfig(ctx)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("could not load config: %w", err)
 		}
 
 		client := kms.NewFromConfig(cfg)

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/base64"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 )
@@ -16,14 +17,14 @@ type KMSDecryptAPI interface {
 func decodeToken(ctx context.Context, api KMSDecryptAPI, token string) (string, error) {
 	blob, err := base64.StdEncoding.DecodeString(token)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("invalid base64 string: %w", err)
 	}
 
 	result, err := api.Decrypt(ctx, &kms.DecryptInput{
 		CiphertextBlob: blob,
 	})
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("could not decrypt token: %w", err)
 	}
 
 	return string(result.Plaintext), nil

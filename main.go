@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"os"
 	"os/exec"
 	"strings"
@@ -128,7 +129,8 @@ func run(name string, args, env []string, l zerolog.Logger) int {
 	}
 
 	if err := cmd.Wait(); err != nil {
-		if exit, ok := err.(*exec.ExitError); ok {
+		var exit *exec.ExitError
+		if errors.As(err, &exit) {
 			return exit.ExitCode()
 		}
 		l.Fatal().Err(err).Str("cmd", cmd.String()).Msg("Unknown error while running command")

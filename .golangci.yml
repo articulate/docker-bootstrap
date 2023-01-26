@@ -1,23 +1,27 @@
 linters:
+  presets:
+    - bugs
+    - error
+    - performance
   enable:
     - gofmt
+    - gofumpt
     - revive
     - gocyclo
     - misspell
     - whitespace
     - goimports
-    - gofmt
     - gosec
+    - testpackage
     - lll
+  disable:
+    - scopelint
+    - rowserrcheck
+    - sqlclosecheck
+    - maligned
 
 linters-settings:
   gocyclo:
-    min-complexity: 8
+    min-complexity: 10
   goimports:
     local-prefixes: github.com/articulate/docker-consul-template-bootstrap
-  gosimple:
-    go: "1.19"
-  staticcheck:
-    go: "1.19"
-  unused:
-    go: "1.19"
