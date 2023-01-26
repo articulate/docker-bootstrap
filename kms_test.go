@@ -52,7 +52,7 @@ func TestDecodeToken(t *testing.T) {
 
 		token, err := decodeToken(context.TODO(), m, "Zm9vYmFy")
 		assert.Equal(t, "", token)
-		assert.EqualError(t, err, "kms error")
+		assert.EqualError(t, err, "could not decrypt token: kms error")
 	})
 
 	m.AssertExpectations(t)
