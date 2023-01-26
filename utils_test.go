@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -19,7 +20,7 @@ type mockClient struct {
 func (m *mockClient) Load(path string) (Dict, error) {
 	args := m.Called(path)
 
-	return map[string]string{args.String(0): args.String(1)}, args.Error(2)
+	return map[string]string{args.String(0): args.String(1)}, args.Error(2) //nolint:wrapcheck
 }
 
 func TestLoadValues(t *testing.T) {
@@ -45,7 +46,7 @@ func TestLoadValues(t *testing.T) {
 func TestLoadValues_Fatal(t *testing.T) {
 	if os.Getenv("TEST_FATAL") == "true" {
 		m := new(mockClient)
-		m.On("Load", "none").Return("", "", fmt.Errorf("test error"))
+		m.On("Load", "none").Return("", "", fmt.Errorf("test error")) //nolint:goerr113
 
 		loadValues(m, zerolog.New(os.Stderr), []string{"none"})
 		return
@@ -54,10 +55,11 @@ func TestLoadValues_Fatal(t *testing.T) {
 	cmd := exec.Command(os.Args[0], fmt.Sprintf("-test.run=%s", t.Name())) //nolint:gosec
 	cmd.Env = append(cmd.Env, "TEST_FATAL=true")
 
+	var exit *exec.ExitError
 	_, err := cmd.Output()
-	assert.Error(t, err)
-	assert.Equal(t, 1, err.(*exec.ExitError).ExitCode())
+	assert.True(t, errors.As(err, &exit))
+	assert.Equal(t, 1, exit.ExitCode())
 	assert.Equal(t, []byte(`{"level":"debug","path":"none","message":"Loading values"}
 {"level":"fatal","error":"test error","path":"none","message":"Could not load values"}
-`), err.(*exec.ExitError).Stderr)
+`), exit.Stderr)
 }

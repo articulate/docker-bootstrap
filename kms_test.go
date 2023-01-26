@@ -23,7 +23,7 @@ func (m *kmsMock) Decrypt(
 
 	return &kms.DecryptOutput{
 		Plaintext: []byte(args.String(0)),
-	}, args.Error(1)
+	}, args.Error(1) //nolint:wrapcheck
 }
 
 func TestDecodeToken(t *testing.T) {
@@ -48,11 +48,11 @@ func TestDecodeToken(t *testing.T) {
 	t.Run("kms error", func(t *testing.T) {
 		m.On("Decrypt", context.TODO(), &kms.DecryptInput{
 			CiphertextBlob: []byte("foobar"),
-		}).Return("no", fmt.Errorf("kms error"))
+		}).Return("no", fmt.Errorf("kms error")) //nolint:goerr113
 
 		token, err := decodeToken(context.TODO(), m, "Zm9vYmFy")
 		assert.Equal(t, "", token)
-		assert.EqualError(t, err, "kms error")
+		assert.EqualError(t, err, "could not decrypt token: kms error")
 	})
 
 	m.AssertExpectations(t)
