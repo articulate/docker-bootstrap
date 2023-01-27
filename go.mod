@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.18.10
 	github.com/aws/aws-sdk-go-v2/service/kms v1.20.1
 	github.com/hashicorp/consul/api v1.15.3
-	github.com/hashicorp/vault/api v1.8.2
+	github.com/hashicorp/vault/api v1.8.3
 	github.com/hashicorp/vault/api/auth/aws v0.3.0
 	github.com/hashicorp/vault/api/auth/kubernetes v0.3.0
 	github.com/rs/zerolog v1.29.0
@@ -51,7 +51,7 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/serf v0.9.7 // indirect
-	github.com/hashicorp/vault/sdk v0.6.0 // indirect
+	github.com/hashicorp/vault/sdk v0.7.0 // indirect
 	github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
