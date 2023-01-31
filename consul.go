@@ -34,6 +34,9 @@ func (c *Consul) Load(path string) (Dict, error) {
 	}
 
 	for _, p := range pairs {
+		if p.Value == nil {
+			continue
+		}
 		kv[consulKey(p.Key)] = string(p.Value)
 	}
 
