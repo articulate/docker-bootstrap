@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/samber/lo"
 )
 
 // EnvMap represents a map for environment variables
@@ -28,13 +30,25 @@ func (e *EnvMap) Add(key, value string) {
 }
 
 // Environ returns the map in the format of "key=value", skipping any already set,
-// non-empty environment variables
+// non-empty environment variables, and expanding variables
 func (e *EnvMap) Environ() []string {
-	env := []string{}
-	for k, v := range e.env {
-		if x := os.Getenv(k); x == "" {
-			env = append(env, fmt.Sprintf("%s=%s", k, v))
-		}
-	}
-	return env
+	env := lo.OmitBy(e.env, func(k string, _ string) bool {
+		return os.Getenv(k) != ""
+	})
+
+	env = lo.MapValues(env, func(v string, _ string) string {
+		return os.Expand(v, func(s string) string {
+			if l := os.Getenv(s); l != "" {
+				return l
+			}
+			if v, ok := e.env[s]; ok {
+				return v
+			}
+			return ""
+		})
+	})
+
+	return lo.MapToSlice(env, func(k string, v string) string {
+		return fmt.Sprintf("%s=%s", k, v)
+	})
 }

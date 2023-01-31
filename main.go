@@ -5,6 +5,8 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"runtime"
+	"strconv"
 	"strings"
 
 	"github.com/rs/zerolog"
@@ -58,6 +60,8 @@ func main() {
 	} else {
 		logger.Warn().Msg("Not loading values from Vault. VAULT_ADDR is not set")
 	}
+
+	env.Add("PROCESSOR_COUNT", strconv.Itoa(runtime.NumCPU()))
 
 	exit := run(os.Args[1], os.Args[2:], env.Environ(), logger)
 	os.Exit(exit)
