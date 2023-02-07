@@ -17,10 +17,11 @@ const k8sTokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token" //nol
 // Vault is a client for fetching values from Vault
 type Vault struct {
 	client *api.Client
+	region string
 }
 
 // NewVault returns a new Vault client
-func NewVault(addr string) (*Vault, error) {
+func NewVault(addr, region string) (*Vault, error) {
 	cfg := api.DefaultConfig()
 	cfg.Address = addr
 
@@ -29,7 +30,7 @@ func NewVault(addr string) (*Vault, error) {
 		return nil, fmt.Errorf("could not connect to %s: %w", addr, err)
 	}
 
-	return &Vault{client}, nil
+	return &Vault{client, region}, nil
 }
 
 // Authenticate authenticates the client with Vault
@@ -73,12 +74,7 @@ func (v *Vault) getAuthMethod(role string) (api.AuthMethod, error) {
 		return nil, nil
 	}
 
-	region := os.Getenv("AWS_REGION")
-	if region == "" {
-		region = "us-east-1"
-	}
-
-	auth, err := aws.NewAWSAuth(aws.WithRegion(region), aws.WithRole(role))
+	auth, err := aws.NewAWSAuth(aws.WithRegion(v.region), aws.WithRole(role))
 	if err != nil {
 		return nil, fmt.Errorf("could not authenticate with IAM: %w", err)
 	}

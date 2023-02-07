@@ -25,12 +25,18 @@ func main() {
 		Service:     os.Getenv("SERVICE_NAME"),
 		Product:     os.Getenv("SERVICE_PRODUCT"),
 		Environment: os.Getenv("SERVICE_ENV"),
+		Region:      os.Getenv("AWS_REGION"),
+	}
+
+	if cfg.Region == "" {
+		cfg.Region = "us-east-1"
 	}
 
 	logger := log.With().
 		Str("env", cfg.Environment).
 		Str("service", cfg.Service).
 		Str("product", cfg.Product).
+		Str("region", cfg.Region).
 		Logger()
 
 	// handles peer environments (peer-some-thing => peer), which loads stage vars
@@ -48,6 +54,7 @@ func main() {
 		logger.Warn().Err(err).Msg("Cannot determine PWD")
 	}
 	env.Add("PWD", pwd)
+	env.Add("AWS_REGION", cfg.Region)
 
 	if addr := os.Getenv("CONSUL_ADDR"); addr != "" {
 		env.Merge(loadConsul(addr, cfg, logger))
@@ -86,7 +93,7 @@ func loadConsul(addr string, c Config, l zerolog.Logger) Dict {
 func loadVault(ctx context.Context, addr string, c Config, l zerolog.Logger) Dict {
 	l.Debug().Msg("Loading values from Vault")
 
-	client, err := NewVault(addr)
+	client, err := NewVault(addr, c.Region)
 	if err != nil {
 		l.Fatal().Err(err).Str("addr", addr).Msg("Could not connect to Vault")
 	}
