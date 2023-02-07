@@ -6,6 +6,7 @@ type Config struct {
 	Service     string
 	Product     string
 	Environment string
+	Region      string
 }
 
 // ConsulPaths returns the paths from Consul to load
