@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/samber/lo"
 )
@@ -32,10 +33,17 @@ func (e *EnvMap) Add(key, value string) {
 // Environ returns the map in the format of "key=value", skipping any already set,
 // non-empty environment variables, and expanding variables
 func (e *EnvMap) Environ() []string {
-	env := lo.OmitBy(e.env, func(k string, _ string) bool {
+	// Remove anything already set as an env var
+	env := lo.OmitBy(e.env, func(k, _ string) bool {
 		return os.Getenv(k) != ""
 	})
 
+	// Remove blank keys
+	env = lo.OmitBy(env, func(k, _ string) bool {
+		return strings.TrimSpace(k) == ""
+	})
+
+	// Expand variables
 	env = lo.MapValues(env, func(v string, _ string) string {
 		return os.Expand(v, func(s string) string {
 			if l := os.Getenv(s); l != "" {
