@@ -22,6 +22,7 @@ func TestEnvMap(t *testing.T) {
 	e.Add("DOCKER_CONSUL_BOOTSTRAP_TEST_BAR", "testing")
 	e.Add("DOCKER_CONSUL_BOOTSTRAP_EXPAND_ONE", "foo-${DOCKER_CONSUL_BOOTSTRAP_TEST_FOO}-bar")
 	e.Add("DOCKER_CONSUL_BOOTSTRAP_EXPAND_TWO", "foo-${DOCKER_CONSUL_BOOTSTRAP_TEST_BAZ}-baz")
+	e.Add("  ", "test-empty")
 
 	assert.ElementsMatch(t, []string{
 		"DOCKER_CONSUL_BOOTSTRAP_TEST_TEST=testing",
