@@ -11,7 +11,7 @@ require (
 	github.com/hashicorp/vault/api/auth/kubernetes v0.3.0
 	github.com/rs/zerolog v1.29.0
 	github.com/samber/lo v1.37.0
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 )
 
 require (
