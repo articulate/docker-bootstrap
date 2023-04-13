@@ -17,7 +17,7 @@ type kmsMock struct {
 func (m *kmsMock) Decrypt(
 	ctx context.Context,
 	input *kms.DecryptInput,
-	opt ...func(*kms.Options),
+	_ ...func(*kms.Options),
 ) (*kms.DecryptOutput, error) {
 	args := m.Called(ctx, input)
 
