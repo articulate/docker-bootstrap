@@ -19,22 +19,38 @@ ENTRYPOINT [ "/entrypoint" ]
 
 ## Usage
 
-To load a environment variables, you'll need to set a `SERVICE_ENV` environment
-variable to `prod`, `stage`, `dev`, or `peer`. The following paths get loaded as
-environment variables, but some environments may change this. You can view exact
-paths used in each template.
+To load values from Consul's KV store, you will need to set `CONSUL_ADDR`. It
+will load keys from the following paths, using the basename as the variable name:
 
-* `global/env_vars/*` (_Consul_)
-* `services/${SERVICE_NAME}/env_vars/*` (_Consul_)
-* `secrets/global/env_vars/*` (_Vault_ using the `value` key)
-* `services/${SERVICE_NAME}/env_vars/*` (_Vault_ using the `value` key)
+* `global/env_vars/*`
+* `global/${SERVICE_ENV}/env_vars/*`
+* `services/${SERVICE_NAME}/env_vars/*`
+* `service/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/*`
 
-To load values from Consul, you'll need to make sure `CONSUL_ADDR` is accessible
-from your Docker container.
+For example, `consul kv put services/foo/env_vars/API_SERVICE_URI https://api.priv/v1`
+will load an environment variable `API_SERVICE_URI=https://api.priv/v1`.
 
-To load values from Vault, you'll need to make sure both `CONSUL_ADDR` and `VAULT_ADDR`
-are accessible. You'll also need to authenticate with Vault in one of the following
-ways:
+Any environment variables set previous to calling the script, will not change.
+Paths later in the list will overwrite any previous values. For example,
+`global/env_vars/FOO` will be overwritten by `service/my-service/env_vars/FOO`.
+
+To load values from Vault, you will need to set `VAULT_ADDR` and authenticate with
+Vault (see below). Values from vault will use the `value` key as the variable value.
+Values are read from the following paths:
+
+* `secret/global/env_vars/*` (in `stage` or `prod`)
+* `secret/global/${SERVICE_ENV}/env_vars/*`
+* `secret/services/${SERVICE_NAME}/env_vars/*` (in `stage` or `prod`)
+* `secret/service/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/*`
+
+For example, `vault write secret/foo/env_vars/API_KEY value=secretkey` will load
+an environment variable `API_KEY=secretkey`. Values from Vault will overrwrite
+Consul values, but follow the same rules otherwise.
+
+<details>
+<summary>Vault Authentication</summary>
+
+You can authenticate with Vault in one of the following ways:
 
 * Set `VAULT_TOKEN`
 * Set `ENCRYPTED_VAULT_TOKEN` with a value encrypted by AWS KMS
@@ -42,6 +58,8 @@ ways:
 * If running on Kubernetes, use the Kubernetes auth method in Vault
 * If running on AWS ECS or Lambda, use the AWS IAM auth method
   * If Vault role does not match IAM role, set with `VAULT_ROLE`
+
+</details>
 
 ## Development
 
@@ -61,5 +79,5 @@ or [commitizen](https://github.com/commitizen-tools/commitizen#installation).
 
 ## Creating a Release
 
-To create a release, create a tag that follows [semver](https://semver.org/) and
-a GitHub Action workflow will take care of creating the release.
+To create a release, create a tag that follows [semver](https://semver.org/). A
+GitHub Action workflow will take care of creating the release.
