@@ -65,7 +65,7 @@ You can authenticate with Vault in one of the following ways:
 
 You'll need to install the following:
 
-* Go 1.19
+* Go 1.20
 * [golangci-lint](https://golangci-lint.run/) (`brew install golangci-lint`)
 * [pre-commit](https://pre-commit.com/) (`brew install pre-commit`)
 * [GoReleaser](https://goreleaser.com/) (_optional_)
