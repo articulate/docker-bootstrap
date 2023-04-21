@@ -14,11 +14,12 @@ func TestConfig_ConsulPaths(t *testing.T) {
 	}
 
 	assert.Equal(t, []string{
-		"global/stage/env_vars",
 		"global/env_vars",
+		"global/stage/env_vars",
 		"products/bar/env_vars",
 		"apps/foo/stage/env_vars",
 		"services/foo/env_vars",
+		"services/foo/stage/env_vars",
 	}, c.ConsulPaths())
 }
 
@@ -30,20 +31,22 @@ func TestConfig_VaultPaths(t *testing.T) {
 	}
 
 	assert.Equal(t, []string{
-		"secret/global/stage/env_vars",
 		"secret/global/env_vars",
+		"secret/global/stage/env_vars",
 		"secret/products/bar/env_vars",
 		"secret/apps/foo/stage/env_vars",
 		"secret/services/foo/env_vars",
+		"secret/services/foo/stage/env_vars",
 	}, c.VaultPaths())
 
 	c.Environment = "prod"
 	assert.Equal(t, []string{
-		"secret/global/prod/env_vars",
 		"secret/global/env_vars",
+		"secret/global/prod/env_vars",
 		"secret/products/bar/env_vars",
 		"secret/apps/foo/prod/env_vars",
 		"secret/services/foo/env_vars",
+		"secret/services/foo/prod/env_vars",
 	}, c.VaultPaths())
 
 	c.Environment = "dev"
@@ -51,5 +54,6 @@ func TestConfig_VaultPaths(t *testing.T) {
 		"secret/global/dev/env_vars",
 		"secret/products/bar/dev/env_vars",
 		"secret/apps/foo/dev/env_vars",
+		"secret/services/foo/dev/env_vars",
 	}, c.VaultPaths())
 }
