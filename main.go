@@ -23,7 +23,6 @@ func main() {
 
 	cfg := Config{
 		Service:     os.Getenv("SERVICE_NAME"),
-		Product:     os.Getenv("SERVICE_PRODUCT"),
 		Environment: os.Getenv("SERVICE_ENV"),
 		Region:      os.Getenv("AWS_REGION"),
 	}
@@ -35,7 +34,6 @@ func main() {
 	logger := log.With().
 		Str("env", cfg.Environment).
 		Str("service", cfg.Service).
-		Str("product", cfg.Product).
 		Str("region", cfg.Region).
 		Logger()
 
