@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/vault/api v1.9.1
 	github.com/hashicorp/vault/api/auth/aws v0.4.0
 	github.com/hashicorp/vault/api/auth/kubernetes v0.4.0
-	github.com/rs/zerolog v1.29.0
+	github.com/rs/zerolog v1.29.1
 	github.com/samber/lo v1.38.1
 	github.com/stretchr/testify v1.8.2
 )
