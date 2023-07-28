@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/aws/aws-sdk-go-v2/config v1.18.30
-	github.com/aws/aws-sdk-go-v2/service/kms v1.22.1
+	github.com/aws/aws-sdk-go-v2/service/kms v1.23.2
 	github.com/hashicorp/consul/api v1.22.0
 	github.com/hashicorp/vault/api v1.9.2
 	github.com/hashicorp/vault/api/auth/aws v0.4.1
