@@ -25,5 +25,5 @@ if [ "$missing" != "" ]; then
     apt-get clean
     apt-get autoclean
     apt-get autoremove --yes --purge
-    rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives /usr/share/doc /root/.cache/
 fi
