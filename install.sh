@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE: Update if changes are made to this repo that need to be included in the images
-# CACHE VERSION: 20221114
+# CACHE VERSION: 20230911
 
 set -eo pipefail
 
@@ -54,12 +54,12 @@ unzip /tmp/vault.zip vault -d /usr/local/bin
 rm /tmp/vault.zip
 
 # Install consul-bootstrap
-curl -Ls "https://github.com/articulate/docker-consul-template-bootstrap/archive/${CONSUL_TEMPLATE_BOOTSTRAP_REF}.zip" -o /tmp/docker-consul-template-bootstrap.zip
-unzip /tmp/docker-consul-template-bootstrap.zip -d /tmp
+curl -Ls "https://github.com/articulate/docker-bootstrap/archive/${CONSUL_TEMPLATE_BOOTSTRAP_REF}.zip" -o /tmp/docker-bootstrap.zip
+unzip /tmp/docker-bootstrap.zip -d /tmp
 mkdir -p /consul-template/
-mv "/tmp/docker-consul-template-bootstrap-${CONSUL_TEMPLATE_BOOTSTRAP_REF}"/{dev,peer,prod,stage} /consul-template/
-mv "/tmp/docker-consul-template-bootstrap-${CONSUL_TEMPLATE_BOOTSTRAP_REF}/entrypoint.sh" /entrypoint.sh
-rm -rf /tmp/docker-consul-template-bootstrap*
+mv "/tmp/docker-bootstrap-${CONSUL_TEMPLATE_BOOTSTRAP_REF}"/{dev,peer,prod,stage} /consul-template/
+mv "/tmp/docker-bootstrap-${CONSUL_TEMPLATE_BOOTSTRAP_REF}/entrypoint.sh" /entrypoint.sh
+rm -rf /tmp/docker-bootstrap*
 
 for package in wget jq curl which aws consul-template vault; do
   if ! command -v "$package"; then
