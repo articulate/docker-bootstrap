@@ -4,8 +4,19 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    groups:
+      actions:
+        patterns:
+          - "*"
   - package-ecosystem: gomod
     directory: /
     open-pull-requests-limit: 25
     schedule:
       interval: monthly
+    groups:
+      aws:
+        patterns:
+          - github.com/aws/*
+      hashicorp:
+        patterns:
+          - github.com/hashicorp/*
