@@ -16,7 +16,7 @@ fi
 
 curl -s "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m)-${AWSCLI_VERSION}.zip" -o /tmp/awscliv2.zip
 unzip -q -d /tmp /tmp/awscliv2.zip
-/tmp/aws/install
+/tmp/aws/install "$@"
 rm -rf /tmp/aws /tmp/awscliv2 /tmp/awscliv2.zip
 
 if [ "$missing" != "" ]; then
