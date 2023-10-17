@@ -1,37 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-function log_deprecated(){
-    if [ "${LOG_CONSUL_DEPRECATION}" != "true" ]; then
-        return
-    fi
-    path="${1}"
-    env="${SERVICE_ENV}"
-    product="${SERVICE_PRODUCT}"
-    service="${SERVICE_NAME}"
-    (>&2 echo "{\"level\":\"warn\",\"path\":\"${path}\",\"env\":\"${env}\",\"product\":\"${product}\",\"service\":\"${service}\",\"msg\":\"loaded deprecated value\"}")
-}
-
-# DEPRECATED: global secrets
 {{range secrets (printf "secret/global/%s/env_vars" (env "SERVICE_ENV")) -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (env "SERVICE_ENV") .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/global/${SERVICE_ENV}/env_vars/{{.}}"
-{{end -}}
-{{end -}}
-
-# DEPRECATED: products secrets
-{{if (env "SERVICE_PRODUCT") -}}
-{{range secrets (printf "secret/products/%s/dev/env_vars" (env "SERVICE_PRODUCT")) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/products/%s/dev/env_vars/%s" (env "SERVICE_PRODUCT") .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/products/${SERVICE_PRODUCT}/dev/env_vars/{{.}}"
-{{end -}}
-{{end -}}
-
-# DEPRECATED: app secrets
-{{range secrets (printf "secret/apps/%s/%s/env_vars" (env "SERVICE_NAME") (env "SERVICE_ENV")) -}}
-{{if not (env (. | toUpper)) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/apps/%s/%s/env_vars/%s" (env "SERVICE_NAME") (env "SERVICE_ENV") .) }}="{{.Data.value}}"{{end}}
-log_deprecated "secret/apps/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/{{.}}"
 {{end -}}
 {{end -}}
