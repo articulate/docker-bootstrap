@@ -21,14 +21,10 @@ func main() {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
-	cfg := Config{
+	cfg := &Config{
 		Service:     os.Getenv("SERVICE_NAME"),
 		Environment: os.Getenv("SERVICE_ENV"),
 		Region:      os.Getenv("AWS_REGION"),
-	}
-
-	if cfg.Service == "" {
-		log.Fatal().Msg("SERVICE_NAME cannot be blank")
 	}
 
 	if cfg.Environment == "" {
@@ -76,7 +72,7 @@ func main() {
 	os.Exit(run(os.Args[1], os.Args[2:], env.Environ(), logger))
 }
 
-func loadConsul(addr string, c Config, l zerolog.Logger) Dict {
+func loadConsul(addr string, c *Config, l zerolog.Logger) Dict {
 	l.Debug().Msg("Loading values from Consul")
 
 	client, err := NewConsul(addr)
@@ -92,7 +88,7 @@ func loadConsul(addr string, c Config, l zerolog.Logger) Dict {
 	return loadValues(client, l, paths)
 }
 
-func loadVault(ctx context.Context, addr string, c Config, l zerolog.Logger) Dict {
+func loadVault(ctx context.Context, addr string, c *Config, l zerolog.Logger) Dict {
 	l.Debug().Msg("Loading values from Vault")
 
 	client, err := NewVault(addr, c.Region)
