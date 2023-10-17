@@ -27,8 +27,12 @@ func main() {
 		Region:      os.Getenv("AWS_REGION"),
 	}
 
+	if cfg.Service == "" {
+		log.Warn().Msg("SERVICE_NAME is not set, will not load service values")
+	}
+
 	if cfg.Environment == "" {
-		log.Warn().Msg("SERVICE_ENV is blank, defaulting to dev")
+		log.Warn().Msg("SERVICE_ENV is not set, defaulting to dev")
 		cfg.Environment = "dev"
 	}
 
