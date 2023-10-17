@@ -11,9 +11,15 @@ linters:
     - misspell
     - whitespace
     - goimports
+    - gofmt
     - gosec
-    - testpackage
     - lll
+    - unused
+    - nonamedreturns
+    - tenv
+    - funlen
+    - nestif
+    - forbidigo
   disable:
     - scopelint
     - rowserrcheck
@@ -25,3 +31,8 @@ linters-settings:
     min-complexity: 10
   goimports:
     local-prefixes: github.com/articulate/docker-consul-template-bootstrap
+  forbidigo:
+    analyze-types: true
+    forbid:
+      - ^(fmt\\.Print(|f|ln)|print|println)$
+      - ^spew\.(ConfigState\.)?Dump$

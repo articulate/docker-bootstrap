@@ -4,7 +4,7 @@ Load values from Consul and Vault as environment variables.
 
 ## Installing
 
-Download the [latest release](https://github.com/articulate/docker-consul-template-bootstrap/releases/latest),
+Download the [latest release](https://github.com/articulate/docker-bootstrap/releases),
 add it to your image, and set it as your `ENTRYPOINT`.
 
 If you are using Buildkit you can use the `TARGETARCH` arg to `ADD` the correct
@@ -12,7 +12,7 @@ architecture.
 
 ```docker
 ARG TARGETARCH
-ADD --chmod=755 https://github.com/articulate/docker-consul-template-bootstrap/releases/latest/download/docker-consul-template-bootstrap_linux_${TARGETARCH} /entrypoint
+ADD --chmod=755 https://github.com/articulate/docker-bootstrap/releases/latest/download/docker-bootstrap_linux_${TARGETARCH} /entrypoint
 
 ENTRYPOINT [ "/entrypoint" ]
 ```

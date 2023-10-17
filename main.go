@@ -27,6 +27,15 @@ func main() {
 		Region:      os.Getenv("AWS_REGION"),
 	}
 
+	if cfg.Service == "" {
+		log.Fatal().Msg("SERVICE_NAME cannot be blank")
+	}
+
+	if cfg.Environment == "" {
+		log.Warn().Msg("SERVICE_ENV is blank, defaulting to dev")
+		cfg.Environment = "dev"
+	}
+
 	if cfg.Region == "" {
 		cfg.Region = "us-east-1"
 	}
@@ -37,22 +46,11 @@ func main() {
 		Str("region", cfg.Region).
 		Logger()
 
-	// handles peer environments (peer-some-thing => peer), which loads stage vars
-	if strings.HasPrefix(cfg.Environment, "peer") {
-		cfg.Environment = "stage"
-	}
-
 	if len(os.Args) < 2 {
 		logger.Fatal().Msg("Missing command")
 	}
 
 	env := NewEnvMap()
-	pwd, err := os.Getwd()
-	if err != nil {
-		logger.Warn().Err(err).Msg("Cannot determine PWD")
-	}
-	env.Add("PWD", pwd)
-	env.Add("AWS_REGION", cfg.Region)
 
 	if addr := os.Getenv("CONSUL_ADDR"); addr != "" {
 		env.Merge(loadConsul(addr, cfg, logger))
@@ -66,10 +64,16 @@ func main() {
 		logger.Warn().Msg("Not loading values from Vault. VAULT_ADDR is not set")
 	}
 
+	pwd, err := os.Getwd()
+	if err != nil {
+		logger.Warn().Err(err).Msg("Cannot determine PWD")
+	}
+	env.Add("PWD", pwd)
+	env.Add("AWS_REGION", cfg.Region)
+	env.Add("SERVICE_ENV", cfg.Environment)
 	env.Add("PROCESSOR_COUNT", strconv.Itoa(runtime.NumCPU()))
 
-	exit := run(os.Args[1], os.Args[2:], env.Environ(), logger)
-	os.Exit(exit)
+	os.Exit(run(os.Args[1], os.Args[2:], env.Environ(), logger))
 }
 
 func loadConsul(addr string, c Config, l zerolog.Logger) Dict {

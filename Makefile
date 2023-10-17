@@ -1,5 +1,4 @@
 PKG_LIST := $(shell go list ./... | grep -v /vendor/)
-RELEASE ?= docker-consul-template-bootstrap
 
 help:
 	@echo "+ $@"
