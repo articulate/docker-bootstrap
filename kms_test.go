@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 type kmsMock struct {
@@ -32,7 +33,7 @@ func TestDecodeToken(t *testing.T) {
 	t.Run("invalid base64", func(t *testing.T) {
 		token, err := decodeToken(context.TODO(), m, "dfk0dEJ#0(#$@)(")
 		assert.Equal(t, "", token)
-		assert.Error(t, err)
+		require.Error(t, err)
 	})
 
 	t.Run("decrypt", func(t *testing.T) {
@@ -41,7 +42,7 @@ func TestDecodeToken(t *testing.T) {
 		}).Return("my-decrypted-token", nil)
 
 		token, err := decodeToken(context.TODO(), m, "dGVzdA==")
-		assert.Nil(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, "my-decrypted-token", token)
 	})
 
@@ -52,7 +53,7 @@ func TestDecodeToken(t *testing.T) {
 
 		token, err := decodeToken(context.TODO(), m, "Zm9vYmFy")
 		assert.Equal(t, "", token)
-		assert.EqualError(t, err, "could not decrypt token: kms error")
+		require.EqualError(t, err, "could not decrypt token: kms error")
 	})
 
 	m.AssertExpectations(t)

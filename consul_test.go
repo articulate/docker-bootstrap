@@ -7,6 +7,6 @@ import (
 )
 
 func TestConsulKey(t *testing.T) {
-	assert.Equal(t, consulKey("foo/bar/baz"), "BAZ")
-	assert.Equal(t, consulKey("test"), "TEST")
+	assert.Equal(t, "BAZ", consulKey("foo/bar/baz"))
+	assert.Equal(t, "TEST", consulKey("test"))
 }
