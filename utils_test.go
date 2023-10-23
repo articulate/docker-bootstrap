@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -11,6 +10,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 type mockClient struct {
@@ -57,7 +57,7 @@ func TestLoadValues_Fatal(t *testing.T) {
 
 	var exit *exec.ExitError
 	_, err := cmd.Output()
-	assert.True(t, errors.As(err, &exit))
+	require.ErrorAs(t, err, &exit)
 	assert.Equal(t, 1, exit.ExitCode())
 	assert.Equal(t, []byte(`{"level":"debug","path":"none","message":"Loading values"}
 {"level":"fatal","error":"test error","path":"none","message":"Could not load values"}
