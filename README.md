@@ -25,7 +25,7 @@ will load keys from the following paths, using the basename as the variable name
 * `global/env_vars/*`
 * `global/${SERVICE_ENV}/env_vars/*`
 * `services/${SERVICE_NAME}/env_vars/*`
-* `service/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/*`
+* `services/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/*`
 
 For example, `consul kv put services/foo/env_vars/API_SERVICE_URI https://api.priv/v1`
 will load an environment variable `API_SERVICE_URI=https://api.priv/v1`.
@@ -41,10 +41,10 @@ Values are read from the following paths:
 * `secret/global/env_vars/*` (in `stage` or `prod`)
 * `secret/global/${SERVICE_ENV}/env_vars/*`
 * `secret/services/${SERVICE_NAME}/env_vars/*` (in `stage` or `prod`)
-* `secret/service/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/*`
+* `secret/services/${SERVICE_NAME}/${SERVICE_ENV}/env_vars/*`
 
-For example, `vault write secret/foo/env_vars/API_KEY value=secretkey` will load
-an environment variable `API_KEY=secretkey`. Values from Vault will overrwrite
+For example, `vault write secret/services/foo/env_vars/API_KEY value=secretkey` will load
+an environment variable `API_KEY=secretkey`. Values from Vault will overwrite
 Consul values, but follow the same rules otherwise.
 
 <details>
