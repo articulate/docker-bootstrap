@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"fmt"
+	"errors"
 	"os"
 	"os/exec"
 	"testing"
@@ -46,13 +46,13 @@ func TestLoadValues(t *testing.T) {
 func TestLoadValues_Fatal(t *testing.T) {
 	if os.Getenv("TEST_FATAL") == "true" {
 		m := new(mockClient)
-		m.On("Load", "none").Return("", "", fmt.Errorf("test error")) //nolint:goerr113
+		m.On("Load", "none").Return("", "", errors.New("test error")) //nolint:goerr113
 
 		loadValues(m, zerolog.New(os.Stderr), []string{"none"})
 		return
 	}
 
-	cmd := exec.Command(os.Args[0], fmt.Sprintf("-test.run=%s", t.Name())) //nolint:gosec
+	cmd := exec.Command(os.Args[0], "-test.run="+t.Name()) //nolint:gosec
 	cmd.Env = append(cmd.Env, "TEST_FATAL=true")
 
 	var exit *exec.ExitError

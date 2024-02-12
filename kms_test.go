@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms"
@@ -49,7 +49,7 @@ func TestDecodeToken(t *testing.T) {
 	t.Run("kms error", func(t *testing.T) {
 		m.On("Decrypt", context.TODO(), &kms.DecryptInput{
 			CiphertextBlob: []byte("foobar"),
-		}).Return("no", fmt.Errorf("kms error")) //nolint:goerr113
+		}).Return("no", errors.New("kms error")) //nolint:goerr113
 
 		token, err := decodeToken(context.TODO(), m, "Zm9vYmFy")
 		assert.Equal(t, "", token)
