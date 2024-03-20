@@ -5,10 +5,10 @@ go 1.21
 require (
 	github.com/aws/aws-sdk-go-v2/config v1.27.4
 	github.com/aws/aws-sdk-go-v2/service/kms v1.29.1
-	github.com/hashicorp/consul/api v1.27.0
-	github.com/hashicorp/vault/api v1.11.0
-	github.com/hashicorp/vault/api/auth/aws v0.5.0
-	github.com/hashicorp/vault/api/auth/kubernetes v0.5.0
+	github.com/hashicorp/consul/api v1.28.2
+	github.com/hashicorp/vault/api v1.12.0
+	github.com/hashicorp/vault/api/auth/aws v0.6.0
+	github.com/hashicorp/vault/api/auth/kubernetes v0.6.0
 	github.com/rs/zerolog v1.32.0
 	github.com/samber/lo v1.39.0
 	github.com/stretchr/testify v1.8.4
@@ -16,7 +16,7 @@ require (
 
 require (
 	github.com/armon/go-metrics v0.4.1 // indirect
-	github.com/aws/aws-sdk-go v1.30.27 // indirect
+	github.com/aws/aws-sdk-go v1.49.22 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.25.2 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.4 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.15.2 // indirect
