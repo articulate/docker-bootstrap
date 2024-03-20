@@ -2,12 +2,38 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 )
 
 type Config struct {
 	Service     string
 	Environment string
 	Region      string
+}
+
+// NewFromEnv creates a new Config from environment variables and defaults
+func NewFromEnv() *Config {
+	cfg := &Config{
+		Service:     os.Getenv("SERVICE_NAME"),
+		Environment: os.Getenv("SERVICE_ENV"),
+		Region:      os.Getenv("AWS_REGION"),
+	}
+
+	if cfg.Service == "" {
+		slog.Warn("SERVICE_NAME is not set, will not load service values")
+	}
+
+	if cfg.Environment == "" {
+		slog.Warn("SERVICE_ENV is not set, defaulting to dev")
+		cfg.Environment = "dev"
+	}
+
+	if cfg.Region == "" {
+		cfg.Region = "us-east-1"
+	}
+
+	return cfg
 }
 
 // ConsulPaths returns the paths from Consul to load

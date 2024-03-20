@@ -3,85 +3,76 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
+	"log/slog"
 	"os"
 	"os/exec"
 	"runtime"
 	"strconv"
 	"strings"
-
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 )
+
+var logLevel = new(slog.LevelVar)
 
 func main() {
 	ctx := context.Background()
 
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: logLevel}))
+	slog.SetDefault(logger)
 	if v, ok := os.LookupEnv("DEBUG_BOOTSTRAP"); ok && v != "false" {
-		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+		logLevel.Set(slog.LevelDebug)
 	}
 
-	cfg := &Config{
-		Service:     os.Getenv("SERVICE_NAME"),
-		Environment: os.Getenv("SERVICE_ENV"),
-		Region:      os.Getenv("AWS_REGION"),
-	}
-
-	if cfg.Service == "" {
-		log.Warn().Msg("SERVICE_NAME is not set, will not load service values")
-	}
-
-	if cfg.Environment == "" {
-		log.Warn().Msg("SERVICE_ENV is not set, defaulting to dev")
-		cfg.Environment = "dev"
-	}
-
-	if cfg.Region == "" {
-		cfg.Region = "us-east-1"
-	}
-
-	logger := log.With().
-		Str("env", cfg.Environment).
-		Str("service", cfg.Service).
-		Str("region", cfg.Region).
-		Logger()
+	cfg := NewFromEnv()
+	logger = logger.With("env", cfg.Environment, "service", cfg.Service, "region", cfg.Region)
+	slog.SetDefault(logger)
 
 	if len(os.Args) < 2 {
-		logger.Fatal().Msg("Missing command")
+		logger.ErrorContext(ctx, "Missing command")
+		os.Exit(1)
 	}
 
 	env := NewEnvMap()
-
 	if addr := os.Getenv("CONSUL_ADDR"); addr != "" {
-		env.Merge(loadConsul(addr, cfg, logger))
+		c, err := loadConsul(ctx, addr, cfg, logger)
+		if err != nil {
+			logger.ErrorContext(ctx, "Could not load values from Consul", "error", err)
+			os.Exit(1)
+		}
+		env.Merge(c)
 	} else {
-		logger.Warn().Msg("Not loading values from Consul. CONSUL_ADDR is not set")
+		logger.WarnContext(ctx, "Not loading values from Consul. CONSUL_ADDR is not set")
 	}
 
 	if addr := os.Getenv("VAULT_ADDR"); addr != "" {
-		env.Merge(loadVault(ctx, addr, cfg, logger))
+		v, err := loadVault(ctx, addr, cfg, logger)
+		if err != nil {
+			logger.ErrorContext(ctx, "Could not load values from Vault", "error", err)
+			os.Exit(1)
+		}
+		env.Merge(v)
 	} else {
-		logger.Warn().Msg("Not loading values from Vault. VAULT_ADDR is not set")
+		logger.WarnContext(ctx, "Not loading values from Vault. VAULT_ADDR is not set")
 	}
 
 	pwd, err := os.Getwd()
 	if err != nil {
-		logger.Warn().Err(err).Msg("Cannot determine PWD")
+		logger.WarnContext(ctx, "Cannot determine PWD", "error", err)
 	}
 	env.Add("PWD", pwd)
 	env.Add("AWS_REGION", cfg.Region)
 	env.Add("SERVICE_ENV", cfg.Environment)
 	env.Add("PROCESSOR_COUNT", strconv.Itoa(runtime.NumCPU()))
 
-	os.Exit(run(os.Args[1], os.Args[2:], env.Environ(), logger))
+	os.Exit(run(ctx, os.Args[1], os.Args[2:], env.Environ(), logger))
 }
 
-func loadConsul(addr string, c *Config, l zerolog.Logger) Dict {
-	l.Debug().Msg("Loading values from Consul")
+func loadConsul(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dict, error) {
+	l.Debug("Loading values from Consul")
 
 	client, err := NewConsul(addr)
 	if err != nil {
-		l.Fatal().Err(err).Str("addr", addr).Msg("Could not connect to Consul")
+		return nil, serror(fmt.Errorf("Could not connect to Consul: %w", err), "addr", addr)
 	}
 
 	paths := c.ConsulPaths()
@@ -89,20 +80,20 @@ func loadConsul(addr string, c *Config, l zerolog.Logger) Dict {
 		paths = append(paths, strings.Split(p, ",")...)
 	}
 
-	return loadValues(client, l, paths)
+	return loadValues(ctx, client, l, paths)
 }
 
-func loadVault(ctx context.Context, addr string, c *Config, l zerolog.Logger) Dict {
-	l.Debug().Msg("Loading values from Vault")
+func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dict, error) {
+	l.DebugContext(ctx, "Loading values from Vault")
 
 	client, err := NewVault(addr, c.Region)
 	if err != nil {
-		l.Fatal().Err(err).Str("addr", addr).Msg("Could not connect to Vault")
+		return nil, serror(fmt.Errorf("Could not connect to Vault: %w", err), "addr", addr)
 	}
 
 	token, err := vaultToken(ctx)
 	if err != nil {
-		l.Fatal().Err(err).Msg("Could not get Vault token")
+		return nil, fmt.Errorf("Could not get Vault token: %w", err)
 	}
 
 	role := os.Getenv("VAULT_ROLE")
@@ -112,12 +103,12 @@ func loadVault(ctx context.Context, addr string, c *Config, l zerolog.Logger) Di
 
 	auth, err := client.Authenticate(ctx, token, role)
 	if err != nil {
-		l.Fatal().Err(err).Msg("Could not authenticate Vault")
+		return nil, fmt.Errorf("Could not authenticate Vault: %w", err)
 	}
 
 	if auth == "" {
-		l.Warn().Msg("Not loading values from Vault. Unable to authenticate Vault")
-		return make(Dict)
+		l.WarnContext(ctx, "Not loading values from Vault. Unable to authenticate Vault")
+		return make(Dict), nil
 	}
 
 	paths := c.VaultPaths()
@@ -125,20 +116,21 @@ func loadVault(ctx context.Context, addr string, c *Config, l zerolog.Logger) Di
 		paths = append(paths, strings.Split(p, ",")...)
 	}
 
-	values := loadValues(client, l, paths)
+	values, err := loadValues(ctx, client, l, paths)
 	values["VAULT_TOKEN"] = auth
-	return values
+	return values, err
 }
 
-func run(name string, args, env []string, l zerolog.Logger) int {
-	cmd := exec.Command(name, args...) //nolint:gosec
+func run(ctx context.Context, name string, args, env []string, l *slog.Logger) int {
+	cmd := exec.CommandContext(ctx, name, args...) //nolint:gosec
 	cmd.Env = append(os.Environ(), env...)
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 
 	if err := cmd.Start(); err != nil {
-		l.Fatal().Err(err).Str("cmd", cmd.String()).Msg("Could not start command")
+		l.ErrorContext(ctx, "Could not start command", "error", err, "cmd", cmd.String())
+		return 1
 	}
 
 	if err := cmd.Wait(); err != nil {
@@ -146,7 +138,8 @@ func run(name string, args, env []string, l zerolog.Logger) int {
 		if errors.As(err, &exit) {
 			return exit.ExitCode()
 		}
-		l.Fatal().Err(err).Str("cmd", cmd.String()).Msg("Unknown error while running command")
+		l.ErrorContext(ctx, "Unknown error while running command", "error", err, "cmd", cmd.String())
+		return 1
 	}
 
 	return 0

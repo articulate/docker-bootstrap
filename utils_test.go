@@ -1,13 +1,10 @@
 package main
 
 import (
-	"bytes"
+	"context"
 	"errors"
-	"os"
-	"os/exec"
 	"testing"
 
-	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -24,42 +21,38 @@ func (m *mockClient) Load(path string) (Dict, error) {
 }
 
 func TestLoadValues(t *testing.T) {
-	log := &bytes.Buffer{}
-	logger := zerolog.New(log)
+	logger, log := testLogger()
 
 	m := new(mockClient)
 	m.On("Load", "foo").Return("foo", "bar", nil)
 	m.On("Load", "bar").Return("bar", "baz", nil)
 
+	d, err := loadValues(context.TODO(), m, logger, []string{"foo", "bar"})
+	require.NoError(t, err)
 	assert.Equal(t, Dict{
 		"foo": "bar",
 		"bar": "baz",
-	}, loadValues(m, logger, []string{"foo", "bar"}))
+	}, d)
 
-	assert.Equal(t, []byte(`{"level":"debug","path":"foo","message":"Loading values"}
-{"level":"debug","path":"bar","message":"Loading values"}
+	assert.Equal(t, []byte(`{"time":"test-time","level":"DEBUG","msg":"Loading values","path":"foo"}
+{"time":"test-time","level":"DEBUG","msg":"Loading values","path":"bar"}
 `), log.Bytes())
 
 	m.AssertExpectations(t)
 }
 
-func TestLoadValues_Fatal(t *testing.T) {
-	if os.Getenv("TEST_FATAL") == "true" {
-		m := new(mockClient)
-		m.On("Load", "none").Return("", "", errors.New("test error")) //nolint:goerr113
+func TestLoadValues_Error(t *testing.T) {
+	logger, log := testLogger()
 
-		loadValues(m, zerolog.New(os.Stderr), []string{"none"})
-		return
-	}
+	m := new(mockClient)
+	m.On("Load", "none").Return("", "", errors.New("test error")) //nolint:goerr113
 
-	cmd := exec.Command(os.Args[0], "-test.run="+t.Name()) //nolint:gosec
-	cmd.Env = append(cmd.Env, "TEST_FATAL=true")
+	d, err := loadValues(context.TODO(), m, logger, []string{"none"})
+	require.ErrorContains(t, err, "Could not load values: test error")
+	assert.Equal(t, Dict{}, d)
 
-	var exit *exec.ExitError
-	_, err := cmd.Output()
-	require.ErrorAs(t, err, &exit)
-	assert.Equal(t, 1, exit.ExitCode())
-	assert.Equal(t, []byte(`{"level":"debug","path":"none","message":"Loading values"}
-{"level":"fatal","error":"test error","path":"none","message":"Could not load values"}
-`), exit.Stderr)
+	assert.Equal(t, []byte(`{"time":"test-time","level":"DEBUG","msg":"Loading values","path":"none"}
+`), log.Bytes())
+
+	m.AssertExpectations(t)
 }
