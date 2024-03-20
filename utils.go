@@ -1,6 +1,10 @@
 package main
 
-import "github.com/rs/zerolog"
+import (
+	"context"
+	"fmt"
+	"log/slog"
+)
 
 type (
 	Dict map[string]string
@@ -11,19 +15,19 @@ type (
 	}
 )
 
-func loadValues(c Client, l zerolog.Logger, paths []string) Dict {
+func loadValues(ctx context.Context, c Client, l *slog.Logger, paths []string) (Dict, error) {
 	values := map[string]string{}
 	for _, path := range paths {
-		l.Debug().Str("path", path).Msg("Loading values")
+		l.DebugContext(ctx, "Loading values", "path", path)
 
 		kv, err := c.Load(path)
 		if err != nil {
-			l.Fatal().Err(err).Str("path", path).Msg("Could not load values")
+			return values, serror(fmt.Errorf("Could not load values: %w", err), "path", path)
 		}
 
 		for k, v := range kv {
 			values[k] = v
 		}
 	}
-	return values
+	return values, nil
 }
