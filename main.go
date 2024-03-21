@@ -64,6 +64,11 @@ func main() {
 	env.Add("SERVICE_ENV", cfg.Environment)
 	env.Add("PROCESSOR_COUNT", strconv.Itoa(runtime.NumCPU()))
 
+	if err := validate(ctx, cfg, env, logger); err != nil {
+		logger.ErrorContext(ctx, "Missing dependencies", "error", err)
+		os.Exit(4)
+	}
+
 	os.Exit(run(ctx, os.Args[1], os.Args[2:], env.Environ(), logger))
 }
 
@@ -139,7 +144,7 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 			return exit.ExitCode()
 		}
 		l.ErrorContext(ctx, "Unknown error while running command", "error", err, "cmd", cmd.String())
-		return 1
+		return 3
 	}
 
 	return 0

@@ -7,17 +7,19 @@ import (
 )
 
 type Config struct {
-	Service     string
-	Environment string
-	Region      string
+	Service           string
+	Environment       string
+	Region            string
+	ServiceDefinition string
 }
 
 // NewFromEnv creates a new Config from environment variables and defaults
 func NewFromEnv() *Config {
 	cfg := &Config{
-		Service:     os.Getenv("SERVICE_NAME"),
-		Environment: os.Getenv("SERVICE_ENV"),
-		Region:      os.Getenv("AWS_REGION"),
+		Service:           os.Getenv("SERVICE_NAME"),
+		Environment:       os.Getenv("SERVICE_ENV"),
+		Region:            os.Getenv("AWS_REGION"),
+		ServiceDefinition: os.Getenv("SERVICE_DEFINITION"),
 	}
 
 	if cfg.Service == "" {
@@ -31,6 +33,10 @@ func NewFromEnv() *Config {
 
 	if cfg.Region == "" {
 		cfg.Region = "us-east-1"
+	}
+
+	if cfg.ServiceDefinition == "" {
+		cfg.ServiceDefinition = "service.json"
 	}
 
 	return cfg
