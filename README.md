@@ -61,11 +61,40 @@ You can authenticate with Vault in one of the following ways:
 
 </details>
 
+### Environment Variables
+
+If you want to ensure some environment variables exist before running your command,
+you can include a JSON file called `service.json` in the working directory. The
+entrypoint will parse this file and check that the configured environment variables
+exist and are not empty.
+
+```json
+{
+  "dependencies": {
+    "env_vars": {
+      "required": [
+        "FOO",
+        "BAR"
+      ],
+      "optional": [
+        "BAZ"
+      ]
+    }
+  }
+}
+```
+
+If any optional environment variables are missing, it will log that, but continue
+to run.
+
+If any required environment variables are missing, it will log that and then exit
+with an exit code of 4.
+
 ## Development
 
 You'll need to install the following:
 
-* Go 1.20
+* Go
 * [golangci-lint](https://golangci-lint.run/) (`brew install golangci-lint`)
 * [pre-commit](https://pre-commit.com/) (`brew install pre-commit`)
 * [GoReleaser](https://goreleaser.com/) (_optional_)

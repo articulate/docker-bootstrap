@@ -19,7 +19,7 @@ func main() {
 
 	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: logLevel}))
 	slog.SetDefault(logger)
-	if v, ok := os.LookupEnv("DEBUG_BOOTSTRAP"); ok && v != "false" {
+	if v, err := strconv.ParseBool(os.Getenv("DEBUG_BOOTSTRAP")); err == nil && v {
 		logLevel.Set(slog.LevelDebug)
 	}
 
@@ -63,6 +63,11 @@ func main() {
 	env.Add("AWS_REGION", cfg.Region)
 	env.Add("SERVICE_ENV", cfg.Environment)
 	env.Add("PROCESSOR_COUNT", strconv.Itoa(runtime.NumCPU()))
+
+	if err := validate(ctx, cfg, env, logger); err != nil {
+		logger.ErrorContext(ctx, "Missing dependencies", "error", err)
+		os.Exit(4)
+	}
 
 	os.Exit(run(ctx, os.Args[1], os.Args[2:], env.Environ(), logger))
 }
@@ -139,7 +144,7 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 			return exit.ExitCode()
 		}
 		l.ErrorContext(ctx, "Unknown error while running command", "error", err, "cmd", cmd.String())
-		return 1
+		return 3
 	}
 
 	return 0

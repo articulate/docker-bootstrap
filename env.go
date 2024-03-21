@@ -60,3 +60,9 @@ func (e *EnvMap) Environ() []string {
 		return fmt.Sprintf("%s=%s", k, v)
 	})
 }
+
+// Has returns true if the given key is set and not empty
+func (e *EnvMap) Has(key string) bool {
+	v, ok := e.env[key]
+	return ok && v != ""
+}
