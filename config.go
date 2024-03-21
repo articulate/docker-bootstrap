@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strconv"
 )
 
 type Config struct {
@@ -11,6 +12,7 @@ type Config struct {
 	Environment       string
 	Region            string
 	ServiceDefinition string
+	SkipValidation    bool
 }
 
 // NewFromEnv creates a new Config from environment variables and defaults
@@ -20,6 +22,11 @@ func NewFromEnv() *Config {
 		Environment:       os.Getenv("SERVICE_ENV"),
 		Region:            os.Getenv("AWS_REGION"),
 		ServiceDefinition: os.Getenv("SERVICE_DEFINITION"),
+		SkipValidation:    false,
+	}
+
+	if s, err := strconv.ParseBool(os.Getenv("BOOTSTRAP_SKIP_VALIDATION")); err == nil {
+		cfg.SkipValidation = s
 	}
 
 	if cfg.Service == "" {

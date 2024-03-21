@@ -56,6 +56,10 @@ func (d *dependency) UnmarshalJSON(data []byte) error {
 }
 
 func validate(ctx context.Context, c *Config, e *EnvMap, l *slog.Logger) error {
+	if c.SkipValidation || c.Environment == "test" {
+		return nil
+	}
+
 	f, err := os.ReadFile(c.ServiceDefinition)
 	if os.IsNotExist(err) {
 		return nil

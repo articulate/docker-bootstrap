@@ -67,6 +67,16 @@ func TestValidate(t *testing.T) { //nolint:funlen
 	)
 	assert.Contains(t, log.String(), `"WARN","msg":"Missing optional environment variables","env_vars":["QUX","FOOBAZ"]`)
 
+	// Skips validation
+	c.SkipValidation = true
+	require.NoError(t, validate(context.TODO(), c, e, l))
+	c.SkipValidation = false
+
+	// Skips validation in test environment
+	c.Environment = "test"
+	require.NoError(t, validate(context.TODO(), c, e, l))
+	c.Environment = "dev"
+
 	// Empty env vars should be considered missing
 	e.Add("FOO", "")
 	t.Setenv("BAR", "")

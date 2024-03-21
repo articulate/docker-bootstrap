@@ -19,7 +19,7 @@ func main() {
 
 	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: logLevel}))
 	slog.SetDefault(logger)
-	if v, ok := os.LookupEnv("DEBUG_BOOTSTRAP"); ok && v != "false" {
+	if v, err := strconv.ParseBool(os.Getenv("DEBUG_BOOTSTRAP")); err == nil && v {
 		logLevel.Set(slog.LevelDebug)
 	}
 
