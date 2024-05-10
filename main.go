@@ -7,12 +7,28 @@ import (
 	"log/slog"
 	"os"
 	"os/exec"
+	"os/signal"
 	"runtime"
 	"strconv"
 	"strings"
+	"syscall"
+	"time"
 )
 
-var logLevel = new(slog.LevelVar)
+var (
+	logLevel = new(slog.LevelVar)
+	// killWait is the time to wait before forcefully terminating the child process
+	killWait = 5 * time.Second
+	// signals contains the signals that will be forwarded to the child process
+	signals = []os.Signal{
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT,
+		syscall.SIGHUP,
+		syscall.SIGUSR1,
+		syscall.SIGUSR2,
+	}
+)
 
 func main() {
 	ctx := context.Background()
@@ -127,16 +143,45 @@ func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dic
 }
 
 func run(ctx context.Context, name string, args, env []string, l *slog.Logger) int {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	cmd := exec.CommandContext(ctx, name, args...) //nolint:gosec
 	cmd.Env = append(os.Environ(), env...)
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
 	if err := cmd.Start(); err != nil {
 		l.ErrorContext(ctx, "Could not start command", "error", err, "cmd", cmd.String())
 		return 1
 	}
+
+	sigch := make(chan os.Signal, 1)
+	exitch := make(chan os.Signal, 1)
+	signal.Notify(sigch, signals...)
+	signal.Notify(exitch, syscall.SIGINT)
+	defer signal.Stop(sigch)
+
+	// forward signals to the child process
+	go func() {
+		for {
+			s := <-sigch
+			l.DebugContext(ctx, "Sending signal", "signal", s.String())
+			if err := cmd.Process.Signal(s); err != nil {
+				l.ErrorContext(ctx, "Could not send signal to command", "error", err, "cmd", cmd.String(), "signal", s.String())
+			}
+		}
+	}()
+
+	// handle forceful termination
+	go func() {
+		<-exitch
+		time.Sleep(killWait)
+		l.DebugContext(ctx, "Terminating unrespnsive process", "cmd", cmd.String())
+		cancel()
+	}()
 
 	if err := cmd.Wait(); err != nil {
 		var exit *exec.ExitError
