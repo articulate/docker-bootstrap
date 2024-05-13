@@ -151,7 +151,9 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	if name != "bash" && name != "sh" && name != "zsh" && name != "fish" {
+		cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	}
 
 	if err := cmd.Start(); err != nil {
 		l.ErrorContext(ctx, "Could not start command", "error", err, "cmd", cmd.String())
@@ -163,6 +165,7 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 	signal.Notify(sigch, signals...)
 	signal.Notify(exitch, syscall.SIGINT)
 	defer signal.Stop(sigch)
+	defer signal.Stop(exitch)
 
 	// forward signals to the child process
 	go func() {
