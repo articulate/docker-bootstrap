@@ -192,5 +192,8 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 		return 3
 	}
 
+	if code := cmd.ProcessState.ExitCode(); code != -1 {
+		return code
+	}
 	return 0
 }
