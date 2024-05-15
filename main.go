@@ -179,7 +179,7 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 	go func() {
 		<-exitch
 		time.Sleep(killWait)
-		l.WarnContext(ctx, "Terminating unrespnsive process", "cmd", cmd.String())
+		l.WarnContext(ctx, "Terminating unresponsive process", "cmd", cmd.String())
 		cancel()
 	}()
 
