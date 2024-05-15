@@ -41,27 +41,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	env := NewEnvMap()
-	if addr := os.Getenv("CONSUL_ADDR"); addr != "" {
-		c, err := loadConsul(ctx, addr, cfg, logger)
-		if err != nil {
-			logger.ErrorContext(ctx, "Could not load values from Consul", "error", err)
-			os.Exit(1)
-		}
-		env.Merge(c)
-	} else {
-		logger.WarnContext(ctx, "Not loading values from Consul. CONSUL_ADDR is not set")
-	}
-
-	if addr := os.Getenv("VAULT_ADDR"); addr != "" {
-		v, err := loadVault(ctx, addr, cfg, logger)
-		if err != nil {
-			logger.ErrorContext(ctx, "Could not load values from Vault", "error", err)
-			os.Exit(1)
-		}
-		env.Merge(v)
-	} else {
-		logger.WarnContext(ctx, "Not loading values from Vault. VAULT_ADDR is not set")
+	env, err := loadEnvVars(ctx, cfg, logger)
+	if err != nil {
+		logger.ErrorContext(ctx, "Could not load environment variables", "error", err)
+		os.Exit(1)
 	}
 
 	pwd, err := os.Getwd()
@@ -78,7 +61,36 @@ func main() {
 		os.Exit(4)
 	}
 
+	if os.Getpid() == 1 {
+		go reapChildren(ctx, logger)
+	}
+
 	os.Exit(run(ctx, os.Args[1], os.Args[2:], env.Environ(), logger))
+}
+
+func loadEnvVars(ctx context.Context, cfg *Config, l *slog.Logger) (*EnvMap, error) {
+	env := NewEnvMap()
+	if addr := os.Getenv("CONSUL_ADDR"); addr != "" {
+		c, err := loadConsul(ctx, addr, cfg, l)
+		if err != nil {
+			return env, fmt.Errorf("could not load values from Consul: %w", err)
+		}
+		env.Merge(c)
+	} else {
+		l.WarnContext(ctx, "Not loading values from Consul. CONSUL_ADDR is not set")
+	}
+
+	if addr := os.Getenv("VAULT_ADDR"); addr != "" {
+		v, err := loadVault(ctx, addr, cfg, l)
+		if err != nil {
+			return env, fmt.Errorf("could not load values from Vault: %w", err)
+		}
+		env.Merge(v)
+	} else {
+		l.WarnContext(ctx, "Not loading values from Vault. VAULT_ADDR is not set")
+	}
+
+	return env, nil
 }
 
 func loadConsul(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dict, error) {
@@ -196,4 +208,40 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 		return code
 	}
 	return 0
+}
+
+func reapChildren(ctx context.Context, l *slog.Logger) {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGCHLD)
+	defer signal.Stop(ch)
+
+	for {
+		select {
+		case <-ch:
+			// run our reap process below
+		case <-ctx.Done():
+			return
+		}
+
+		func() {
+		POLL:
+			var status syscall.WaitStatus
+			pid, err := syscall.Wait4(-1, &status, syscall.WNOHANG, nil)
+			switch {
+			case err == nil:
+				if pid > 0 {
+					l.DebugContext(ctx, "Reaped child process", "pid", pid, "status", status)
+					goto POLL
+				}
+				return
+			case errors.Is(err, syscall.ECHILD):
+				return
+			case errors.Is(err, syscall.EINTR):
+				goto POLL
+			default:
+				l.WarnContext(ctx, "Error while reaping child process", "error", err)
+				return
+			}
+		}()
+	}
 }
