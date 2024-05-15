@@ -13,21 +13,14 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/samber/lo"
 )
 
 var (
 	logLevel = new(slog.LevelVar)
 	// killWait is the time to wait before forcefully terminating the child process
 	killWait = 5 * time.Second
-	// signals contains the signals that will be forwarded to the child process
-	signals = []os.Signal{
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT,
-		syscall.SIGHUP,
-		syscall.SIGUSR1,
-		syscall.SIGUSR2,
-	}
 )
 
 func main() {
@@ -151,6 +144,9 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
+	if !lo.Contains([]string{"sh", "bash", "zsh", "fish", "yarn"}, name) {
+		cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	}
 
 	if err := cmd.Start(); err != nil {
 		l.ErrorContext(ctx, "Could not start command", "error", err, "cmd", cmd.String())
@@ -159,7 +155,7 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 
 	sigch := make(chan os.Signal, 1)
 	exitch := make(chan os.Signal, 1)
-	signal.Notify(sigch, signals...)
+	signal.Notify(sigch)
 	signal.Notify(exitch, syscall.SIGINT)
 	defer signal.Stop(sigch)
 	defer signal.Stop(exitch)
@@ -168,8 +164,12 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 	go func() {
 		for {
 			s := <-sigch
+			if s == syscall.SIGCHLD {
+				continue
+			}
+
 			l.DebugContext(ctx, "Sending signal", "signal", s.String())
-			if err := cmd.Process.Signal(s); err != nil {
+			if err := cmd.Process.Signal(s); err != nil && !errors.Is(err, os.ErrProcessDone) {
 				l.ErrorContext(ctx, "Could not send signal to command", "error", err, "cmd", cmd.String(), "signal", s.String())
 			}
 		}
