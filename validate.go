@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strings"
 
 	"github.com/samber/lo"
 )
@@ -81,7 +82,7 @@ func validate(ctx context.Context, c *Config, e *EnvMap, l *slog.Logger) error {
 
 	if len(req) != 0 {
 		l.ErrorContext(ctx, "Missing required environment variables", "env_vars", req)
-		return ErrMissingEnvVars
+		return fmt.Errorf("%w: %s", ErrMissingEnvVars, strings.Join(req, ", "))
 	}
 
 	return nil
