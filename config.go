@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -14,6 +15,7 @@ type Config struct {
 	Region            string
 	ServiceDefinition string
 	SkipValidation    bool
+	Program           string
 }
 
 // NewFromEnv creates a new Config from environment variables and defaults
@@ -25,6 +27,7 @@ func NewFromEnv() *Config {
 		Region:            os.Getenv("AWS_REGION"),
 		ServiceDefinition: os.Getenv("SERVICE_DEFINITION"),
 		SkipValidation:    false,
+		Program:           "docker-bootstrap",
 	}
 
 	if s, err := strconv.ParseBool(os.Getenv("BOOTSTRAP_SKIP_VALIDATION")); err == nil {
@@ -46,6 +49,10 @@ func NewFromEnv() *Config {
 
 	if cfg.ServiceDefinition == "" {
 		cfg.ServiceDefinition = "service.json"
+	}
+
+	if ex, err := os.Executable(); err == nil {
+		cfg.Program = filepath.Base(ex)
 	}
 
 	return cfg

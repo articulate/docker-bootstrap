@@ -38,6 +38,7 @@ func main() {
 		slog.String("service", cfg.Service),
 		slog.String("product", cfg.Product),
 		slog.String("region", cfg.Region),
+		slog.String("program", cfg.Program),
 	)
 	slog.SetDefault(logger)
 
