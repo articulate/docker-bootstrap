@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Service           string
 	Environment       string
+	Product           string
 	Region            string
 	ServiceDefinition string
 	SkipValidation    bool
@@ -20,6 +21,7 @@ func NewFromEnv() *Config {
 	cfg := &Config{
 		Service:           os.Getenv("SERVICE_NAME"),
 		Environment:       os.Getenv("SERVICE_ENV"),
+		Product:           os.Getenv("SERVICE_PRODUCT"),
 		Region:            os.Getenv("AWS_REGION"),
 		ServiceDefinition: os.Getenv("SERVICE_DEFINITION"),
 		SkipValidation:    false,

@@ -33,7 +33,12 @@ func main() {
 	}
 
 	cfg := NewFromEnv()
-	logger = logger.With("env", cfg.Environment, "service", cfg.Service, "region", cfg.Region)
+	logger = logger.With(
+		slog.String("env", cfg.Environment),
+		slog.String("service", cfg.Service),
+		slog.String("product", cfg.Product),
+		slog.String("region", cfg.Region),
+	)
 	slog.SetDefault(logger)
 
 	if len(os.Args) < 2 {

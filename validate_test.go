@@ -16,12 +16,30 @@ func TestDependency_Required(t *testing.T) {
 			Regions: []string{"us-east-1"},
 		},
 	}
-	assert.True(t, d.Required("us-east-1"))
-	assert.False(t, d.Required("us-west-2"))
+	assert.True(t, d.Required("test", "us-east-1"))
+	assert.False(t, d.Required("test", "us-west-2"))
 
 	d = dependency{}
-	assert.True(t, d.Required("us-east-1"))
-	assert.True(t, d.Required("us-west-2"))
+	assert.True(t, d.Required("test", "us-east-1"))
+	assert.True(t, d.Required("test", "us-west-2"))
+
+	d = dependency{
+		dependencyInner: dependencyInner{
+			Products: []string{"test"},
+		},
+	}
+	assert.True(t, d.Required("test", "us-east-1"))
+	assert.False(t, d.Required("prod", "us-east-1"))
+
+	d = dependency{
+		dependencyInner: dependencyInner{
+			Regions:  []string{"us-east-1"},
+			Products: []string{"test"},
+		},
+	}
+	assert.False(t, d.Required("prod", "us-east-1"))
+	assert.False(t, d.Required("test", "us-west-2"))
+	assert.True(t, d.Required("test", "us-east-1"))
 }
 
 func TestValidate(t *testing.T) { //nolint:funlen
@@ -37,6 +55,10 @@ func TestValidate(t *testing.T) { //nolint:funlen
 					},
 					{
 						"key":"BAZ"
+					},
+					{
+						"key": "FIZZ",
+						"products": ["test"]
 					}
 				],
 				"optional": [
@@ -107,4 +129,11 @@ func TestValidate(t *testing.T) { //nolint:funlen
 	require.NoError(t, err)
 	assert.NotContains(t, log.String(), "Missing required environment variables")
 	assert.NotContains(t, log.String(), "Missing optional environment variables")
+
+	// Missing required env vars for product
+	log.Reset()
+	c.Product = "test"
+	err = validate(context.TODO(), c, e, l)
+	require.ErrorIs(t, err, ErrMissingEnvVars)
+	assert.Contains(t, log.String(), `Missing required environment variables","env_vars":["FIZZ"]`)
 }
