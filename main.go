@@ -65,7 +65,14 @@ func main() {
 		go reapChildren(ctx, logger)
 	}
 
-	os.Exit(run(ctx, os.Args[1], os.Args[2:], env.Environ(), logger))
+	cmd := os.Args[1]
+	args := os.Args[2:]
+
+	if cmd == "yarn" {
+		logger.WarnContext(ctx, "yarn is not recommended. You might see unexpected behavior. Use node or npm instead.")
+	}
+
+	os.Exit(run(ctx, cmd, args, env.Environ(), logger))
 }
 
 func loadEnvVars(ctx context.Context, cfg *Config, l *slog.Logger) (*EnvMap, error) {
