@@ -68,8 +68,8 @@ func main() {
 	cmd := os.Args[1]
 	args := os.Args[2:]
 
-	if cmd == "yarn" {
-		logger.WarnContext(ctx, "yarn is not recommended. You might see unexpected behavior. Use node or npm instead.")
+	if cmd == "yarn" || cmd == "npm" {
+		logger.WarnContext(ctx, cmd+" is not recommended. You might see unexpected behavior. Use node instead.")
 	}
 
 	os.Exit(run(ctx, cmd, args, env.Environ(), logger))
