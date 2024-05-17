@@ -169,8 +169,8 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
-	if !lo.Contains([]string{"sh", "bash", "zsh", "fish", "yarn"}, name) {
-		cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	if !lo.Contains([]string{"sh", "bash", "zsh", "fish"}, name) {
+		cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 	}
 
 	if err := cmd.Start(); err != nil {
