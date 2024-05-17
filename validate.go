@@ -26,16 +26,17 @@ type (
 		Partial bool `json:"-"`
 	}
 	dependencyInner struct {
-		Key     string   `json:"key"`
-		Regions []string `json:"regions"`
+		Key      string   `json:"key"`
+		Regions  []string `json:"regions"`
+		Products []string `json:"products"`
 	}
 )
 
 var ErrMissingEnvVars = errors.New("missing required environment variables")
 
 // Required returns true if the dependency is required for the given region
-func (d *dependency) Required(region string) bool {
-	return d.Regions == nil || lo.Contains(d.Regions, region)
+func (d *dependency) Required(product, region string) bool {
+	return (d.Products == nil || lo.Contains(d.Products, product)) && (d.Regions == nil || lo.Contains(d.Regions, region))
 }
 
 // UnmarshalJSON handles the dependency being a string or an object
@@ -91,7 +92,7 @@ func validate(ctx context.Context, c *Config, e *EnvMap, l *slog.Logger) error {
 func missing(deps []dependency, c *Config, e *EnvMap) []string {
 	res := []string{}
 	for _, d := range deps {
-		if !d.Required(c.Region) {
+		if !d.Required(c.Product, c.Region) {
 			continue
 		}
 
