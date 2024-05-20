@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/samber/lo"
+	"golang.org/x/term"
 )
 
 var (
@@ -169,9 +169,9 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
-	if !lo.Contains([]string{"sh", "bash", "zsh", "fish"}, name) {
-		cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
-	}
+
+	isTerm := term.IsTerminal(int(os.Stdin.Fd()))
+	cmd.SysProcAttr = &syscall.SysProcAttr{Foreground: isTerm, Setsid: !isTerm}
 
 	if err := cmd.Start(); err != nil {
 		l.ErrorContext(ctx, "Could not start command", "error", err, "cmd", cmd.String())
@@ -187,8 +187,7 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 
 	// forward signals to the child process
 	go func() {
-		for {
-			s := <-sigch
+		for s := range sigch {
 			if s == syscall.SIGCHLD {
 				continue
 			}
