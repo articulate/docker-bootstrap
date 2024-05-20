@@ -14,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/hashicorp/go-reap"
 	"golang.org/x/term"
 )
 
@@ -68,7 +69,7 @@ func main() {
 	}
 
 	if os.Getpid() == 1 {
-		go reapChildren(ctx, logger)
+		go reap.ReapChildren(nil, nil, nil, nil)
 	}
 
 	cmd := os.Args[1]
@@ -220,40 +221,4 @@ func run(ctx context.Context, name string, args, env []string, l *slog.Logger) i
 		return code
 	}
 	return 0
-}
-
-func reapChildren(ctx context.Context, l *slog.Logger) {
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, syscall.SIGCHLD)
-	defer signal.Stop(ch)
-
-	for {
-		select {
-		case <-ch:
-			// run our reap process below
-		case <-ctx.Done():
-			return
-		}
-
-		func() {
-		POLL:
-			var status syscall.WaitStatus
-			pid, err := syscall.Wait4(-1, &status, syscall.WNOHANG, nil)
-			switch {
-			case err == nil:
-				if pid > 0 {
-					l.DebugContext(ctx, "Reaped child process", "pid", pid, "status", status)
-					goto POLL
-				}
-				return
-			case errors.Is(err, syscall.ECHILD):
-				return
-			case errors.Is(err, syscall.EINTR):
-				goto POLL
-			default:
-				l.WarnContext(ctx, "Error while reaping child process", "error", err)
-				return
-			}
-		}()
-	}
 }
