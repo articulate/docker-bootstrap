@@ -11,6 +11,7 @@ require (
 	github.com/hashicorp/vault/api/auth/kubernetes v0.6.0
 	github.com/samber/lo v1.39.0
 	github.com/stretchr/testify v1.9.0
+	golang.org/x/term v0.15.0
 )
 
 require (
