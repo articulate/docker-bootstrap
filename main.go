@@ -65,6 +65,7 @@ func main() {
 		logger.WarnContext(ctx, cmd+" is not recommended. You might see unexpected behavior. Use node instead.")
 	}
 
+	logger.DebugContext(ctx, "Running command", "command", cmd, "args", args)
 	if err := run(cmd, args, env.Environ()); err != nil {
 		logger.ErrorContext(ctx, "Could not run command", "error", err)
 		os.Exit(1)
@@ -157,6 +158,7 @@ func run(name string, args, env []string) error {
 	}
 
 	env = append(os.Environ(), env...)
+	args = append([]string{name}, args...)
 
 	if err := syscall.Exec(bin, args, env); err != nil {
 		return fmt.Errorf("could not execute %s %s: %w", name, strings.Join(args, " "), err)
