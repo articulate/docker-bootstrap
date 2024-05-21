@@ -156,6 +156,8 @@ func run(name string, args, env []string) error {
 		return fmt.Errorf("could not find %s: %w", name, err)
 	}
 
+	env = append(os.Environ(), env...)
+
 	if err := syscall.Exec(bin, args, env); err != nil {
 		return fmt.Errorf("could not execute %s %s: %w", name, strings.Join(args, " "), err)
 	}
