@@ -6,13 +6,11 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.27.10
 	github.com/aws/aws-sdk-go-v2/service/kms v1.30.1
 	github.com/hashicorp/consul/api v1.28.2
-	github.com/hashicorp/go-reap v0.0.0-20230117204525-bf69c61a7b71
 	github.com/hashicorp/vault/api v1.12.0
 	github.com/hashicorp/vault/api/auth/aws v0.6.0
 	github.com/hashicorp/vault/api/auth/kubernetes v0.6.0
 	github.com/samber/lo v1.39.0
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/term v0.15.0
 )
 
 require (

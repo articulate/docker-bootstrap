@@ -2,27 +2,17 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"os"
 	"os/exec"
-	"os/signal"
 	"runtime"
 	"strconv"
 	"strings"
 	"syscall"
-	"time"
-
-	"github.com/hashicorp/go-reap"
-	"golang.org/x/term"
 )
 
-var (
-	logLevel = new(slog.LevelVar)
-	// killWait is the time to wait before forcefully terminating the child process
-	killWait = 5 * time.Second
-)
+var logLevel = new(slog.LevelVar)
 
 func main() {
 	ctx := context.Background()
@@ -68,10 +58,6 @@ func main() {
 		os.Exit(4)
 	}
 
-	if os.Getpid() == 1 {
-		go reap.ReapChildren(nil, nil, nil, nil)
-	}
-
 	cmd := os.Args[1]
 	args := os.Args[2:]
 
@@ -79,7 +65,10 @@ func main() {
 		logger.WarnContext(ctx, cmd+" is not recommended. You might see unexpected behavior. Use node instead.")
 	}
 
-	os.Exit(run(ctx, cmd, args, env.Environ(), logger))
+	if err := run(cmd, args, env.Environ()); err != nil {
+		logger.ErrorContext(ctx, "Could not run command", "error", err)
+		os.Exit(1)
+	}
 }
 
 func loadEnvVars(ctx context.Context, cfg *Config, l *slog.Logger) (*EnvMap, error) {
@@ -108,7 +97,7 @@ func loadEnvVars(ctx context.Context, cfg *Config, l *slog.Logger) (*EnvMap, err
 }
 
 func loadConsul(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dict, error) {
-	l.Debug("Loading values from Consul")
+	l.DebugContext(ctx, "Loading values from Consul")
 
 	client, err := NewConsul(addr)
 	if err != nil {
@@ -161,64 +150,15 @@ func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dic
 	return values, err
 }
 
-func run(ctx context.Context, name string, args, env []string, l *slog.Logger) int {
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
-	cmd := exec.CommandContext(ctx, name, args...) //nolint:gosec
-	cmd.Env = append(os.Environ(), env...)
-	cmd.Stdin = os.Stdin
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-
-	isTerm := term.IsTerminal(int(os.Stdin.Fd()))
-	cmd.SysProcAttr = &syscall.SysProcAttr{Foreground: isTerm, Setsid: !isTerm}
-
-	if err := cmd.Start(); err != nil {
-		l.ErrorContext(ctx, "Could not start command", "error", err, "cmd", cmd.String())
-		return 1
+func run(name string, args, env []string) error {
+	bin, err := exec.LookPath(name)
+	if err != nil {
+		return fmt.Errorf("could not find %s: %w", name, err)
 	}
 
-	sigch := make(chan os.Signal, 1)
-	exitch := make(chan os.Signal, 1)
-	signal.Notify(sigch)
-	signal.Notify(exitch, syscall.SIGINT)
-	defer signal.Stop(sigch)
-	defer signal.Stop(exitch)
-
-	// forward signals to the child process
-	go func() {
-		for s := range sigch {
-			if s == syscall.SIGCHLD {
-				continue
-			}
-
-			l.DebugContext(ctx, "Sending signal", "signal", s.String())
-			if err := cmd.Process.Signal(s); err != nil && !errors.Is(err, os.ErrProcessDone) {
-				l.ErrorContext(ctx, "Could not send signal to command", "error", err, "cmd", cmd.String(), "signal", s.String())
-			}
-		}
-	}()
-
-	// handle forceful termination
-	go func() {
-		<-exitch
-		time.Sleep(killWait)
-		l.WarnContext(ctx, "Terminating unresponsive process", "cmd", cmd.String())
-		cancel()
-	}()
-
-	if err := cmd.Wait(); err != nil {
-		var exit *exec.ExitError
-		if errors.As(err, &exit) {
-			return exit.ExitCode()
-		}
-		l.ErrorContext(ctx, "Unknown error while running command", "error", err, "cmd", cmd.String())
-		return 3
+	if err := syscall.Exec(bin, args, env); err != nil {
+		return fmt.Errorf("could not execute %s %s: %w", name, strings.Join(args, " "), err)
 	}
 
-	if code := cmd.ProcessState.ExitCode(); code != -1 {
-		return code
-	}
-	return 0
+	return nil
 }
