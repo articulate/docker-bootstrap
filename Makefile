@@ -11,7 +11,7 @@ help:
 
 build: ## Build binary
 	@echo "+ $@"
-	@goreleaser build --snapshot --rm-dist --skip-post-hooks
+	@goreleaser build --snapshot --clean
 .PHONY: build
 
 generate: ## Autogenerate code and resources
