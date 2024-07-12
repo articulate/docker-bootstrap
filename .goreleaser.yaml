@@ -1,23 +1,24 @@
+version: 2
 before:
   hooks:
     - go mod tidy
     - go generate ./...
 builds:
-  - env:
-      - CGO_ENABLED=0
+  - goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
     flags:
       - -trimpath
       - -mod=readonly
     ldflags:
       - -s -w
-    goos:
-      - linux
-    goarch:
-      - amd64
-      - arm64
-    hooks:
-      post:
-        - upx --brute {{ .Path }}
+    env:
+      - CGO_ENABLED=0
+upx:
+  - enabled: true
+    brute: true
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
     format: binary
