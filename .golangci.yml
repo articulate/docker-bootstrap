@@ -21,10 +21,8 @@ linters:
     - nestif
     - forbidigo
   disable:
-    - scopelint
     - rowserrcheck
     - sqlclosecheck
-    - maligned
 
 linters-settings:
   gocyclo:
