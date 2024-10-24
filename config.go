@@ -78,17 +78,17 @@ func (c *Config) ConsulPaths() []string {
 
 // VaultPaths returns the paths from Vault to load
 func (c *Config) VaultPaths() []string {
-	isPublic := c.Environment == "stage" || c.Environment == "prod"
+	devEnv := c.Environment == "dev" || c.Environment == "test"
 	paths := []string{}
 
-	if isPublic {
+	if !devEnv {
 		paths = append(paths, "secret/global/env_vars")
 	}
 
 	paths = append(paths, fmt.Sprintf("secret/global/%s/env_vars", c.Environment))
 
 	if c.Service != "" {
-		if isPublic {
+		if !devEnv {
 			paths = append(paths, fmt.Sprintf("secret/services/%s/env_vars", c.Service))
 		}
 
