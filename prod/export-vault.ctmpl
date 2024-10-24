@@ -7,6 +7,7 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (env
 {{end -}}
 {{end -}}
 
+{{if not (eq (env "SERVICE_ENV") "dev") -}}
 {{range secrets "secret/global/env_vars" -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="{{.Data.value}}"{{end}}
@@ -16,5 +17,6 @@ export {{ . | toUpper}}{{with secret (printf "secret/global/env_vars/%s" .) }}="
 {{range secrets (printf "secret/services/%s/env_vars" (env "SERVICE_NAME")) -}}
 {{if not (env (. | toUpper)) -}}
 export {{ . | toUpper}}{{with secret (printf "secret/services/%s/env_vars/%s" (env "SERVICE_NAME") .) }}="{{.Data.value}}"{{end}}
+{{end -}}
 {{end -}}
 {{end -}}
