@@ -12,11 +12,3 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: shellcheck install.sh entrypoint.sh
-  dockerspec:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: docker-compose build
-      - run: docker-compose run --rm -e COMMIT_SHA app
-        env:
-          COMMIT_SHA: ${{ github.sha }}

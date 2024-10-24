@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-{{range secrets (printf "secret/global/%s/env_vars" (env "SERVICE_ENV")) -}}
-{{if not (env (. | toUpper)) -}}
-export {{ . | toUpper}}{{with secret (printf "secret/global/%s/env_vars/%s" (env "SERVICE_ENV") .) }}="{{.Data.value}}"{{end}}
-{{end -}}
-{{end -}}
