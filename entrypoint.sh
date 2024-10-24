@@ -4,7 +4,7 @@ set -e
 AWS_REGION="${AWS_REGION:-us-east-1}"
 
 if [ -n "$CONSUL_ADDR" ]; then
-  if consul-template -consul-addr="$CONSUL_ADDR" -template="/consul-template/${SERVICE_ENV}/export-consul.ctmpl:/tmp/export-consul.sh" -once -max-stale=0; then
+  if consul-template -consul-addr="$CONSUL_ADDR" -template="/consul-template/templates/export-consul.ctmpl:/tmp/export-consul.sh" -once -max-stale=0; then
     # shellcheck disable=SC1091
     source /tmp/export-consul.sh
     rm -f /tmp/export-consul.sh
@@ -59,7 +59,7 @@ if [ -n "$VAULT_ADDR" ]; then
   fi
 
   if [ -n "$VAULT_TOKEN" ] && [ -n "$CONSUL_ADDR" ]; then
-    if consul-template -consul-addr="$CONSUL_ADDR" -vault-addr="$VAULT_ADDR" -template="/consul-template/${SERVICE_ENV}/export-vault.ctmpl:/tmp/export-vault.sh" -once -max-stale=0; then
+    if consul-template -consul-addr="$CONSUL_ADDR" -vault-addr="$VAULT_ADDR" -template="/consul-template/templates/export-vault.ctmpl:/tmp/export-vault.sh" -once -max-stale=0; then
       # shellcheck disable=SC1091
       source /tmp/export-vault.sh
       rm -f /tmp/export-vault.sh
