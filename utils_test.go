@@ -34,9 +34,10 @@ func TestLoadValues(t *testing.T) {
 		"bar": "baz",
 	}, d)
 
-	assert.Equal(t, []byte(`{"time":"test-time","level":"DEBUG","msg":"Loading values","path":"foo"}
+	//nolint:testifylint
+	assert.Equal(t, `{"time":"test-time","level":"DEBUG","msg":"Loading values","path":"foo"}
 {"time":"test-time","level":"DEBUG","msg":"Loading values","path":"bar"}
-`), log.Bytes())
+`, log.String())
 
 	m.AssertExpectations(t)
 }
@@ -51,8 +52,7 @@ func TestLoadValues_Error(t *testing.T) {
 	require.ErrorContains(t, err, "Could not load values: test error")
 	assert.Equal(t, Dict{}, d)
 
-	assert.Equal(t, []byte(`{"time":"test-time","level":"DEBUG","msg":"Loading values","path":"none"}
-`), log.Bytes())
+	assert.JSONEq(t, `{"time":"test-time","level":"DEBUG","msg":"Loading values","path":"none"}`, log.String())
 
 	m.AssertExpectations(t)
 }
