@@ -22,7 +22,7 @@ func (e *structuredError) Unwrap() error {
 }
 
 // LogValue returns a structured log value for use with slog
-func (e structuredError) LogValue() slog.Value {
+func (e *structuredError) LogValue() slog.Value {
 	args := make([]slog.Attr, 0, (len(e.args)/2)+1)
 	args = append(args, slog.String(slog.MessageKey, e.Error()))
 
