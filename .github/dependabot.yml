@@ -4,6 +4,8 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    commit-message:
+      prefix: ci
     groups:
       actions:
         patterns:
@@ -13,6 +15,9 @@ updates:
     open-pull-requests-limit: 25
     schedule:
       interval: monthly
+    commit-message:
+      prefix: deps
+      prefix-development: build(gomod)
     groups:
       aws:
         patterns:
