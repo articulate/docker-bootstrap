@@ -121,16 +121,12 @@ func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dic
 		return nil, serror(fmt.Errorf("Could not connect to Vault: %w", err), "addr", addr)
 	}
 
-	token, err := vaultToken(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("Could not get Vault token: %w", err)
-	}
-
 	role := os.Getenv("VAULT_ROLE")
 	if role == "" {
 		role = c.Service
 	}
 
+	token := os.Getenv("VAULT_TOKEN")
 	auth, err := client.Authenticate(ctx, token, role)
 	if err != nil {
 		return nil, fmt.Errorf("Could not authenticate Vault: %w", err)

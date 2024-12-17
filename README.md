@@ -53,8 +53,6 @@ Consul values, but follow the same rules otherwise.
 You can authenticate with Vault in one of the following ways:
 
 * Set `VAULT_TOKEN`
-* Set `ENCRYPTED_VAULT_TOKEN` with a value encrypted by AWS KMS
-  * You'll need to make sure the container has permissions for the default KMS key
 * If running on Kubernetes, use the Kubernetes auth method in Vault
 * If running on AWS ECS or Lambda, use the AWS IAM auth method
   * If Vault role does not match IAM role, set with `VAULT_ROLE`

@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/hashicorp/vault/api"
 	"github.com/hashicorp/vault/api/auth/aws"
 	"github.com/hashicorp/vault/api/auth/kubernetes"
@@ -125,23 +123,4 @@ func secretKeys(s *api.Secret) []string {
 	}
 
 	return list
-}
-
-// vaultToken returns the vault token from env var
-func vaultToken(ctx context.Context) (string, error) {
-	if token := os.Getenv("VAULT_TOKEN"); token != "" {
-		return token, nil
-	}
-
-	if enc := os.Getenv("ENCRYPTED_VAULT_TOKEN"); enc != "" {
-		cfg, err := config.LoadDefaultConfig(ctx)
-		if err != nil {
-			return "", fmt.Errorf("could not load config: %w", err)
-		}
-
-		client := kms.NewFromConfig(cfg)
-		return decodeToken(ctx, client, enc)
-	}
-
-	return "", nil
 }
