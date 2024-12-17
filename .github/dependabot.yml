@@ -19,9 +19,6 @@ updates:
       prefix: deps
       prefix-development: build(gomod)
     groups:
-      aws:
-        patterns:
-          - github.com/aws/*
       hashicorp:
         patterns:
           - github.com/hashicorp/*
