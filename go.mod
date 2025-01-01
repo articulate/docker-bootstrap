@@ -3,7 +3,7 @@ module github.com/articulate/docker-bootstrap
 go 1.23
 
 require (
-	github.com/hashicorp/consul/api v1.30.0
+	github.com/hashicorp/consul/api v1.31.0
 	github.com/hashicorp/vault/api v1.15.0
 	github.com/hashicorp/vault/api/auth/aws v0.8.0
 	github.com/hashicorp/vault/api/auth/kubernetes v0.8.0
