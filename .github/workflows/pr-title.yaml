@@ -1,0 +1,10 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  title-check:
+    uses: articulate/devex-sre/.github/workflows/conventional-commit-pr-title.yaml@main
+    secrets: inherit
