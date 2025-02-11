@@ -8,17 +8,17 @@ builds:
       - linux
     goarch:
       - amd64
-      - arm64
     flags:
       - -trimpath
       - -mod=readonly
+      - -tags=cgo
     ldflags:
       - -s -w
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
 upx:
-  - enabled: true
-    brute: true
+  - enabled: false
+    brute: false
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
     format: binary
