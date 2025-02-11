@@ -4,21 +4,31 @@ before:
     - go mod tidy
     - go generate ./...
 builds:
-  - goos:
+  - id: bootstrap-amd64
+    goos:
       - linux
     goarch:
       - amd64
-    flags:
-      - -trimpath
-      - -mod=readonly
-      - -tags=cgo
     ldflags:
-      - -s -w
+      - "-s -w -extldflags '-Wl,-rpath,$ORIGIN'"
     env:
       - CGO_ENABLED=1
-upx:
-  - enabled: false
-    brute: false
+      - CC=gcc
+      - CXX=g++
+    
+  - id: bootstrap-arm64
+    goos:
+      - linux
+    goarch:
+      - arm64
+    ldflags:
+      - "-s -w -extldflags '-Wl,-rpath,$ORIGIN'"
+    env:
+      - CGO_ENABLED=1
+      - CC=aarch64-linux-gnu-gcc
+      - CXX=aarch64-linux-gnu-g++
+      - CGO_LDFLAGS="-L/usr/aarch64-linux-gnu/lib -Wl,--sysroot=/usr/aarch64-linux-gnu"
+      - CGO_CFLAGS="--sysroot=/usr/aarch64-linux-gnu"
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
     format: binary
