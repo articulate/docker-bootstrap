@@ -15,7 +15,6 @@ builds:
       - CGO_ENABLED=1
       - CC=gcc
       - CXX=g++
-    
   - id: bootstrap-arm64
     goos:
       - linux
@@ -29,6 +28,31 @@ builds:
       - CXX=aarch64-linux-gnu-g++
       - CGO_LDFLAGS="-L/usr/aarch64-linux-gnu/lib -Wl,--sysroot=/usr/aarch64-linux-gnu"
       - CGO_CFLAGS="--sysroot=/usr/aarch64-linux-gnu"
+  - id: bootstrap-musl-amd64
+    goos:
+      - linux
+    goarch:
+      - amd64
+    ldflags:
+      - "-s -w -extldflags '-Wl,-rpath,$ORIGIN'"
+    env:
+      - CGO_ENABLED=1
+      - CC=x86_64-linux-musl-gcc
+      - CXX=x86_64-linux-musl-g++
+      - CGO_LDFLAGS=-static-libgcc
+  # I'm having a hard time finding a cross-compiler that works for arm-based musl builds. In theory this would work if building in an arm environment
+  # - id: bootstrap-musl-arm64
+  #   goos:
+  #     - linux
+  #   goarch:
+  #     - arm64
+  #   ldflags:
+  #     - "-s -w -extldflags '-Wl,-rpath,$ORIGIN'"
+  #   env:
+  #     - CGO_ENABLED=1
+  #     - CC=aarch64-linux-musl-gcc
+  #     - CXX=aarch64-linux-musl-g++
+  #     - CGO_LDFLAGS=-static-libgcc
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
     format: binary
