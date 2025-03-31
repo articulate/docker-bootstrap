@@ -16,9 +16,6 @@ builds:
       - -s -w
     env:
       - CGO_ENABLED=0
-upx:
-  - enabled: true
-    brute: true
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
     format: binary
