@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.3](https://github.com/articulate/docker-bootstrap/compare/v5.0.2...v5.0.3) (2025-03-31)
+
+
+### Bug Fixes
+
+* **goreleaser:** disable upx ([#263](https://github.com/articulate/docker-bootstrap/issues/263)) ([56ff284](https://github.com/articulate/docker-bootstrap/commit/56ff2846ea266730179e626e2f6185fa60c5411a))
+
 ## [5.0.2](https://github.com/articulate/docker-bootstrap/compare/v5.0.1...v5.0.2) (2025-02-19)
 
 
