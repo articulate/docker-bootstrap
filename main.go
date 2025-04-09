@@ -102,7 +102,7 @@ func loadConsul(ctx context.Context, addr string, c *Config, l *slog.Logger) (Di
 
 	client, err := NewConsul(addr)
 	if err != nil {
-		return nil, serror(fmt.Errorf("Could not connect to Consul: %w", err), "addr", addr)
+		return nil, serror(fmt.Errorf("could not connect to Consul: %w", err), "addr", addr)
 	}
 
 	paths := c.ConsulPaths()
@@ -118,7 +118,7 @@ func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dic
 
 	client, err := NewVault(addr, c.Region)
 	if err != nil {
-		return nil, serror(fmt.Errorf("Could not connect to Vault: %w", err), "addr", addr)
+		return nil, serror(fmt.Errorf("could not connect to Vault: %w", err), "addr", addr)
 	}
 
 	role := os.Getenv("VAULT_ROLE")
@@ -129,7 +129,7 @@ func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dic
 	token := os.Getenv("VAULT_TOKEN")
 	auth, err := client.Authenticate(ctx, token, role)
 	if err != nil {
-		return nil, fmt.Errorf("Could not authenticate Vault: %w", err)
+		return nil, fmt.Errorf("could not authenticate Vault: %w", err)
 	}
 
 	if auth == "" {
