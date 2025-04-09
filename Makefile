@@ -56,5 +56,6 @@ lint: ## Lint Go code
 
 format: ## Try to fix linting issues
 	@echo "+ $@"
+	@golangci-lint fmt
 	@golangci-lint run --fix
 .PHONY: format

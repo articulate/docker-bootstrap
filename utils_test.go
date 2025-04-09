@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"testing"
 
@@ -27,7 +26,7 @@ func TestLoadValues(t *testing.T) {
 	m.On("Load", "foo").Return("foo", "bar", nil)
 	m.On("Load", "bar").Return("bar", "baz", nil)
 
-	d, err := loadValues(context.TODO(), m, logger, []string{"foo", "bar"})
+	d, err := loadValues(t.Context(), m, logger, []string{"foo", "bar"})
 	require.NoError(t, err)
 	assert.Equal(t, Dict{
 		"foo": "bar",
@@ -48,7 +47,7 @@ func TestLoadValues_Error(t *testing.T) {
 	m := new(mockClient)
 	m.On("Load", "none").Return("", "", errors.New("test error")) //nolint:err113
 
-	d, err := loadValues(context.TODO(), m, logger, []string{"none"})
+	d, err := loadValues(t.Context(), m, logger, []string{"none"})
 	require.ErrorContains(t, err, "could not load values: test error")
 	assert.Equal(t, Dict{}, d)
 

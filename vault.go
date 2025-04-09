@@ -14,8 +14,9 @@ const k8sTokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token" //nol
 
 // Vault is a client for fetching values from Vault
 type Vault struct {
-	client *api.Client
-	region string
+	client       *api.Client
+	region       string
+	k8sTokenFile string
 }
 
 // NewVault returns a new Vault client
@@ -28,7 +29,7 @@ func NewVault(addr, region string) (*Vault, error) {
 		return nil, fmt.Errorf("could not connect to %s: %w", addr, err)
 	}
 
-	return &Vault{client, region}, nil
+	return &Vault{client, region, k8sTokenFile}, nil
 }
 
 // Authenticate authenticates the client with Vault
@@ -57,8 +58,8 @@ func (v *Vault) Authenticate(ctx context.Context, token, role string) (string, e
 
 // getAuthMethod tries to determine the auth method to be used with Vault
 func (v *Vault) getAuthMethod(role string) (api.AuthMethod, error) {
-	if _, err := os.Stat(k8sTokenFile); !os.IsNotExist(err) {
-		auth, err := kubernetes.NewKubernetesAuth(role)
+	if _, err := os.Stat(v.k8sTokenFile); !os.IsNotExist(err) {
+		auth, err := kubernetes.NewKubernetesAuth(role, kubernetes.WithServiceAccountTokenPath(v.k8sTokenFile))
 		if err != nil {
 			return nil, fmt.Errorf("could not authenticate with kubernetes: %w", err)
 		}

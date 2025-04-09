@@ -64,6 +64,7 @@ func validate(ctx context.Context, c *Config, e *EnvMap, l *slog.Logger) error {
 
 	f, err := os.ReadFile(c.ServiceDefinition)
 	if os.IsNotExist(err) {
+		l.DebugContext(ctx, "Service definition does not exist. Skipping validation", "file", c.ServiceDefinition)
 		return nil
 	} else if err != nil {
 		return fmt.Errorf("could not read service definition: %w", err)

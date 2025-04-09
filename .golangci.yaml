@@ -58,6 +58,10 @@ linters:
       - common-false-positives
       - legacy
       - std-error-handling
+    rules:
+      - linters:
+          - lll
+        path: _test\.go
     paths:
       - third_party$
       - builtin$
@@ -70,7 +74,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - github.com/articulate/docker-consul-template-bootstrap
+        - github.com/articulate/docker-bootstrap
   exclusions:
     generated: lax
     paths:
