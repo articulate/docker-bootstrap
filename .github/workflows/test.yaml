@@ -29,6 +29,82 @@ jobs:
           cache: true
       - run: make test
 
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      consul:
+        image: hashicorp/consul
+        ports:
+          - 8500:8500
+      vault:
+        image: hashicorp/vault
+        env:
+          SKIP_SETCAP: "true"
+          VAULT_DEV_ROOT_TOKEN_ID: vault-auth-token
+        ports:
+          - 8200:8200
+    env:
+      SERVICE_NAME: my-test-service
+      SERVICE_PRODUCT: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          check-latest: true
+          cache: true
+      - name: Setup
+        run: |
+          source tests/setup
+
+          consul global/env_vars/FOO foo
+          consul global/env_vars/BAR bar
+          consul global/dev/env_vars/DEV dev
+          consul services/my-test-service/env_vars/FOO foobar
+          consul services/my-test-service/env_vars/BAZ baz
+          consul services/my-test-service/dev/env_vars/FOOBAR test
+
+          vault global/env_vars/SECRET my-secret
+          vault global/dev/env_vars/SECRET my-dev-secret
+          vault global/dev/env_vars/DEV vdev
+          vault services/my-test-service/env_vars/FOO vfoo
+          vault services/my-test-service/dev/env_vars/FOOBAR vfoobar
+      - name: Test no config
+        run: scripts/test -s 0 -e tests/no-config.stderr.txt true
+      - name: Test no command
+        run: scripts/test -s 1 -e tests/no-command.stderr.txt
+      - name: Test load all dev
+        run: scripts/test -s 0 -o tests/dev.stdout.txt -e tests/dev.stderr.txt tests/print-env FOO BAR BAZ DEV TEST SECRET
+        env:
+          CONSUL_ADDR: http://127.0.0.1:8500
+          VAULT_ADDR: http://127.0.0.1:8200
+          VAULT_TOKEN: vault-auth-token
+      - name: Test load all
+        run: scripts/test -s 0 -o tests/full.stdout.txt tests/print-env FOO BAR BAZ DEV TEST SECRET
+        env:
+          CONSUL_ADDR: http://127.0.0.1:8500
+          VAULT_ADDR: http://127.0.0.1:8200
+          VAULT_TOKEN: vault-auth-token
+          SERVICE_ENV: stage
+      - name: Test load consul
+        run: scripts/test -s 0 -o tests/consul.stdout.txt -e tests/consul.stderr.txt tests/print-env FOO BAR BAZ DEV TEST
+        env:
+          CONSUL_ADDR: http://127.0.0.1:8500
+      - name: Test load vault
+        run: scripts/test -s 0 -o tests/vault.stdout.txt -e tests/vault.stderr.txt tests/print-env FOO BAR BAZ DEV TEST SECRET
+        env:
+          VAULT_ADDR: http://127.0.0.1:8200
+          VAULT_TOKEN: vault-auth-token
+          SERVICE_ENV: stage
+      - name: Test load no service
+        run: scripts/test -d -s 0 -o tests/no-service.stdout.txt -e tests/no-service.stderr.txt tests/print-env FOO BAR BAZ DEV TEST SECRET
+        env:
+          SERVICE_NAME: ""
+          CONSUL_ADDR: http://127.0.0.1:8500
+          VAULT_ADDR: http://127.0.0.1:8200
+          VAULT_TOKEN: vault-auth-token
+          SERVICE_ENV: stage
+
   shellcheck:
     runs-on: ubuntu-latest
     steps:

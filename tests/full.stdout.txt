@@ -1,0 +1,4 @@
+BAR=bar
+BAZ=baz
+FOO=vfoo
+SECRET=my-secret

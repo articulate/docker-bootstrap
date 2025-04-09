@@ -1,0 +1,3 @@
+BAR=bar
+FOO=foo
+SECRET=my-secret

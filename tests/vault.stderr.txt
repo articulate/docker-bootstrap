@@ -1,0 +1,1 @@
+{"level":"WARN","msg":"Not loading values from Consul. CONSUL_ADDR is not set","env":"stage","service":"my-test-service","product":"test","region":"us-east-1","program":"docker-bootstrap"}

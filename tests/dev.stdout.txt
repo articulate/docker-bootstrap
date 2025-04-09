@@ -1,0 +1,6 @@
+BAR=bar
+BAZ=baz
+DEV=vdev
+FOO=foobar
+FOOBAR=vfoobar
+SECRET=my-dev-secret
