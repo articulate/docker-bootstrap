@@ -49,7 +49,7 @@ func TestLoadValues_Error(t *testing.T) {
 	m.On("Load", "none").Return("", "", errors.New("test error")) //nolint:err113
 
 	d, err := loadValues(context.TODO(), m, logger, []string{"none"})
-	require.ErrorContains(t, err, "Could not load values: test error")
+	require.ErrorContains(t, err, "could not load values: test error")
 	assert.Equal(t, Dict{}, d)
 
 	assert.JSONEq(t, `{"time":"test-time","level":"DEBUG","msg":"Loading values","path":"none"}`, log.String())
