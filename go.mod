@@ -1,6 +1,6 @@
 module github.com/articulate/docker-bootstrap
 
-go 1.23
+go 1.24
 
 require (
 	github.com/hashicorp/consul/api v1.31.0
