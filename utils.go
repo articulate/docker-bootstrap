@@ -22,7 +22,7 @@ func loadValues(ctx context.Context, c Client, l *slog.Logger, paths []string) (
 
 		kv, err := c.Load(path)
 		if err != nil {
-			return values, serror(fmt.Errorf("Could not load values: %w", err), "path", path)
+			return values, serror(fmt.Errorf("could not load values: %w", err), "path", path)
 		}
 
 		for k, v := range kv {

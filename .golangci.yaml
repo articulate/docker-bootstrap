@@ -1,36 +1,79 @@
+version: "2"
 linters:
-  presets:
-    - bugs
-    - error
-    - performance
   enable:
-    - gofmt
-    - gofumpt
-    - revive
-    - gocyclo
-    - misspell
-    - whitespace
-    - goimports
-    - gofmt
-    - gosec
-    - lll
-    - unused
-    - nonamedreturns
-    - tenv
-    - funlen
-    - nestif
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - durationcheck
+    - err113
+    - errchkjson
+    - errorlint
+    - exhaustive
+    - fatcontext
     - forbidigo
+    - funlen
+    - gocheckcompilerdirectives
+    - gochecksumtype
+    - gocyclo
+    - gosec
+    - gosmopolitan
+    - lll
+    - loggercheck
+    - makezero
+    - misspell
+    - musttag
+    - nestif
+    - nilerr
+    - nilnesserr
+    - noctx
+    - nonamedreturns
+    - perfsprint
+    - prealloc
+    - protogetter
+    - reassign
+    - recvcheck
+    - revive
+    - spancheck
+    - testifylint
+    - whitespace
+    - wrapcheck
+    - zerologlint
   disable:
     - rowserrcheck
     - sqlclosecheck
-
-linters-settings:
-  gocyclo:
-    min-complexity: 10
-  goimports:
-    local-prefixes: github.com/articulate/docker-consul-template-bootstrap
-  forbidigo:
-    analyze-types: true
-    forbid:
-      - ^(fmt\\.Print(|f|ln)|print|println)$
-      - ^spew\.(ConfigState\.)?Dump$
+  settings:
+    forbidigo:
+      forbid:
+        - pattern: ^(fmt\\.Print(|f|ln)|print|println)$
+        - pattern: ^spew\.(ConfigState\.)?Dump$
+      analyze-types: true
+    gocyclo:
+      min-complexity: 10
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/articulate/docker-consul-template-bootstrap
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
