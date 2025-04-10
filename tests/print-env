@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+
+env | sort | grep -E "^($(IFS="|" ; echo "$*"))"

@@ -1,0 +1,1 @@
+{"level":"WARN","msg":"SERVICE_ENV is not set, defaulting to dev"}

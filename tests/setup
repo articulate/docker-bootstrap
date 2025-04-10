@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -e
+
+consul() {
+    local key="$1"
+    local value="$2"
+
+    curl -X PUT --data "$value" "http://127.0.0.1:8500/v1/kv/$key"
+}
+
+vault() {
+    local key="$1"
+    local value="$2"
+
+    curl -X POST --header "X-Vault-Token: vault-auth-token" --data "{\"value\":\"$value\"}" "http://127.0.0.1:8200/v1/secret/$key"
+}
+
+# Turn off kv v2 and enable kv v1
+curl -X DELETE --header "X-Vault-Token: vault-auth-token" http://127.0.0.1:8200/v1/sys/mounts/secret
+curl -X POST --header "X-Vault-Token: vault-auth-token" --data '{"type":"kv","path":"secret/","options":{"version":"1"}}' http://127.0.0.1:8200/v1/sys/mounts/secret

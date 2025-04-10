@@ -1,0 +1,2 @@
+{"level":"WARN","msg":"SERVICE_ENV is not set, defaulting to dev"}
+{"level":"ERROR","msg":"Missing command","env":"dev","service":"my-test-service","product":"test","region":"us-east-1","program":"docker-bootstrap"}

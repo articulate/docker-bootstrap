@@ -1,0 +1,2 @@
+{"level":"WARN","msg":"SERVICE_ENV is not set, defaulting to dev"}
+{"level":"WARN","msg":"Not loading values from Vault. VAULT_ADDR is not set","env":"dev","service":"my-test-service","product":"test","region":"us-east-1","program":"docker-bootstrap"}

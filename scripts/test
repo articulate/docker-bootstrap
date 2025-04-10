@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+show_help() {
+    cat << EOF
+Usage: ${0##*/} [-hd] [-s STATUS] [-o OUTPUT] [-e ERROR] [COMMAND]
+
+Run the bootstrap and compare the result with given inputs
+
+    -h           display this help and exit
+    -d           print out stdout and stderr before assertions
+    -s STATUS    ensure STATUS matches the bootstrap exit code
+    -o OUTPUT    ensure the OUTPUT matches the bootstrap STDOUT (can be a file)
+    -e ERROR     ensure the ERROR matches the bootstrap STDERR (can be a file)
+EOF
+}
+
+while getopts "hds:o:e:" opt; do
+  case "$opt" in
+    h)
+        show_help
+        exit 0
+        ;;
+    s)
+        status=$OPTARG
+        ;;
+    o)
+        output=$OPTARG
+        [ -f "$output" ] && output="$(cat "$output")"
+        ;;
+    e)
+        error=$OPTARG
+        [ -f "$error" ] && error="$(cat "$error")"
+        ;;
+    d)
+        debug=true
+        ;;
+    *)
+        show_help >&2
+        exit 1
+        ;;
+  esac
+done
+
+shift "$((OPTIND-1))"
+
+out=$(mktemp)
+err=$(mktemp)
+
+go run . "$@" 1> "$out" 2> "$err"
+rc="$?"
+
+assert() {
+    local expected="$1"
+    local actual="$2"
+    local message="$3"
+
+    test -z "$expected" -o "$expected" = "$actual" && return
+
+    echo "$message: expected $expected, got $actual" >&2
+    exit 1
+}
+
+if [ -n "$debug" ]; then
+    echo "==stdout=="
+    cat "$out"
+    echo "==stderr=="
+    cat "$err"
+    echo "=="
+fi
+
+assert "$status" "$rc" "status"
+assert "$output" "$(cat "$out")" "stdout"
+assert "$error" "$(jq -c 'del(.time)' "$err")" "stderr"

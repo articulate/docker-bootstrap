@@ -1,0 +1,5 @@
+BAR=bar
+BAZ=baz
+DEV=dev
+FOO=foobar
+FOOBAR=test
