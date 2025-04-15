@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.1.0](https://github.com/articulate/docker-bootstrap/compare/v5.0.3...v5.1.0) (2025-04-15)
+
+
+### Features
+
+* upgrade golangci-lint to v2 ([#266](https://github.com/articulate/docker-bootstrap/issues/266)) ([785e1e4](https://github.com/articulate/docker-bootstrap/commit/785e1e4437ff6a09277a7118bcab804107e65961))
+
+
+### Dependency Updates
+
+* bump the hashicorp group with 4 updates ([#262](https://github.com/articulate/docker-bootstrap/issues/262)) ([ac54d19](https://github.com/articulate/docker-bootstrap/commit/ac54d19d354d38bb700a1918c2e8094a709766dc))
+
 ## [5.0.3](https://github.com/articulate/docker-bootstrap/compare/v5.0.2...v5.0.3) (2025-03-31)
 
 
