@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.1](https://github.com/articulate/docker-bootstrap/compare/v5.1.0...v5.1.1) (2025-05-13)
+
+
+### Dependency Updates
+
+* bump github.com/samber/lo from 1.49.1 to 1.50.0 ([#272](https://github.com/articulate/docker-bootstrap/issues/272)) ([0c8a43f](https://github.com/articulate/docker-bootstrap/commit/0c8a43f3f3247bb7a368bae50d9e6bed87748dfe))
+
 ## [5.1.0](https://github.com/articulate/docker-bootstrap/compare/v5.0.3...v5.1.0) (2025-04-15)
 
 
