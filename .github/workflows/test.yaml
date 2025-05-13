@@ -69,6 +69,8 @@ jobs:
           vault global/dev/env_vars/DEV vdev
           vault services/my-test-service/env_vars/FOO vfoo
           vault services/my-test-service/dev/env_vars/FOOBAR vfoobar
+
+          go mod download
       - name: Test no config
         run: scripts/test -s 0 -e tests/no-config.stderr.txt true
       - name: Test no command
