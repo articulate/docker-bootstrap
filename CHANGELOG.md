@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.0](https://github.com/articulate/docker-bootstrap/compare/v5.1.1...v5.2.0) (2025-06-03)
+
+
+### Features
+
+* add darwin build ([#277](https://github.com/articulate/docker-bootstrap/issues/277)) ([02d2778](https://github.com/articulate/docker-bootstrap/commit/02d27786a150f37bf20678d5b02e2d7b8bd84bc9))
+
 ## [5.1.1](https://github.com/articulate/docker-bootstrap/compare/v5.1.0...v5.1.1) (2025-05-13)
 
 
