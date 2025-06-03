@@ -6,6 +6,7 @@ before:
 builds:
   - goos:
       - linux
+      - darwin
     goarch:
       - amd64
       - arm64
@@ -17,14 +18,13 @@ builds:
     env:
       - CGO_ENABLED=0
 archives:
-  - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
+  - name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
     format: binary
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 snapshot:
   version_template: "{{ incpatch .Version }}-next"
 release:
   use_existing_draft: true
-
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
