@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.2](https://github.com/articulate/docker-bootstrap/compare/v5.2.1...v5.2.2) (2025-09-02)
+
+
+### Dependency Updates
+
+* bump github.com/stretchr/testify from 1.10.0 to 1.11.1 ([#283](https://github.com/articulate/docker-bootstrap/issues/283)) ([7959e02](https://github.com/articulate/docker-bootstrap/commit/7959e0202adfde24f7bb6ffc4584abd026d1bcab))
+
 ## [5.2.1](https://github.com/articulate/docker-bootstrap/compare/v5.2.0...v5.2.1) (2025-07-07)
 
 
