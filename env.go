@@ -46,13 +46,13 @@ func (e *EnvMap) Environ() []string {
 	// Expand variables
 	env = lo.MapValues(env, func(v string, _ string) string {
 		return os.Expand(v, func(s string) string {
-			if l := os.Getenv(s); l != "" {
+			if l, ok := os.LookupEnv(s); ok {
 				return l
 			}
 			if v, ok := e.env[s]; ok {
 				return v
 			}
-			return ""
+			return "$" + s
 		})
 	})
 
