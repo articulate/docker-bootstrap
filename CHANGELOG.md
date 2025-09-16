@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.0](https://github.com/articulate/docker-bootstrap/compare/v5.2.2...v5.3.0) (2025-09-16)
+
+
+### Features
+
+* **env:** expanded env vars that are not found should be retained ([#285](https://github.com/articulate/docker-bootstrap/issues/285)) ([c043140](https://github.com/articulate/docker-bootstrap/commit/c04314045f149c38259adb9c4922fa4eafbafe45))
+
 ## [5.2.2](https://github.com/articulate/docker-bootstrap/compare/v5.2.1...v5.2.2) (2025-09-02)
 
 
