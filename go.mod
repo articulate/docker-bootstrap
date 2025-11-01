@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/vault/api v1.21.0
 	github.com/hashicorp/vault/api/auth/aws v0.10.0
 	github.com/hashicorp/vault/api/auth/kubernetes v0.10.0
-	github.com/samber/lo v1.51.0
+	github.com/samber/lo v1.52.0
 	github.com/stretchr/testify v1.11.1
 )
 
