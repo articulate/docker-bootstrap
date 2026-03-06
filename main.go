@@ -156,7 +156,7 @@ func run(name string, args, env []string) error {
 	env = append(os.Environ(), env...)
 	args = append([]string{name}, args...)
 
-	if err := syscall.Exec(bin, args, env); err != nil {
+	if err := syscall.Exec(bin, args, env); err != nil { // #nosec
 		return fmt.Errorf("could not execute %s %s: %w", name, strings.Join(args, " "), err)
 	}
 
