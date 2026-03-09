@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.2](https://github.com/articulate/docker-bootstrap/compare/v5.3.1...v5.3.2) (2026-03-09)
+
+
+### Dependency Updates
+
+* bump github.com/samber/lo from 1.51.0 to 1.52.0 ([#292](https://github.com/articulate/docker-bootstrap/issues/292)) ([17ca15c](https://github.com/articulate/docker-bootstrap/commit/17ca15ceeb61e41e0c18cdf913a6b5a537f5e23e))
+* bump the hashicorp group with 3 updates ([#291](https://github.com/articulate/docker-bootstrap/issues/291)) ([19c0274](https://github.com/articulate/docker-bootstrap/commit/19c0274810e3fbeee6964a616800268590f7d1f7))
+
 ## [5.3.1](https://github.com/articulate/docker-bootstrap/compare/v5.3.0...v5.3.1) (2025-10-06)
 
 
