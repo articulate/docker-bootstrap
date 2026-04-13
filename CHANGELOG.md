@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.3](https://github.com/articulate/docker-bootstrap/compare/v5.3.2...v5.3.3) (2026-04-13)
+
+
+### Dependency Updates
+
+* bump the hashicorp group with 4 updates ([#298](https://github.com/articulate/docker-bootstrap/issues/298)) ([97e740a](https://github.com/articulate/docker-bootstrap/commit/97e740a8acd50184be2fb196b06e6619faaee2f5))
+
 ## [5.3.2](https://github.com/articulate/docker-bootstrap/compare/v5.3.1...v5.3.2) (2026-03-09)
 
 
