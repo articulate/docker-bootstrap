@@ -25,6 +25,7 @@ func TestEnvMap(t *testing.T) {
 	e.Add("DOCKER_CONSUL_BOOTSTRAP_EXPAND_ONE", "foo-${DOCKER_CONSUL_BOOTSTRAP_TEST_FOO}-bar")
 	e.Add("DOCKER_CONSUL_BOOTSTRAP_EXPAND_TWO", "foo-${DOCKER_CONSUL_BOOTSTRAP_TEST_BAZ}-baz")
 	e.Add("  ", "test-empty")
+	e.Add("DOCKER_CONSUL_BOOTSTRAP_NEWLINE_ESCAPED", "foo\\n\\nbar")
 	e.Add("DOCKER_CONSUL_BOOTSTRAP_NEWLINE", `foo
 bar
 baz
@@ -38,6 +39,7 @@ test`)
 		"DOCKER_CONSUL_BOOTSTRAP_TEST_BAZ=bar",
 		"DOCKER_CONSUL_BOOTSTRAP_EXPAND_ONE=foo-ignore-bar",
 		"DOCKER_CONSUL_BOOTSTRAP_EXPAND_TWO=foo-bar-baz",
+		"DOCKER_CONSUL_BOOTSTRAP_NEWLINE_ESCAPED=foo\\n\\nbar",
 		"DOCKER_CONSUL_BOOTSTRAP_NEWLINE=foo\\nbar\\nbaz\\n\\ntest",
 	}, e.Environ())
 }
