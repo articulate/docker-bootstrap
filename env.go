@@ -57,7 +57,7 @@ func (e *EnvMap) Environ() []string {
 	})
 
 	return lo.MapToSlice(env, func(k string, v string) string {
-		return fmt.Sprintf("%s=%s", k, strings.ReplaceAll(v, "\n", "\\n"))
+		return fmt.Sprintf("%s=%s", k, v)
 	})
 }
 
