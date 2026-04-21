@@ -24,14 +24,43 @@ clean: ## Cleanup build artifacts
 	@rm -rf dist/
 .PHONY: clean
 
+beta: ## Set beta release
+	@echo "+ $@"
+	@jq '. * {packages: {".": {versioning: "prerelease", prerelease: true}}}' release-please-config.json > release-please-config.json.new
+	@mv release-please-config.json.new release-please-config.json
+	@git add release-please-config.json
+	@git commit -m "chore(release): set to beta"
+.PHONY: beta
+
+stable: ## Set stable release
+	@echo "+ $@"
+	@jq '. * {packages: {".": {versioning: "default", prerelease: false}}}' release-please-config.json > release-please-config.json.new
+	@mv release-please-config.json.new release-please-config.json
+	@git add release-please-config.json
+	@git commit -m "chore(release): promote to stable" -m "Release-As: $$(git describe --tags `git rev-list --tags --max-count=1` | sed -E 's/-.*$$//')"
+.PHONY: stable
+
 ##
 ## Development
 ## ---------------------------------------------------------------------------
 
-init: ## Initialize development environment
+init: .git/hooks/pre-commit .git/hooks/commit-msg ## Initialize development environment
 	@echo "+ $@"
-	@pre-commit install --install-hooks --hook-type pre-commit --hook-type commit-msg
 .PHONY: init
+
+.git/hooks/pre-commit:
+ifneq (, $(shell which prek))
+	@prek install --hook-type pre-commit
+else
+	@pre-commit install --install-hooks --hook-type pre-commit
+endif
+
+.git/hooks/commit-msg:
+ifneq (, $(shell which prek))
+	@prek install --hook-type commit-msg
+else
+	@pre-commit install --install-hooks --hook-type commit-msg
+endif
 
 mod: ## Make sure go.mod is up to date
 	@echo "+ $@"

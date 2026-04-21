@@ -94,7 +94,7 @@ You'll need to install the following:
 
 * Go
 * [golangci-lint](https://golangci-lint.run/) (`brew install golangci-lint`)
-* [pre-commit](https://pre-commit.com/) (`brew install pre-commit`)
+* [prek](https://prek.j178.dev/) (`brew install prek`)
 * [GoReleaser](https://goreleaser.com/) (_optional_)
 
 Setup the build environment with `make init`. Run tests with `make test` and lint
@@ -108,3 +108,6 @@ or [commitizen](https://github.com/commitizen-tools/commitizen#installation).
 
 To create a release, create a tag that follows [semver](https://semver.org/). A
 GitHub Action workflow will take care of creating the release.
+
+To create a beta release, run `make beta`. When you want to promote the beta
+release, run `make stable`.
