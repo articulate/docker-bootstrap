@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.5](https://github.com/articulate/docker-bootstrap/compare/v5.3.4...v5.3.5) (2026-04-21)
+
+
+### Bug Fixes
+
+* **env:** escape newlines in environment variable values ([#302](https://github.com/articulate/docker-bootstrap/issues/302)) ([9c12e24](https://github.com/articulate/docker-bootstrap/commit/9c12e246efcc366556b5ec62fb78ece11cae975c))
+
 ## [5.3.4](https://github.com/articulate/docker-bootstrap/compare/v5.3.3...v5.3.4) (2026-04-20)
 
 
