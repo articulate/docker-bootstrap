@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.6-beta](https://github.com/articulate/docker-bootstrap/compare/v5.3.5...v5.3.6-beta) (2026-04-22)
+
+
+### Refactors
+
+* **env:** use os.Setenv for run ([#304](https://github.com/articulate/docker-bootstrap/issues/304)) ([ddaebcc](https://github.com/articulate/docker-bootstrap/commit/ddaebcc3b5d0b589898b34e85e9a68627b67f556))
+
 ## [5.3.5](https://github.com/articulate/docker-bootstrap/compare/v5.3.4...v5.3.5) (2026-04-21)
 
 
