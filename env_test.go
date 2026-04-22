@@ -34,4 +34,22 @@ func TestEnvMap(t *testing.T) {
 		"DOCKER_CONSUL_BOOTSTRAP_EXPAND_ONE=foo-ignore-bar",
 		"DOCKER_CONSUL_BOOTSTRAP_EXPAND_TWO=foo-bar-baz",
 	}, e.Environ())
+
+	e.Add("DOCKER_CONSUL_BOOTSTRAP_NEWLINE_ESCAPED", "hello\nworld\n")
+	e.Add("DOCKER_CONSUL_BOOTSTRAP_NEWLINE", `foo
+bar
+baz
+
+test`)
+
+	assert.Equal(t, map[string]string{
+		"DOCKER_CONSUL_BOOTSTRAP_TEST_TEST":       "testing",
+		"DOCKER_CONSUL_BOOTSTRAP_TEST_DOLLAR":     "testing$a1^h",
+		"DOCKER_CONSUL_BOOTSTRAP_TEST_EXTRA":      "abc^d$1234&567",
+		"DOCKER_CONSUL_BOOTSTRAP_TEST_BAZ":        "bar",
+		"DOCKER_CONSUL_BOOTSTRAP_EXPAND_ONE":      "foo-ignore-bar",
+		"DOCKER_CONSUL_BOOTSTRAP_EXPAND_TWO":      "foo-bar-baz",
+		"DOCKER_CONSUL_BOOTSTRAP_NEWLINE":         "foo\nbar\nbaz\n\ntest",
+		"DOCKER_CONSUL_BOOTSTRAP_NEWLINE_ESCAPED": "hello\nworld\n",
+	}, e.Map())
 }

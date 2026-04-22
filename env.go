@@ -30,9 +30,9 @@ func (e *EnvMap) Add(key, value string) {
 	e.env[key] = value
 }
 
-// Environ returns the map in the format of "key=value", skipping any already set,
+// Map returns the final map of environment variables, skipping any already set,
 // non-empty environment variables, and expanding variables
-func (e *EnvMap) Environ() []string {
+func (e *EnvMap) Map() map[string]string {
 	// Remove anything already set as an env var
 	env := lo.OmitBy(e.env, func(k, _ string) bool {
 		return os.Getenv(k) != ""
@@ -44,7 +44,7 @@ func (e *EnvMap) Environ() []string {
 	})
 
 	// Expand variables
-	env = lo.MapValues(env, func(v string, _ string) string {
+	return lo.MapValues(env, func(v string, _ string) string {
 		return os.Expand(v, func(s string) string {
 			if l, ok := os.LookupEnv(s); ok {
 				return l
@@ -55,8 +55,14 @@ func (e *EnvMap) Environ() []string {
 			return "$" + s
 		})
 	})
+}
 
-	return lo.MapToSlice(env, func(k string, v string) string {
+// Environ returns the map in the format of "key=value", skipping any already set,
+// non-empty environment variables, and expanding variables
+//
+// Warning: this does not handle values with newlines
+func (e *EnvMap) Environ() []string {
+	return lo.MapToSlice(e.Map(), func(k string, v string) string {
 		return fmt.Sprintf("%s=%s", k, v)
 	})
 }

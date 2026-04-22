@@ -66,7 +66,7 @@ func main() {
 	}
 
 	logger.DebugContext(ctx, "Running command", "command", cmd, "args", args)
-	if err := run(cmd, args, env.Environ()); err != nil {
+	if err := run(cmd, args, env); err != nil {
 		logger.ErrorContext(ctx, "Could not run command", "error", err)
 		os.Exit(1)
 	}
@@ -147,16 +147,23 @@ func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dic
 	return values, err
 }
 
-func run(name string, args, env []string) error {
+func run(name string, args []string, env *EnvMap) error {
 	bin, err := exec.LookPath(name)
 	if err != nil {
 		return fmt.Errorf("could not find %s: %w", name, err)
 	}
 
-	env = append(os.Environ(), env...)
-	args = append([]string{name}, args...)
+	for k, v := range env.Map() {
+		if err := os.Setenv(k, v); err != nil {
+			return fmt.Errorf("could not set %s: %w", k, err)
+		}
+	}
 
-	if err := syscall.Exec(bin, args, env); err != nil { // #nosec
+	if err := syscall.Exec( // #nosec
+		bin,
+		append([]string{name}, args...),
+		os.Environ(),
+	); err != nil {
 		return fmt.Errorf("could not execute %s %s: %w", name, strings.Join(args, " "), err)
 	}
 
