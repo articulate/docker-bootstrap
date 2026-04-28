@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.6](https://github.com/articulate/docker-bootstrap/compare/v5.3.6-beta...v5.3.6) (2026-04-28)
+
+
+### Miscellaneous
+
+* **release:** promote to stable ([#309](https://github.com/articulate/docker-bootstrap/issues/309)) ([7611162](https://github.com/articulate/docker-bootstrap/commit/761116212b900630f08d1c4c6777ccbf7e1fa607))
+
 ## [5.3.6-beta](https://github.com/articulate/docker-bootstrap/compare/v5.3.5...v5.3.6-beta) (2026-04-22)
 
 
