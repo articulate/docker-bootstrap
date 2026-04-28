@@ -67,8 +67,8 @@
       "release-type": "go",
       "draft": true,
       "prerelease-type": "beta",
-      "versioning": "prerelease",
-      "prerelease": true
+      "versioning": "default",
+      "prerelease": false
     }
   }
 }
