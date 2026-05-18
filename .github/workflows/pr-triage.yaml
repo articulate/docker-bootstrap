@@ -1,0 +1,12 @@
+name: Pull Request Triage
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  pr-triage:
+    uses: articulate/shipping/.github/workflows/pr-triage.lock.yml@v1
+    secrets: inherit
+    with:
+      dry_run: true
