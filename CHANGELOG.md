@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.4.0](https://github.com/articulate/docker-bootstrap/compare/v5.3.6...v5.4.0) (2026-05-18)
+
+
+### Features
+
+* add PR triage workflow ([#314](https://github.com/articulate/docker-bootstrap/issues/314)) ([1ae89ab](https://github.com/articulate/docker-bootstrap/commit/1ae89ab93f3fba13a167ac313c7928a55dd22c37))
+
+
+### Dependency Updates
+
+* bump github.com/hashicorp/consul/api from 1.33.7 to 1.34.2 in the hashicorp group ([#312](https://github.com/articulate/docker-bootstrap/issues/312)) ([52d706e](https://github.com/articulate/docker-bootstrap/commit/52d706eeff46ac65a2d777c9e541651850217f9e))
+
 ## [5.3.6](https://github.com/articulate/docker-bootstrap/compare/v5.3.6-beta...v5.3.6) (2026-04-28)
 
 
