@@ -44,11 +44,11 @@ jobs:
       vault:
         image: hashicorp/vault
         env:
-          SKIP_SETCAP: "true"
           VAULT_DEV_ROOT_TOKEN_ID: vault-auth-token
         ports:
           - 8200:8200
         options: >-
+          --cap-add IPC_LOCK
           --health-cmd "VAULT_ADDR=http://127.0.0.1:8200 vault status"
           --health-interval 5s
           --health-timeout 5s
