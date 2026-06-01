@@ -17,8 +17,13 @@ updates:
       interval: monthly
     commit-message:
       prefix: deps
-      prefix-development: build(gomod)
     groups:
       hashicorp:
         patterns:
           - github.com/hashicorp/*
+      dev:
+        patterns:
+          - github.com/stretchr/testify
+      app:
+        patterns:
+          - "*"
