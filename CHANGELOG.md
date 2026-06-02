@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.4.1](https://github.com/articulate/docker-bootstrap/compare/v5.4.0...v5.4.1) (2026-06-02)
+
+
+### Dependency Updates
+
+* bump github.com/hashicorp/consul/api from 1.34.2 to 1.34.3 in the hashicorp group across 1 directory ([#317](https://github.com/articulate/docker-bootstrap/issues/317)) ([ea4adda](https://github.com/articulate/docker-bootstrap/commit/ea4adda3df164fc1b89d480a419390b242d26557))
+
 ## [5.4.0](https://github.com/articulate/docker-bootstrap/compare/v5.3.6...v5.4.0) (2026-05-18)
 
 
