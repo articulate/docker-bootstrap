@@ -47,6 +47,7 @@ jobs:
         with:
           branch: update-awscli
           commit-message: "chore: bump AWSCLI_VERSION to ${{ steps.awscli.outputs.version }}"
+          sign-commits: true
           title: "chore: bump AWSCLI_VERSION to ${{ steps.awscli.outputs.version }}"
           body: |
             Bumps the default `AWSCLI_VERSION` in `scripts/awscli.sh` to the latest
