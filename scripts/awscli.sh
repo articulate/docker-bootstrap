@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-AWSCLI_VERSION="${AWSCLI_VERSION:-2.34.5}"
+AWSCLI_VERSION="${AWSCLI_VERSION:-2.34.58}"
 
 missing=""
 command -v curl >/dev/null || missing="${missing} curl"
