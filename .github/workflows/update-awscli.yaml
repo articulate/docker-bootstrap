@@ -17,7 +17,6 @@ jobs:
         id: awscli
         uses: actions/github-script@v9
         with:
-          github-token: ${{ steps.token.outputs.token }}
           script: |
             // aws/aws-cli has no GitHub Releases; tags are the source of truth.
             // The tags endpoint returns newest-first, so the latest 2.x is within
@@ -46,7 +45,6 @@ jobs:
           sed -i -E "s/(AWSCLI_VERSION:-)[0-9.]+/\1${VERSION}/" scripts/awscli.sh
       - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
         with:
-          token: ${{ steps.token.outputs.token }}
           branch: update-awscli
           commit-message: "chore: bump AWSCLI_VERSION to ${{ steps.awscli.outputs.version }}"
           title: "chore: bump AWSCLI_VERSION to ${{ steps.awscli.outputs.version }}"
