@@ -10,11 +10,6 @@ jobs:
       github.event.pull_request.user.login == 'dependabot[bot]' ||
       github.event.pull_request.user.login == 'articulate-automation[bot]'
     steps:
-      - uses: actions/create-github-app-token@v3
-        id: token
-        with:
-          client-id: ${{ vars.AUTOMATION_CLIENT_ID }}
-          private-key: ${{ secrets.AUTOMATION_PRIVATE_KEY }}
       - name: Approve PR
         env:
           # Approve as Botzo to work around CODEOWNERS requirement
@@ -23,6 +18,6 @@ jobs:
         run: gh pr review --approve "$PR" -R "$GITHUB_REPOSITORY"
       - name: Enable auto-merge
         env:
-          GH_TOKEN: ${{ steps.token.outputs.token }}
+          GH_TOKEN: ${{ secrets.BOTZO_GH_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
         run: gh pr merge --auto --squash "$PR" -R "$GITHUB_REPOSITORY"
