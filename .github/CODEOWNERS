@@ -1,5 +1,6 @@
 * @articulate/devex
 
-# Allow Botzo to approve dependency bumps (and related updates)
+# Allow Botzo to approve dependency bumps
 go.*                @articulate/devex @botzo
 /.github/workflows/ @articulate/devex @botzo
+/scripts/awscli.sh  @articulate/devex @botzo

@@ -8,9 +8,6 @@ on:
 jobs:
   update:
     runs-on: ubuntu-slim
-    permissions:
-      contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v7
       - name: Determine latest AWS CLI 2.x version
@@ -39,12 +36,22 @@ jobs:
             }
             core.setOutput('version', latest);
       - name: Update awscli.sh
+        id: update
         env:
           VERSION: ${{ steps.awscli.outputs.version }}
         run: |
           sed -i -E "s/(AWSCLI_VERSION:-)[0-9.]+/\1${VERSION}/" scripts/awscli.sh
-      - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+          echo "changed=$(git diff --quiet && echo false || echo true)" >> "$GITHUB_OUTPUT"
+      - if: steps.update.outputs.changed == 'true'
+        uses: actions/create-github-app-token@v3
+        id: token
         with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_PRIVATE_KEY }}
+      - if: steps.update.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          token: ${{ steps.token.outputs.token }}
           branch: update-awscli
           commit-message: "chore: bump AWSCLI_VERSION to ${{ steps.awscli.outputs.version }}"
           sign-commits: true
