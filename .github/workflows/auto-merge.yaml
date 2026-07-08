@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-slim
     if: >
       github.event.pull_request.user.login == 'dependabot[bot]' ||
-      github.event.pull_request.user.login == 'articulate-automation[bot]'
+      github.event.pull_request.user.login == 'articulate-automation[bot]' ||
+      github.event.pull_request.user.login == 'articulate-shipping[bot]'
     steps:
       - name: Approve PR
         env:
