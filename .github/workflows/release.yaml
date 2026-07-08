@@ -12,7 +12,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: token
         with:
-          app-id: ${{ secrets.GH_APP_ID }}
+          client-id: ${{ secrets.GH_CLIENT_ID }}
           private-key: ${{ secrets.GH_PRIVATE_KEY }}
       - uses: googleapis/release-please-action@v5
         id: release
