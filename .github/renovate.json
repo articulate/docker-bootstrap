@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["local>articulate/org-renovate"],
+  "dockerfile": { "enabled": false },
+  "packageRules": [
+    {
+      "description": "Keep github-actions commits typed ci so release-please does not cut a release for them.",
+      "matchManagers": ["github-actions"],
+      "semanticCommitType": "ci",
+      "semanticCommitScope": ""
+    },
+    {
+      "description": "Keep gomod commits typed deps so release-please does not cut a release for them.",
+      "matchManagers": ["gomod"],
+      "semanticCommitType": "deps",
+      "semanticCommitScope": ""
+    },
+    {
+      "description": "Group stretchr/testify updates into their own PR, separate from the other Go modules.",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["github.com/stretchr/testify"],
+      "groupName": "dev",
+      "groupSingleUpdates": true
+    },
+    {
+      "description": "Group HashiCorp module updates into their own PR, separate from the other Go modules.",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["github.com/hashicorp/**"],
+      "groupName": "hashicorp",
+      "groupSingleUpdates": true
+    }
+  ]
+}
