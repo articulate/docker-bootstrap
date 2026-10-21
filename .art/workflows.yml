@@ -1,0 +1,4 @@
+# yaml-language-server: $schema=https://articulate-public-infra.s3.amazonaws.com/workflows.schema.json
+pr-review:
+  with:
+    draft_review_frequency: on_change
