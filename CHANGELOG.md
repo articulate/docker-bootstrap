@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.4.4](https://github.com/articulate/docker-bootstrap/compare/v5.4.3...v5.4.4) (2026-10-28)
+
+
+### Dependency Updates
+
+* update module github.com/go-jose/go-jose/v4 to v4.1.6 [security] ([#345](https://github.com/articulate/docker-bootstrap/issues/345)) ([ba3144b](https://github.com/articulate/docker-bootstrap/commit/ba3144b90f3ec5f60221247973c77a23bddb333d))
+
 ## [5.4.3](https://github.com/articulate/docker-bootstrap/compare/v5.4.2...v5.4.3) (2026-10-01)
 
 
