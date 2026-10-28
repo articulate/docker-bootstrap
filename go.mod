@@ -2,6 +2,8 @@ module github.com/articulate/docker-bootstrap
 
 go 1.26.7
 
+toolchain go1.26.10
+
 require (
 	github.com/hashicorp/consul/api v1.34.5
 	github.com/hashicorp/vault/api v1.23.0

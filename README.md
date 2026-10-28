@@ -90,12 +90,9 @@ with an exit code of 4.
 
 ## Development
 
-You'll need to install the following:
-
-* Go
-* [golangci-lint](https://golangci-lint.run/) (`brew install golangci-lint`)
-* [prek](https://prek.j178.dev/) (`brew install prek`)
-* [GoReleaser](https://goreleaser.com/) (_optional_)
+Install [mise](https://mise.jdx.dev/getting-started.html) and run `mise install`
+to get Go, [golangci-lint](https://golangci-lint.run/), [prek](https://prek.j178.dev/),
+and [GoReleaser](https://goreleaser.com/).
 
 Setup the build environment with `make init`. Run tests with `make test` and lint
 code with `make lint`.
