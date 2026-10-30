@@ -1,0 +1,24 @@
+name: PR Title
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+  merge_group:
+
+permissions: {}
+
+jobs:
+  pr-title:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Verify conventional commit title
+        env:
+          MESSAGE: ${{ case(github.event_name == 'merge_group', github.event.merge_group.head_commit.message, github.event.pull_request.title) }}
+        run: |
+          # LC_ALL=C keeps the scope class ASCII only, and [^\n] requires the description to start on the first line.
+          export LC_ALL=C
+          re=$'^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|deps|revert)(\\([A-Za-z0-9_/ \t\n\f\r.-]+\\))?!?: [^\n]'
+          if [[ ! $MESSAGE =~ $re ]]; then
+            echo "::error::PR title must follow Conventional Commits, for example 'feat(scope): add a thing'"
+            exit 1
+          fi
