@@ -1,11 +1,12 @@
 module github.com/articulate/docker-bootstrap
 
-go 1.26.7
+go 1.26.9
 
 toolchain go1.26.10
 
 require (
-	github.com/hashicorp/consul/api v1.34.5
+	github.com/hashicorp/consul/api v1.35.0
+	github.com/hashicorp/consul/api/v2 v2.0.0
 	github.com/hashicorp/vault/api v1.23.0
 	github.com/hashicorp/vault/api/auth/aws v0.12.0
 	github.com/hashicorp/vault/api/auth/kubernetes v0.12.0
@@ -46,7 +47,7 @@ require (
 	github.com/stretchr/objx v0.5.3 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
-	golang.org/x/net v0.59.0 // indirect
+	golang.org/x/net v0.60.0 // indirect
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/time v0.12.0 // indirect
