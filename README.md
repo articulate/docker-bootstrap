@@ -106,5 +106,5 @@ or [commitizen](https://github.com/commitizen-tools/commitizen#installation).
 To create a release, create a tag that follows [semver](https://semver.org/). A
 GitHub Action workflow will take care of creating the release.
 
-To create a beta release, run `make beta`. When you want to promote the beta
-release, run `make stable`.
+To create a beta release, run `mise run beta`. When you want to promote the beta
+release, run `mise run stable`.

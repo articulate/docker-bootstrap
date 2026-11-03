@@ -28,6 +28,24 @@ run = "rm -rf dist/"
 description = "Make sure go.mod is up to date"
 run = "go mod tidy"
 
+[tasks.beta]
+description = "Set beta release"
+run = '''
+jq '. * {packages: {".": {versioning: "prerelease", prerelease: true}}}' release-please-config.json > release-please-config.json.new
+mv release-please-config.json.new release-please-config.json
+git add release-please-config.json
+git commit -m "chore(release): set to beta"
+'''
+
+[tasks.stable]
+description = "Set stable release"
+run = '''
+jq '. * {packages: {".": {versioning: "default", prerelease: false}}}' release-please-config.json > release-please-config.json.new
+mv release-please-config.json.new release-please-config.json
+git add release-please-config.json
+git commit -m "chore(release): promote to stable" -m "Release-As: $(git describe --tags "$(git rev-list --tags --max-count=1)" | sed -E 's/-.*$//')"
+'''
+
 ##
 ## Code Quality
 ##
