@@ -29,4 +29,4 @@ with literal `$` must avoid this syntax or they'll be silently rewritten.
 - Integration tests require Vault KV **v1**. The `tests/setup` script
   explicitly dismounts KV v2 and re-enables v1. If the CI Vault image
   defaults change, tests will silently return empty values.
-- `make beta` and `make stable` commit directly to the current branch.
+- `mise run beta` and `mise run stable` commit directly to the current branch.

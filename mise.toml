@@ -5,3 +5,66 @@ idiomatic_version_file_enable_tools = ["go"]
 golangci-lint = "2.15.0"
 goreleaser = "2.19.0"
 prek = "0.5.10"
+
+[hooks]
+postinstall = '''
+echo "Setting up git hooks"
+prek install --overwrite --hook-type pre-commit --hook-type commit-msg
+'''
+
+##
+## Build
+##
+
+[tasks.build]
+description = "Build binary"
+run = "goreleaser build --snapshot --clean"
+
+[tasks.clean]
+description = "Clean up build artifacts"
+run = "rm -rf dist/"
+
+[tasks.mod]
+description = "Make sure go.mod is up to date"
+run = "go mod tidy"
+
+[tasks.beta]
+description = "Set beta release"
+run = '''
+jq '. * {packages: {".": {versioning: "prerelease", prerelease: true}}}' release-please-config.json > release-please-config.json.new
+mv release-please-config.json.new release-please-config.json
+git add release-please-config.json
+git commit -m "chore(release): set to beta"
+'''
+
+[tasks.stable]
+description = "Set stable release"
+run = '''
+jq '. * {packages: {".": {versioning: "default", prerelease: false}}}' release-please-config.json > release-please-config.json.new
+mv release-please-config.json.new release-please-config.json
+git add release-please-config.json
+git commit -m "chore(release): promote to stable" -m "Release-As: $(git describe --tags "$(git rev-list --tags --max-count=1)" | sed -E 's/-.*$//')"
+'''
+
+##
+## Code Quality
+##
+
+[tasks.test]
+description = "Run tests, as CI does"
+run = "make test"
+
+[tasks.coverage]
+description = "Generate test coverage report"
+run = [
+  "go test ./... -v -coverprofile=coverage.out",
+  "go tool cover -html=coverage.out",
+]
+
+[tasks.lint]
+description = "Lint Go code"
+run = "golangci-lint run"
+
+[tasks.format]
+description = "Try to fix linting issues"
+run = ["golangci-lint fmt", "golangci-lint run --fix"]

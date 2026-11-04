@@ -92,10 +92,10 @@ with an exit code of 4.
 
 Install [mise](https://mise.jdx.dev/getting-started.html) and run `mise install`
 to get Go, [golangci-lint](https://golangci-lint.run/), [prek](https://prek.j178.dev/),
-and [GoReleaser](https://goreleaser.com/).
+and [GoReleaser](https://goreleaser.com/), and to install the git hooks.
 
-Setup the build environment with `make init`. Run tests with `make test` and lint
-code with `make lint`.
+Run tests with `mise run test` and lint code with `mise run lint`. See other
+tasks by running `mise tasks`.
 
 When committing, you'll need to follow the [Conventional Commits](https://www.conventionalcommits.org)
 format. You can install a tool like [git-cz](https://github.com/commitizen/cz-cli#conventional-commit-messages-as-a-global-utility)
@@ -106,5 +106,5 @@ or [commitizen](https://github.com/commitizen-tools/commitizen#installation).
 To create a release, create a tag that follows [semver](https://semver.org/). A
 GitHub Action workflow will take care of creating the release.
 
-To create a beta release, run `make beta`. When you want to promote the beta
-release, run `make stable`.
+To create a beta release, run `mise run beta`. When you want to promote the beta
+release, run `mise run stable`.
