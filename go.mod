@@ -6,7 +6,6 @@ toolchain go1.27.3
 
 require (
 	github.com/hashicorp/consul/api v1.35.0
-	github.com/hashicorp/consul/api/v2 v2.0.0
 	github.com/hashicorp/vault/api v1.23.0
 	github.com/hashicorp/vault/api/auth/aws v0.12.0
 	github.com/hashicorp/vault/api/auth/kubernetes v0.12.0
