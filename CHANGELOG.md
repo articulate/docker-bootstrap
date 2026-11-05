@@ -1,5 +1,19 @@
 # Changelog
 
+## [5.5.0](https://github.com/articulate/docker-bootstrap/compare/v5.4.4...v5.5.0) (2026-11-05)
+
+
+### Features
+
+* warn when a loaded env var is overwritten or shadowed ([#356](https://github.com/articulate/docker-bootstrap/issues/356)) ([ffa1f4e](https://github.com/articulate/docker-bootstrap/commit/ffa1f4ee28c8c8c760cd8b424e63c10008a64a7f))
+
+
+### Dependency Updates
+
+* drop unused consul/api v2 requirement ([#357](https://github.com/articulate/docker-bootstrap/issues/357)) ([644feeb](https://github.com/articulate/docker-bootstrap/commit/644feeb1371c69ff36808b8b43a7c1393cbb584d))
+* update gomod dependencies ([#350](https://github.com/articulate/docker-bootstrap/issues/350)) ([c7e93d3](https://github.com/articulate/docker-bootstrap/commit/c7e93d317ff1425fc132088aa9238ff19d5c63d7))
+* update hashicorp ([#351](https://github.com/articulate/docker-bootstrap/issues/351)) ([30e94d2](https://github.com/articulate/docker-bootstrap/commit/30e94d227d7185ee8e679fac653b011b391c032d))
+
 ## [5.4.4](https://github.com/articulate/docker-bootstrap/compare/v5.4.3...v5.4.4) (2026-10-28)
 
 
