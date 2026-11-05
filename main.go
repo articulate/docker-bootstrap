@@ -74,8 +74,9 @@ func main() {
 
 func loadEnvVars(ctx context.Context, cfg *Config, l *slog.Logger) (*EnvMap, error) {
 	env := NewEnvMap()
+	sources := map[string]origin{}
 	if addr := os.Getenv("CONSUL_ADDR"); addr != "" {
-		c, err := loadConsul(ctx, addr, cfg, l)
+		c, err := loadConsul(ctx, addr, cfg, l, sources)
 		if err != nil {
 			return env, fmt.Errorf("could not load values from Consul: %w", err)
 		}
@@ -85,7 +86,7 @@ func loadEnvVars(ctx context.Context, cfg *Config, l *slog.Logger) (*EnvMap, err
 	}
 
 	if addr := os.Getenv("VAULT_ADDR"); addr != "" {
-		v, err := loadVault(ctx, addr, cfg, l)
+		v, err := loadVault(ctx, addr, cfg, l, sources)
 		if err != nil {
 			return env, fmt.Errorf("could not load values from Vault: %w", err)
 		}
@@ -97,7 +98,7 @@ func loadEnvVars(ctx context.Context, cfg *Config, l *slog.Logger) (*EnvMap, err
 	return env, nil
 }
 
-func loadConsul(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dict, error) {
+func loadConsul(ctx context.Context, addr string, c *Config, l *slog.Logger, sources map[string]origin) (Dict, error) {
 	l.DebugContext(ctx, "Loading values from Consul")
 
 	client, err := NewConsul(addr)
@@ -110,10 +111,10 @@ func loadConsul(ctx context.Context, addr string, c *Config, l *slog.Logger) (Di
 		paths = append(paths, strings.Split(p, ",")...)
 	}
 
-	return loadValues(ctx, client, l, paths)
+	return loadValues(ctx, client, l, paths, sources)
 }
 
-func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dict, error) {
+func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger, sources map[string]origin) (Dict, error) {
 	l.DebugContext(ctx, "Loading values from Vault")
 
 	client, err := NewVault(addr, c.Region)
@@ -142,7 +143,7 @@ func loadVault(ctx context.Context, addr string, c *Config, l *slog.Logger) (Dic
 		paths = append(paths, strings.Split(p, ",")...)
 	}
 
-	values, err := loadValues(ctx, client, l, paths)
+	values, err := loadValues(ctx, client, l, paths, sources)
 	values["VAULT_TOKEN"] = auth
 	return values, err
 }

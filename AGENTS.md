@@ -14,6 +14,11 @@ vars are never overwritten. Vault skips the `global/env_vars` and
 `services/{name}/env_vars` paths in `dev` and `test` environments (the
 `devEnv` guard in `config.go:VaultPaths()`).
 
+`loadValues` (`utils.go`) warns when a key is overwritten with a different
+value, or when a host env var will shadow a loaded value. A single `sources`
+map is shared across the Consul and Vault loads so cross-source overwrites are
+caught. Never add the value to these logs; Vault values are secrets.
+
 ## Variable Expansion in Values
 
 Loaded values are passed through `os.Expand` (`env.go:47`). A Consul/Vault

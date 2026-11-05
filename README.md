@@ -47,6 +47,11 @@ For example, `vault write secret/services/foo/env_vars/API_KEY value=secretkey` 
 an environment variable `API_KEY=secretkey`. Values from Vault will overwrite
 Consul values, but follow the same rules otherwise.
 
+A warning is logged when a path overwrites a different value set by an earlier
+path (in Consul or Vault), or when a loaded value is ignored because the
+environment variable is already set. The warning names the key and paths, never
+the value.
+
 <details>
 <summary>Vault Authentication</summary>
 

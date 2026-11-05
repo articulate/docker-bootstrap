@@ -1,1 +1,4 @@
 {"level":"WARN","msg":"SERVICE_ENV is not set, defaulting to dev"}
+{"level":"WARN","msg":"Overwriting value","env":"dev","service":"my-test-service","product":"test","region":"us-east-1","program":"docker-bootstrap","key":"FOO","path":"services/my-test-service/env_vars","previous_path":"global/env_vars"}
+{"level":"WARN","msg":"Overwriting value","env":"dev","service":"my-test-service","product":"test","region":"us-east-1","program":"docker-bootstrap","key":"DEV","path":"secret/global/dev/env_vars","previous_path":"global/dev/env_vars"}
+{"level":"WARN","msg":"Overwriting value","env":"dev","service":"my-test-service","product":"test","region":"us-east-1","program":"docker-bootstrap","key":"FOOBAR","path":"secret/services/my-test-service/dev/env_vars","previous_path":"services/my-test-service/dev/env_vars"}
