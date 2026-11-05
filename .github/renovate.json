@@ -28,12 +28,6 @@
       "matchPackageNames": ["github.com/hashicorp/**"],
       "groupName": "hashicorp",
       "groupSingleUpdates": true
-    },
-    {
-      "description": "Keep consul/api on v1. The api/v2.0.0 tag is an older snapshot than current v1 releases, and upstream still publishes on the v1 module path.",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": ["github.com/hashicorp/consul/api"],
-      "allowedVersions": "<2"
     }
   ]
 }
